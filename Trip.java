@@ -1,19 +1,19 @@
 
 /**
- * Write a description of class Veiculo here.
- * 
- * @author (your name) 
+ * Write a description of class Trip here.
+ *
+ * @author (your name)
  * @version (a version number or a date)
  */
-public class Veiculo
+public class Trip
 {
     // instance variables - replace the example below with your own
     private int x;
 
     /**
-     * Constructor for objects of class Veiculo
+     * Constructor for objects of class Trip
      */
-    public Veiculo()
+    public Trip()
     {
         // initialise instance variables
         x = 0;
@@ -21,9 +21,9 @@ public class Veiculo
 
     /**
      * An example of a method - replace this comment with your own
-     * 
+     *
      * @param  y   a sample parameter for a method
-     * @return     the sum of x and y 
+     * @return     the sum of x and y
      */
     public int sampleMethod(int y)
     {
