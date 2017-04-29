@@ -5,8 +5,7 @@
  * @author (your name)
  * @version (a version number or a date)
  */
-public class Human
-{
+public abstract class Human {
     // Instance variables
     private String email;
 	private String name;
@@ -17,13 +16,10 @@ public class Human
     /**
      * Constructors
      */
-    public Human() {
-        this("n/a", "n/a", "n/a", "n/a", "n/a");
-    }
 
-	public Human(String mail, String nam, String pass, String addr, String birth) {
+	public Human(String mail, String name, String pass, String addr, String birth) {
 		this.email = mail;
-		this.name = nam;
+		this.name = name;
 		this.password = pass;
 		this.address = addr;
 		this.birthday = birth;
@@ -37,7 +33,7 @@ public class Human
 	 * Getters
 	 */
 
-	 public String getMail() {
+	public String getMail() {
  		return this.email;
  	}
 
@@ -56,4 +52,5 @@ public class Human
  	public String getBirthday() {
  		return this.birthday;
  	}
+
 }

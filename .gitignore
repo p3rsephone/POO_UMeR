@@ -41,3 +41,6 @@ Desktop.ini
 venv
 node_modules
 .sass-cache
+
+#Other stuff
+*.ctxt

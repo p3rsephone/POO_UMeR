@@ -1,33 +1,61 @@
-
+import java.awt.geom.Point2D;
+import java.util.stream.Collectors;
+import java.util.*;
 /**
- * Write a description of class Client here.
+ * Client that uses UMeR
  *
  * @author (your name)
- * @version (a version number or a date)
+ * @version 29.04.17
  */
-public class Client
-{
-    // instance variables - replace the example below with your own
-    private int x;
+public class Client extends Human {
+    // instance variables
+    private Point2D.Double place;
+	private ArrayList<Trip> trips;
+
 
     /**
-     * Constructor for objects of class Client
+     * Constructors
      */
-    public Client()
-    {
-        // initialise instance variables
-        x = 0;
+    public Client(String mail, String name, String pass, String addr, String birth) {
+        super(mail, name, pass, addr, birth);
+		this.place = new Point2D.Double();
+		this.trips = new ArrayList<Trip>();
     }
 
-    /**
-     * An example of a method - replace this comment with your own
+	public Client(Point2D.Double place, ArrayList<Trip> trips, String mail, String name, String pass, String addr, String birth) {
+		super(mail, name, pass, addr, birth);
+		this.place = place;
+		this.trips = trips;
+    }
+
+	public Client(Client c) {
+		super(c);
+        this.place = c.getPlace();
+		this.trips = c.getTrip();
+    }
+
+	/**
+     * Getters
+     */
+
+	public Point2D.Double getPlace() {
+		return this.place;
+	}
+
+	public ArrayList<Trip> getTrip() {
+		ArrayList<Trip> trip = new ArrayList<Trip>();
+        for(Trip t : this.trips) {
+            trip.add(t.clone());
+		}
+		return trip;
+	}
+
+	/**
+     * Clone method for Client
      *
-     * @param  y   a sample parameter for a method
-     * @return     the sum of x and y
+     * @return     A copy of the Client
      */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
-    }
+	public Client clone () {
+		return new Client (this);
+	}
 }
