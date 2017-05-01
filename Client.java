@@ -40,10 +40,10 @@ public class Client extends User {
 	}
 
 	/**
-	 * Altera as viagens de um utilizador
+	 * Adiciona viagens a um utilizador
 	 * @param trips Novas viagens
 	 */
-	public void setTrips(ArrayList<Trip> trips){
+	public void addTrips(ArrayList<Trip> trips){
 		this.trips = new ArrayList<Trip>();
 		for (Trip t: trips)
 			this.trips.add(t.clone());
