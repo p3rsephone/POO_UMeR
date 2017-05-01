@@ -7,41 +7,30 @@ import java.util.*;
  * @author (your name)
  * @version 29.04.17
  */
-public class Client extends Human {
-    // instance variables
-    private Point2D.Double place;
+public class Client extends User {
+	/** Variáveis de Instância */
+
 	private ArrayList<Trip> trips;
 
 
-    /**
-     * Constructors
-     */
-    public Client(String mail, String name, String pass, String addr, String birth) {
-        super(mail, name, pass, addr, birth);
-		this.place = new Point2D.Double();
-		this.trips = new ArrayList<Trip>();
-    }
+    /** Construtores */
 
-	public Client(Point2D.Double place, ArrayList<Trip> trips, String mail, String name, String pass, String addr, String birth) {
-		super(mail, name, pass, addr, birth);
-		this.place = place;
-		this.trips = trips;
+    public Client(ArrayList<Trip> trips, String email, String name, String password, String address, Date birthday, Point2D.Float position) {
+        super(email, name, password, address, birthday, position);
+		this.trips = new ArrayList<Trip>(trips);
     }
 
 	public Client(Client c) {
-		super(c);
-        this.place = c.getPlace();
-		this.trips = c.getTrip();
+		super(c.getEmail(), c.getName(), c.getPassword(), c.getAddress(), c.getBirthday(), c.getPosition());
+		this.trips = new ArrayList<Trip>(c.getTrip());
     }
 
+    /** Metodos de instância */
+
 	/**
-     * Getters
-     */
-
-	public Point2D.Double getPlace() {
-		return this.place;
-	}
-
+	 * Retorna uma cópia do ArrayList com as viagens
+	 * @return Viagens
+	 */
 	public ArrayList<Trip> getTrip() {
 		ArrayList<Trip> trip = new ArrayList<Trip>();
         for(Trip t : this.trips) {
@@ -51,10 +40,19 @@ public class Client extends Human {
 	}
 
 	/**
-     * Clone method for Client
-     *
-     * @return     A copy of the Client
-     */
+	 * Altera as viagens de um utilizador
+	 * @param trips Novas viagens
+	 */
+	public void setTrips(ArrayList<Trip> trips){
+		this.trips = new ArrayList<Trip>();
+		for (Trip t: trips)
+			this.trips.add(t.clone());
+	}
+
+	/**
+	 * Retorna a cópia de um cliente
+	 * @return Cópia do cliente
+	 */
 	public Client clone () {
 		return new Client (this);
 	}
