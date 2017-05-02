@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -15,8 +16,8 @@ public class User {
 	private String name;
 	private String password;
 	private String address;
-	private Date birthday;
-	private Point2D.Float position;
+	private LocalDate birthday;
+	private Point2D.Double position;
 
 
     /** Construtores */
@@ -30,13 +31,13 @@ public class User {
 	 * @param birth Dia de nascimento
 	 * @param position Posição
 	 */
-	public User(String email, String name, String password, String address, Date birthday, Point2D.Float position){
+	public User(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position){
 		this.email = email;
 		this.name = name;
 		this.password = password;
 		this.address = address;
-		this.birthday = new Date(birthday.getDate());
-		this.position.setLocation(position.getX(), position.getY());
+		this.birthday = LocalDate.of(birthday.getYear(), birthday.getMonth(), birthday.getDayOfMonth());
+		this.position = new Point2D.Double(position.getX(), position.getY());
 	}
 
 	/**
@@ -55,8 +56,8 @@ public class User {
 		this.name = null;
 		this.password = null;
 		this.address = null;
-		this.birthday = new Date(null);
-		this.position = new Point2D.Float();
+		this.birthday = LocalDate.of(0,0,0);
+		this.position = new Point2D.Double();
 		this.position.setLocation(0,0);
 	}
 
@@ -99,15 +100,15 @@ public class User {
 	 * Retorna a data de aniversário de um user
 	 * @return birthday
 	 */
- 	public Date getBirthday(){
- 		return new Date(this.birthday.getDate());
+ 	public LocalDate getBirthday(){
+ 		return LocalDate.of(this.birthday.getYear(), this.birthday.getMonth(), this.birthday.getDayOfMonth());
  	}
 
 	/**
 	 * Retorna a posição de um user
 	 * @return position
 	 */
-	public Point2D.Float getPosition(){
+	public Point2D.Double getPosition(){
  		return this.position;
 	}
 
@@ -147,15 +148,15 @@ public class User {
 	 * Altera o aniversário de um user
 	 * @param birthday Novo aniversário
 	 */
-	public void setBirthday(Date birthday){
-		this.birthday = new Date(birthday.getDate());
+	public void setBirthday(LocalDate birthday){
+		this.birthday = LocalDate.of(birthday.getYear(), birthday.getMonth(), birthday.getDayOfMonth());
 	}
 
 	/**
 	 * Altera a posição de um user
 	 * @param position Nova posição
 	 */
-	public void setPosition(Point2D.Float position){
+	public void setPosition(Point2D.Double position){
 		this.position = position;
 	}
 
@@ -170,7 +171,7 @@ public class User {
 				"Password : " 			+ this.password 	+ "\n" +
 				"Morada : " 			+ this.address 		+ "\n" +
 				"Data de nascimento : " + this.birthday 	+ "\n" +
-				"Posição : " 			+ this.position 	+ "\n";
+				"Posição : " 			+ "X - " + this.position.getX() + ", Y - " + this.position.getY()+ "\n";
 	}
 
 	/**

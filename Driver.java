@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.time.LocalDate;
 import java.util.stream.Collectors;
 import java.util.*;
 /**
@@ -11,10 +12,10 @@ public class Driver extends User {
 
 	/* Variáveis de Instância */
     private ArrayList<Trip> trips;
-	private float grading;
+	private double grading;
 	private double mileage;
 	private boolean availability;
-	private float timeCompliance;
+	private double timeCompliance;
 	private int reviews;
 
 	/**
@@ -27,14 +28,16 @@ public class Driver extends User {
 	 * @param trips Viagens feitas
 	 * @param email Email
 	 * @param name 	Nome
-	 * @param pass	Password
-	 * @param addr 	Morada
-	 * @param birth Dia de nascimento
+	 * @param password	Password
+	 * @param address 	Morada
+	 * @param birthday Dia de nascimento
 	 * @param position Posição
 	 */
-    public Driver(int reviews, Float grading, Double mileage, Boolean availability, Float timeCompliance, ArrayList<Trip> trips, String email, String name, String password, String address, Date birthday,Point2D.Float position){
+    public Driver(int reviews, Double grading, Double mileage, Boolean availability, Double timeCompliance, ArrayList<Trip> trips, String email, String name, String password, String address, LocalDate birthday, Point2D.Double position){
 		super(email, name, password, address, birthday, position);
-		this.trips = new ArrayList<Trip>(trips);
+		if (trips != null)
+			this.trips = new ArrayList<>(trips);
+		else this.trips = new ArrayList<>();
 		this.grading = grading;
 		this.mileage = mileage;
 		this.availability = availability;
@@ -49,7 +52,9 @@ public class Driver extends User {
 	*/
 	public Driver(Driver d) {
 		super(d.getEmail(), d.getName(), d.getPassword(), d.getAddress(), d.getBirthday(), d.getPosition());
-		this.trips = new ArrayList<Trip>(d.getTrip());
+		if (d.getTrip() != null)
+			this.trips = new ArrayList<>(d.getTrip());
+		else this.trips = new ArrayList<>();
 		this.grading = d.getGrading();
 		this.mileage = d.getMileage();
 		this.availability = d.getAvailability();
@@ -73,7 +78,7 @@ public class Driver extends User {
 	 * Retorna a classificação do motorista
 	 * @return Classificação
 	 */
-	public Float getGrading() {
+	public Double getGrading() {
 		return (this.grading/this.reviews);
 	}
 
@@ -97,7 +102,7 @@ public class Driver extends User {
 	 * Retorna o grau de cumprimento de horário do motorista
 	 * @return Grau de cumprimento de horário
 	 */
-	public Float getTimeCompliance() {
+	public Double getTimeCompliance() {
 		return (this.timeCompliance/this.reviews);
 	}
 

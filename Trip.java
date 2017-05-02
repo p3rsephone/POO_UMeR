@@ -1,4 +1,6 @@
 import java.awt.geom.Point2D;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -10,11 +12,11 @@ import java.util.Date;
 public class Trip {
 
 	/** Variáveis de Instância */
-	private Point2D.Float start;
-	private Point2D.Float end;
+	private Point2D.Double start;
+	private Point2D.Double end;
 	private Double time;
 	private Double price;
-	private Date date;
+	private LocalDateTime date;
 	private String carPlate;
 	private User driver, client;
 
@@ -31,12 +33,13 @@ public class Trip {
 	 * @param driver		Condutor
 	 * @param client		Cliente
 	 */
-    public Trip (Point2D.Float start, Point2D.Float end, Double time, Double price, String carPlate, User driver, User client) {
+    public Trip (Point2D.Double start, Point2D.Double end, Double time, Double price, LocalDateTime date, String carPlate, User driver, User client) {
         this.start = start;
 		this.end = end;
 		this.time = time;
 		this.price = price;
 		this.carPlate = carPlate;
+		this.date = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), date.getHour(), date.getMinute(), date.getSecond());
 		this.driver = driver;
 		this.client = client;
     }
@@ -46,7 +49,7 @@ public class Trip {
 	 * @param t Viagem
 	 */
 	public Trip (Trip t) {
-		this(t.getStart(), t.getEnd(), t.getTime(), t.getPrice(), t.getCarPlate(), t.getDriver(), t.getClient());
+		this(t.getStart(), t.getEnd(), t.getTime(), t.getPrice(), t.getDate(), t.getCarPlate(), t.getDriver(), t.getClient());
 	}
 
 	/** Metodos de Instância */
@@ -55,8 +58,8 @@ public class Trip {
 	 * Retorna o início da viagem
 	 * @return Início
 	 */
-	public Point2D.Float getStart() {
-		Point2D.Float start = new Point2D.Float();
+	public Point2D.Double getStart() {
+		Point2D.Double start = new Point2D.Double();
 		start.setLocation(this.start.getX(), this.start.getY());
 		return start;
 	}
@@ -65,7 +68,7 @@ public class Trip {
 	 * Retorna o fim de uma viagem
 	 * @return Fim
 	 */
-	public Point2D.Float getEnd() {
+	public Point2D.Double getEnd() {
 		return this.end;
 	}
 
@@ -83,6 +86,10 @@ public class Trip {
 	 */
 	public Double getPrice() {
 		return this.price;
+	}
+
+	public LocalDateTime getDate(){
+		return LocalDateTime.of(this.date.getYear(), this.date.getMonth(), this.date.getDayOfMonth(), this.date.getHour(), this.date.getMinute(), this.date.getSecond());
 	}
 
 	/**
@@ -119,11 +126,16 @@ public class Trip {
 	}
 
 	public String toString(){
-		return "Viagem de " + this.start + "->" + this.end + "\n" +
+		return "Viagem de " + "("+ this.start.getX() + "," + this.start.getY() + ") ---> (" + this.end.getX() + "," + this.end.getY() + ")" + "\n" +
 				"Data : " + this.date + "\n" +
+				"Distância : " + distance() + "km\n" +
 				"Duração :" + this.time + "\n" +
-				"Preço : " + this.price + "\n" +
+				"Preço : " + this.price + "€\n" +
 				"Email condutor : " + this.driver.getEmail() + "\n" +
 				"Email cliente : " + this.client.getEmail();
+	}
+
+	public double distance(){
+		return start.distance(end);
 	}
 }

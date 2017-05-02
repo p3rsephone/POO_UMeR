@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.time.LocalDate;
 import java.util.stream.Collectors;
 import java.util.*;
 /**
@@ -23,9 +24,11 @@ public class Client extends User {
 	 * @param birth Dia de nascimento
 	 * @param position Posição
 	 */
-    public Client(ArrayList<Trip> trips, String email, String name, String password, String address, Date birthday, Point2D.Float position) {
+    public Client(ArrayList<Trip> trips, String email, String name, String password, String address, LocalDate birthday, Point2D.Double position) {
         super(email, name, password, address, birthday, position);
-		this.trips = new ArrayList<Trip>(trips);
+		if (trips != null)
+			this.trips = new ArrayList<>(trips);
+		else this.trips = new ArrayList<>();
     }
 
 	/**
@@ -34,7 +37,9 @@ public class Client extends User {
 	*/
 	public Client(Client c) {
 		super(c.getEmail(), c.getName(), c.getPassword(), c.getAddress(), c.getBirthday(), c.getPosition());
-		this.trips = new ArrayList<Trip>(c.getTrip());
+		if (c.getTrip() != null)
+			this.trips = new ArrayList<>(c.getTrip());
+		else this.trips = new ArrayList<>();
     }
 
     /** Metodos de instância */
