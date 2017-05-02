@@ -2,7 +2,7 @@ import java.awt.geom.Point2D;
 import java.util.Date;
 
 /**
- * Write a description of class Human here.
+ * User of UMeR.
  *
  * @author (your name)
  * @version (a version number or a date)
@@ -23,10 +23,10 @@ public class User {
 
 	/**
 	 * Constrói um novo user a partir dos diferentes parametros fornecidos
-	 * @param email email
-	 * @param name 	nome
-	 * @param pass	password
-	 * @param addr 	morada
+	 * @param email Email
+	 * @param name 	Nome
+	 * @param pass	Password
+	 * @param addr 	Morada
 	 * @param birth Dia de nascimento
 	 * @param position Posição
 	 */

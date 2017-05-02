@@ -5,10 +5,11 @@ import java.util.*;
  * Driver of UMeR.
  *
  * @author (your name)
- * @version (a version number or a date)
+ * @version 02.05.17
  */
 public class Driver extends User {
-    // instance variables
+
+	/* Variáveis de Instância */
     private ArrayList<Trip> trips;
 	private float grading;
 	private double mileage;
@@ -16,9 +17,21 @@ public class Driver extends User {
 	private float timeCompliance;
 	private int reviews;
 
-    /**
-     * Constructor for objects of class Driver
-     */
+	/**
+	 * Constrói um novo user a partir dos diferentes parametros fornecidos
+	 * @param reviews Número de avaliações
+	 * @param grading Classificação do motorista
+	 * @param mileage Kilometragem
+	 * @param availability Disponibilidade
+	 * @param timeCompliance Grau de cumprimento de horário
+	 * @param trips Viagens feitas
+	 * @param email Email
+	 * @param name 	Nome
+	 * @param pass	Password
+	 * @param addr 	Morada
+	 * @param birth Dia de nascimento
+	 * @param position Posição
+	 */
     public Driver(int reviews, Float grading, Double mileage, Boolean availability, Float timeCompliance, ArrayList<Trip> trips, String email, String name, String password, String address, Date birthday,Point2D.Float position){
 		super(email, name, password, address, birthday, position);
 		this.trips = new ArrayList<Trip>(trips);
@@ -30,6 +43,10 @@ public class Driver extends User {
 
     }
 
+	/**
+	* Constroi um motorista a partir de um já definido
+	* @param d
+	*/
 	public Driver(Driver d) {
 		super(d.getEmail(), d.getName(), d.getPassword(), d.getAddress(), d.getBirthday(), d.getPosition());
 		this.trips = new ArrayList<Trip>(d.getTrip());

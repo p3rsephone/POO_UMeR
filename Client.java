@@ -2,24 +2,36 @@ import java.awt.geom.Point2D;
 import java.util.stream.Collectors;
 import java.util.*;
 /**
- * Client that uses UMeR
+ * Client that uses UMeR.
  *
  * @author (your name)
- * @version 29.04.17
+ * @version 02.05.17
  */
 public class Client extends User {
-	/** Variáveis de Instância */
 
+	/** Variáveis de Instância */
 	private ArrayList<Trip> trips;
 
 
-    /** Construtores */
-
+	/**
+	 * Constrói um novo cliente a partir dos diferentes parametros fornecidos
+	 * @param trips Viagens feitas
+	 * @param email Email
+	 * @param name 	Nome
+	 * @param pass	Password
+	 * @param addr 	Morada
+	 * @param birth Dia de nascimento
+	 * @param position Posição
+	 */
     public Client(ArrayList<Trip> trips, String email, String name, String password, String address, Date birthday, Point2D.Float position) {
         super(email, name, password, address, birthday, position);
 		this.trips = new ArrayList<Trip>(trips);
     }
 
+	/**
+	* Constroi um cliente a partir de um já definido
+	* @param c
+	*/
 	public Client(Client c) {
 		super(c.getEmail(), c.getName(), c.getPassword(), c.getAddress(), c.getBirthday(), c.getPosition());
 		this.trips = new ArrayList<Trip>(c.getTrip());
