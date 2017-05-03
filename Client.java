@@ -1,7 +1,8 @@
 import java.awt.geom.Point2D;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
-import java.util.*;
+import java.util.Map;
+import java.util.ArrayList;
 /**
  * Client that uses UMeR.
  *
@@ -11,8 +12,9 @@ import java.util.*;
 public class Client extends User {
 
 	/** Variáveis de Instância */
-	private ArrayList<Trip> trips;
-
+	private double rigor;
+	private int mood;
+	private int points;
 
 	/**
 	 * Constrói um novo cliente a partir dos diferentes parametros fornecidos
@@ -24,11 +26,8 @@ public class Client extends User {
 	 * @param birth Dia de nascimento
 	 * @param position Posição
 	 */
-    public Client(ArrayList<Trip> trips, String email, String name, String password, String address, LocalDate birthday, Point2D.Double position) {
-        super(email, name, password, address, birthday, position);
-		if (trips != null)
-			this.trips = new ArrayList<>(trips);
-		else this.trips = new ArrayList<>();
+    public Client(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, ArrayList<Trip> trips, int numberOfTrips, double rigor, int mood, int points) {
+        super(email, name, password, address, birthday, position, totalDistance, trips, numberOfTrips);
     }
 
 	/**
@@ -36,35 +35,10 @@ public class Client extends User {
 	* @param c
 	*/
 	public Client(Client c) {
-		super(c.getEmail(), c.getName(), c.getPassword(), c.getAddress(), c.getBirthday(), c.getPosition());
-		if (c.getTrip() != null)
-			this.trips = new ArrayList<>(c.getTrip());
-		else this.trips = new ArrayList<>();
+		super(c.getEmail(), c.getName(), c.getPassword(), c.getAddress(), c.getBirthday(), c.getPosition(), c.getTotalDistance(), c.getTrips(), c.getNumberOfTrips());
     }
 
     /** Metodos de instância */
-
-	/**
-	 * Retorna uma cópia do ArrayList com as viagens
-	 * @return Viagens
-	 */
-	public ArrayList<Trip> getTrip() {
-		ArrayList<Trip> trip = new ArrayList<Trip>();
-        for(Trip t : this.trips) {
-            trip.add(t.clone());
-		}
-		return trip;
-	}
-
-	/**
-	 * Adiciona viagens a um utilizador
-	 * @param trips Novas viagens
-	 */
-	public void addTrips(ArrayList<Trip> trips){
-		this.trips = new ArrayList<Trip>();
-		for (Trip t: trips)
-			this.trips.add(t.clone());
-	}
 
 	/**
 	 * Retorna a cópia de um cliente
@@ -72,5 +46,34 @@ public class Client extends User {
 	 */
 	public Client clone () {
 		return new Client (this);
+	}
+
+	public String toString(){
+		return super.toString() + "\n" +
+				"Rigor : " + this.rigor + "\n" +
+				"Mood : " + this.mood + "\n" +
+				"Pontos : " + this.points;
+	}
+
+	public String requestClosestTaxi(Map<String, Driver> drivers){
+		int min = -1;
+		String closestDriver = null;
+		for (Driver d : drivers.values())
+			if (d.getAvailability() == true)
+				if (d.getPosition().distance(this.getPosition()) < min)
+					closestDriver = d.getEmail();
+
+		return closestDriver;
+	}
+
+	public boolean requestSpecificDriver(String mail, Map<String, Driver> drivers){
+		if (drivers.get(mail).getAvailability() == true)
+			return true;
+		else return false;
+	}
+
+	public void addTrip(Trip t){
+		super.addTrip(t);
+		this.points += t.distance() / 4;
 	}
 }

@@ -11,38 +11,32 @@ import java.util.*;
 public class Driver extends User {
 
 	/* Variáveis de Instância */
-    private ArrayList<Trip> trips;
 	private double grading;
-	private double mileage;
 	private boolean availability;
 	private double timeCompliance;
-	private int reviews;
+	private int numberOfReviews;
 
 	/**
 	 * Constrói um novo user a partir dos diferentes parametros fornecidos
-	 * @param reviews Número de avaliações
-	 * @param grading Classificação do motorista
-	 * @param mileage Kilometragem
-	 * @param availability Disponibilidade
-	 * @param timeCompliance Grau de cumprimento de horário
-	 * @param trips Viagens feitas
 	 * @param email Email
-	 * @param name 	Nome
-	 * @param password	Password
 	 * @param address 	Morada
+	 * @param name 	Nome
 	 * @param birthday Dia de nascimento
+	 * @param password	Password
 	 * @param position Posição
+	 * @param grading Classificação do motorista
+	 * @param availability Disponibilidade
+	 * @param mileage Kilometragem
+	 * @param timeCompliance Grau de cumprimento de horário
+	 * @param numberOfReviews Número de avaliações
+	 * @param trips Viagens feitas
 	 */
-    public Driver(int reviews, Double grading, Double mileage, Boolean availability, Double timeCompliance, ArrayList<Trip> trips, String email, String name, String password, String address, LocalDate birthday, Point2D.Double position){
-		super(email, name, password, address, birthday, position);
-		if (trips != null)
-			this.trips = new ArrayList<>(trips);
-		else this.trips = new ArrayList<>();
+    public Driver(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, double grading, Boolean availability, double timeCompliance, int numberOfReviews, ArrayList<Trip> trips, int numberOfTrips){
+		super(email, name, password, address, birthday, position, totalDistance, trips, numberOfTrips);
 		this.grading = grading;
-		this.mileage = mileage;
 		this.availability = availability;
 		this.timeCompliance = timeCompliance;
-		this.reviews = reviews;
+		this.numberOfReviews = numberOfReviews;
 
     }
 
@@ -51,43 +45,28 @@ public class Driver extends User {
 	* @param d
 	*/
 	public Driver(Driver d) {
-		super(d.getEmail(), d.getName(), d.getPassword(), d.getAddress(), d.getBirthday(), d.getPosition());
-		if (d.getTrip() != null)
-			this.trips = new ArrayList<>(d.getTrip());
-		else this.trips = new ArrayList<>();
+		super(d.getEmail(), d.getName(), d.getPassword(), d.getAddress(), d.getBirthday(), d.getPosition(), d.getTotalDistance(), d.getTrips(), d.getNumberOfTrips());
 		this.grading = d.getGrading();
-		this.mileage = d.getMileage();
 		this.availability = d.getAvailability();
 		this.timeCompliance = d.getTimeCompliance();
-		this.reviews = d.getReviews();
+		this.numberOfReviews = d.getNumberOfReviews();
 	}
 
-	/**
-	 * Retorna uma cópia do ArrayList com as viagens
-	 * @return Viagens
-	 */
-	public ArrayList<Trip> getTrip() {
-		ArrayList<Trip> trip = new ArrayList<Trip>();
-        for(Trip t : this.trips) {
-            trip.add(t.clone());
-		}
-		return trip;
+	public Driver(){
+		super();
+		this.grading = 0;
+		this.availability = true;
+		this.timeCompliance = 0;
+		this.numberOfReviews = 0;
 	}
+
 
 	/**
 	 * Retorna a classificação do motorista
 	 * @return Classificação
 	 */
 	public Double getGrading() {
-		return (this.grading/this.reviews);
-	}
-
-	/**
-	 * Retorna a quantidade de kilómetros que o motorista já fez
-	 * @return Kilometragem
-	 */
-	public Double getMileage() {
-		return this.mileage;
+		return this.grading;
 	}
 
 	/**
@@ -103,62 +82,48 @@ public class Driver extends User {
 	 * @return Grau de cumprimento de horário
 	 */
 	public Double getTimeCompliance() {
-		return (this.timeCompliance/this.reviews);
+		return this.timeCompliance;
 	}
 
 	/**
-	 * Retorna o numero de avaliações que o motorista tem
-	 * @return Numero de avaliações
+	 * Retorna o número de classificações deste
+	 * @return
 	 */
-	public int getReviews() {
-		return this.reviews;
+	public int getNumberOfReviews(){
+		return this.numberOfReviews;
 	}
 
 	/**
-	 * Adiciona viagens a um motorista
-	 * @param trips Novas viagens
+	 * Altera a classificação de um driver
+	 * @param grading
 	 */
-	public void addTrips(ArrayList<Trip> trips){
-		this.trips = new ArrayList<Trip>();
-		for (Trip t: trips)
-			this.trips.add(t.clone());
+	public void setGrading(double grading){
+		this.grading = grading;
 	}
 
 	/**
-	 * Adiciona uma classificação a um motorista
-	 * @param grade Classificação a adicionar
+	 * Altera a disponibilidade de um driver
+	 * @param b
 	 */
-	public void addGrading(Float grade) {
-		this.grading += grade;
-		this.reviews +=1;
-	}
-
-	/**
-	 * Aumenta a kilometragem de um motorista
-	 * @param miles Kilometragem a adicionar
-	 */
-	public void addMileage(Double miles) {
-		this.mileage += miles;
-	}
-
-	/**
-	 * Muda o estado de disponibilidade de um motorista
-	 * @param b Estado
-	 */
-	public void changeAvailability(Boolean b) {
+	public void setAvailability(Boolean b) {
 		this.availability = b;
 	}
 
 	/**
-	 * Adiciona uma classificação do grau de cumprimento horário a um motorista
-	 * @param time Grau de cumprimento a adicionar
+	 * Altera o grau de comprimento de um motorista
+	 * @param timeCompliance
 	 */
-	public void addTimeReview(Float time) {
-		this.timeCompliance += time;
-		this.reviews +=1;
+	public void setTimeCompliance(double timeCompliance){
+		this.timeCompliance = timeCompliance;
 	}
 
-	//TODO: toString
+	/**
+	 * Altera o número de classificações de um driver
+	 * @param numberOfReviews
+	 */
+	public void setNumberOfReviews(int numberOfReviews){
+		this.numberOfReviews = numberOfReviews;
+	}
 
 	/**
 	 * Retorna uma cópia de um motorista
@@ -166,6 +131,34 @@ public class Driver extends User {
 	 */
 	public Driver clone() {
 		return new Driver(this);
+	}
+
+	public String toString(){
+		return "Driver \n" + super.toString() + "\n" +
+				"Disponibilidade : " + this.availability +
+				"Classificação : " + this.grading + "\n" +
+				"Kilometros : " + getTotalDistance() + "\n" +
+				"Grau de cumprimento : " + this.timeCompliance + "\n" +
+				"Número de classificações : " + this.numberOfReviews;
+	}
+
+	/**
+	 * Verifica se dois condutores são iguais
+	 * @param d Condutor a ser comparado
+	 * @return São iguais (true) ou não (false)
+	 */
+	public boolean equals(Driver d){
+		return this.getEmail().equals(d.getEmail());
+	}
+
+	public void addTrip(Trip t){
+		super.addTrip(t);
+
+		if (this.grading != -1) {
+			this.grading = (this.grading * numberOfReviews + t.getRating()*10) / (numberOfReviews + 1);
+			this.numberOfReviews++;
+		}
+
 	}
 
 }

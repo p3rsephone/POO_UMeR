@@ -1,5 +1,6 @@
 import java.awt.geom.Point2D;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -18,6 +19,9 @@ public class User {
 	private String address;
 	private LocalDate birthday;
 	private Point2D.Double position;
+	private double totalDistance;
+	private ArrayList<Trip> trips;
+	private int numberOfTrips;
 
 
     /** Construtores */
@@ -31,13 +35,17 @@ public class User {
 	 * @param birth Dia de nascimento
 	 * @param position Posição
 	 */
-	public User(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position){
+	public User(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, ArrayList<Trip> trips, int numberOfTrips){
 		this.email = email;
 		this.name = name;
 		this.password = password;
 		this.address = address;
 		this.birthday = LocalDate.of(birthday.getYear(), birthday.getMonth(), birthday.getDayOfMonth());
 		this.position = new Point2D.Double(position.getX(), position.getY());
+		this.totalDistance = totalDistance;
+		if (trips != null) this.trips = new ArrayList<>(trips);
+		else this.trips = new ArrayList<>();
+		this.numberOfTrips = numberOfTrips;
 	}
 
 	/**
@@ -45,7 +53,7 @@ public class User {
 	 * @param p
 	 */
 	public User(User p){
-		this(p.getEmail(), p.getName(), p.getPassword(), p.getAddress(), p.getBirthday(), p.getPosition());
+		this(p.getEmail(), p.getName(), p.getPassword(), p.getAddress(), p.getBirthday(), p.getPosition(), p.getTotalDistance(), p.getTrips(), p.getNumberOfTrips());
 	}
 
 	/**
@@ -109,7 +117,36 @@ public class User {
 	 * @return position
 	 */
 	public Point2D.Double getPosition(){
- 		return this.position;
+ 		return new Point2D.Double(this.position.getX(), this.position.getY());
+	}
+
+	/**
+	 * Retorna o número de kilometros feitos pelo user
+	 * @return Número de kilometros total
+	 */
+	public double getTotalDistance(){
+		return this.totalDistance;
+	}
+
+	/**
+	 * Retorna uma cópia do ArrayList com as viagens
+	 * @return Viagens
+	 */
+	public ArrayList<Trip> getTrips() {
+		ArrayList<Trip> trip = new ArrayList<>();
+		if (this.trips != null)
+			for(Trip t : this.trips) {
+				trip.add(t.clone());
+			}
+		return trip;
+	}
+
+	/**
+	 * Retorna o número de viagens já efetuadas por um user
+	 * @return Número de viagens
+	 */
+	public int getNumberOfTrips(){
+		return this.numberOfTrips;
 	}
 
 	/**
@@ -160,6 +197,14 @@ public class User {
 		this.position = position;
 	}
 
+	/**
+	 * Altera o número de viagens de um user
+	 * @param numberOfTrips Novo número de viagens
+	 */
+	public void setNumberOfTrips(int numberOfTrips){
+		this.numberOfTrips = numberOfTrips;
+	}
+
 
 	/**
 	 * toString de um user
@@ -171,7 +216,9 @@ public class User {
 				"Password : " 			+ this.password 	+ "\n" +
 				"Morada : " 			+ this.address 		+ "\n" +
 				"Data de nascimento : " + this.birthday 	+ "\n" +
-				"Posição : " 			+ "X - " + this.position.getX() + ", Y - " + this.position.getY()+ "\n";
+				"Posição : " 			+ "(X - " + this.position.getX() + ", Y - " + this.position.getY() + ")\n" +
+				"Distância Total : " 	+ this.totalDistance + "\n"+
+				"Número de viagens :"	+ this.numberOfTrips + "\n";
 	}
 
 	/**
@@ -189,6 +236,16 @@ public class User {
 	 */
 	public User clone(){
 		return new User(this);
+	}
+
+	/**
+	 * Adiciona uma viagem a um utilizador
+	 * @param trips Viagem a ser adicionada
+	 */
+	public void addTrip(Trip trips){
+		this.trips.add(trips.clone());
+		this.position.setLocation(trips.getEnd());
+		this.numberOfTrips++;
 	}
 
 }

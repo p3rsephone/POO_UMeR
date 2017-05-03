@@ -12,6 +12,8 @@ import java.util.Date;
 public class Trip {
 
 	/** Variáveis de Instância */
+
+	private int id;
 	private Point2D.Double start;
 	private Point2D.Double end;
 	private Double time;
@@ -19,6 +21,7 @@ public class Trip {
 	private LocalDateTime date;
 	private String carPlate;
 	private User driver, client;
+	private int rating;
 
 
     /** Constructores */
@@ -33,8 +36,9 @@ public class Trip {
 	 * @param driver		Condutor
 	 * @param client		Cliente
 	 */
-    public Trip (Point2D.Double start, Point2D.Double end, Double time, Double price, LocalDateTime date, String carPlate, User driver, User client) {
-        this.start = start;
+    public Trip (int id, Point2D.Double start, Point2D.Double end, Double time, Double price, LocalDateTime date, String carPlate, User driver, User client, int rating) {
+        this.id = id;
+    	this.start = start;
 		this.end = end;
 		this.time = time;
 		this.price = price;
@@ -42,6 +46,7 @@ public class Trip {
 		this.date = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), date.getHour(), date.getMinute(), date.getSecond());
 		this.driver = driver;
 		this.client = client;
+		this.rating = rating;
     }
 
 	/**
@@ -49,10 +54,14 @@ public class Trip {
 	 * @param t Viagem
 	 */
 	public Trip (Trip t) {
-		this(t.getStart(), t.getEnd(), t.getTime(), t.getPrice(), t.getDate(), t.getCarPlate(), t.getDriver(), t.getClient());
+		this(t.getID(), t.getStart(), t.getEnd(), t.getTime(), t.getPrice(), t.getDate(), t.getCarPlate(), t.getDriver(), t.getClient(), t.getRating());
 	}
 
 	/** Metodos de Instância */
+
+	public int getID(){
+		return this.id;
+	}
 
 	/**
 	 * Retorna o início da viagem
@@ -116,6 +125,10 @@ public class Trip {
 		return this.client.clone();
 	}
 
+	public int getRating(){
+		return this.rating;
+	}
+
 	/**
      * Clone method for Trip
      *
@@ -132,9 +145,14 @@ public class Trip {
 				"Duração :" + this.time + "\n" +
 				"Preço : " + this.price + "€\n" +
 				"Email condutor : " + this.driver.getEmail() + "\n" +
-				"Email cliente : " + this.client.getEmail();
+				"Email cliente : " + this.client.getEmail() + "\n" +
+				"Classificação :" + this.rating;
 	}
 
+	/**
+	 * Calcula a distância de uma viagem
+	 * @return Distância
+	 */
 	public double distance(){
 		return start.distance(end);
 	}
