@@ -1,3 +1,7 @@
+import java.awt.geom.Point2D;
+import java.util.LinkedList;
+
+
 
 /**
  * Write a description of class Car here.
@@ -6,27 +10,53 @@
  * @version (a version number or a date)
  */
 public class Car extends Vehicle {
-    // instance variables - replace the example below with your own
-    private int x;
+
+    private LinkedList<Client> queue;
+
+
+    /** CONSTRUTORES */
 
     /**
-     * Constructor for objects of class Car
+     * Cria um Carro
      */
-    public Car()
-    {
-        // initialise instance variables
-        x = 0;
+    public Car() {
+        super();
+        this.queue = new LinkedList<>();
     }
 
+
     /**
-     * An example of a method - replace this comment with your own
+     * Constroi um Carro passado os parâmetros
      *
-     * @param  y   a sample parameter for a method
-     * @return     the sum of x and y
+     * @param queue
+     * @param registration
+     * @param speed
+     * @param price
+     * @param reliable
+     * @param available
+     * @param seats
+     * @param position
      */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
+    public Car(LinkedList<Client> queue, String registration, int speed, int price, int reliable, int available, int seats, Point2D.Double position) {
+        super(registration, speed, price, reliable, available, seats, position);
+        this.setSeats(4);
+        this.setSpeed(50);
+        //this.setPrice();
+        if (queue != null) this.queue = new LinkedList<>(queue);
+        else this.queue = new LinkedList<>();
     }
+
+    /**
+     * Constroi um Carro a partir de um já existente
+     *
+     * @param v
+     */
+    public Car(Car v) {
+        super(v.getRegistration(), v.getSpeed(), v.getPrice(), v.getReliable(), v.getAvailable(), v.getSeats(), v.getPosition());
+        if (v.queue != null) this.queue = new LinkedList<>(v.queue);
+        else this.queue = new LinkedList<>();
+    }
+
+
+
 }
