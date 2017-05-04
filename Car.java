@@ -37,11 +37,11 @@ public class Car extends Vehicle {
      * @param seats
      * @param position
      */
-    public Car(LinkedList<Client> queue, String registration, int speed, int price, int reliable, int available, int seats, Point2D.Double position) {
+    public Car(LinkedList<Client> queue, String registration, int speed, double price, int reliable, int available, int seats, Point2D.Double position) {
         super(registration, speed, price, reliable, available, seats, position);
         this.setSeats(4);
-        this.setSpeed(50);
-        //this.setPrice();
+        this.setSpeed(80);
+        this.setPrice(1.10);
         if (queue != null) this.queue = new LinkedList<>(queue);
         else this.queue = new LinkedList<>();
     }
@@ -57,6 +57,12 @@ public class Car extends Vehicle {
         else this.queue = new LinkedList<>();
     }
 
-
-
+    /**
+     * Faz a cópia de um carro
+     *
+     * @return Cópia de Carro
+     */
+    public Car clone(){
+    return new Car(this);
+    }
 }

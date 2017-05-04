@@ -11,7 +11,7 @@ public class Test {
         System.out.println("Test User" + "\n" + "-----------------");
         Point2D.Double pos = new Point2D.Double(14.2, 8);
         LocalDate birth = LocalDate.of(1965, 5, 21);
-        User u = new User("as31sd@ashjdas.com", "asdjasd", "ahdja3r1rf", "asdjas", birth, pos, 1200, null, 0);
+        Client u = new Client("as31sd@ashjdas.com", "asdjasd", "ahdja3r1rf", "asdjas", birth, pos, 1200, null, 0, 0.2, 1, 20);
         System.out.println(u);
     }
 

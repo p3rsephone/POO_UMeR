@@ -9,7 +9,7 @@ public abstract class Vehicle {
 
     private String registration;
     private int speed;
-    private int price;
+    private double price;
     private int reliable;
     private int available;
     private int seats;
@@ -42,7 +42,7 @@ public abstract class Vehicle {
      * @param seats Numeros de lugares
      * @param position Posição
      */
-    public Vehicle(String registration, int speed, int price, int reliable, int available, int seats, Point2D.Double position) {
+    public Vehicle(String registration, int speed, double price, int reliable, int available, int seats, Point2D.Double position) {
         this.registration = registration;
         this.speed = speed;
         this.price = price;
@@ -91,7 +91,7 @@ public abstract class Vehicle {
      *
      * @return price Preço do Veiculo
      */
-    public int getPrice() {
+    public double getPrice() {
         return this.price;
     }
 
@@ -157,7 +157,7 @@ public abstract class Vehicle {
      *
      * @param price Nova preço
      */
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -216,10 +216,7 @@ public abstract class Vehicle {
      *
      * @return Cópia de Veiculo
      */
-    public Vehicle clone() {
-        return new Vehicle(this) {
-        };
-    }
+    public abstract Vehicle clone();
 
     /**
      * toString de um veiculo

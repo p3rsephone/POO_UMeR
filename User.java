@@ -9,7 +9,7 @@ import java.util.Date;
  * @author (your name)
  * @version (a version number or a date)
  */
-public class User {
+public abstract class User {
 
     /** Variáveis de Instância */
 
@@ -234,10 +234,8 @@ public class User {
 	 * Faz a cópia de um user
 	 * @return Cópia de User
 	 */
-	public User clone(){
-		return new User(this);
-	}
-
+	public abstract User clone();
+	
 	/**
 	 * Adiciona uma viagem a um utilizador
 	 * @param trips Viagem a ser adicionada
