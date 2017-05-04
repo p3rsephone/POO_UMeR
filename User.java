@@ -218,7 +218,7 @@ public abstract class User {
 				"Data de nascimento : " + this.birthday 	+ "\n" +
 				"Posição : " 			+ "(X - " + this.position.getX() + ", Y - " + this.position.getY() + ")\n" +
 				"Distância Total : " 	+ this.totalDistance + "\n"+
-				"Número de viagens :"	+ this.numberOfTrips + "\n";
+				"Número de viagens :"	+ this.numberOfTrips;
 	}
 
 	/**
@@ -243,6 +243,7 @@ public abstract class User {
 	public void addTrip(Trip trips){
 		this.trips.add(trips.clone());
 		this.position.setLocation(trips.getEnd());
+		this.totalDistance += trips.distance();
 		this.numberOfTrips++;
 	}
 

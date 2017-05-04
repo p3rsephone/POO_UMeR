@@ -135,9 +135,8 @@ public class Driver extends User {
 
 	public String toString(){
 		return "Driver \n" + super.toString() + "\n" +
-				"Disponibilidade : " + this.availability +
+				"Disponibilidade : " + this.availability + "\n" +
 				"Classificação : " + this.grading + "\n" +
-				"Kilometros : " + getTotalDistance() + "\n" +
 				"Grau de cumprimento : " + this.timeCompliance + "\n" +
 				"Número de classificações : " + this.numberOfReviews;
 	}
@@ -155,7 +154,7 @@ public class Driver extends User {
 		super.addTrip(t);
 
 		if (this.grading != -1) {
-			this.grading = (this.grading * numberOfReviews + t.getRating()*10) / (numberOfReviews + 1);
+			this.grading = (this.grading * numberOfReviews + t.getRating()) / (numberOfReviews + 1);
 			this.numberOfReviews++;
 		}
 

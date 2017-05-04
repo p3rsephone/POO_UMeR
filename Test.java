@@ -30,7 +30,7 @@ public class Test {
 
         Point2D.Double pos2 = new Point2D.Double(14.2, 8);
         LocalDate birth2 = LocalDate.of(1965, 5, 21);
-        Driver u2 = new Driver("dghsdad@ashjdas.com", "Fhshfbaas", "adfsadsasd", "asdjas", birth2, pos2, 100, 3, true, 0.9, 13, null ,13);
+        Driver u2 = new Driver("dghsdad@ashjdas.com", "Fhshfbaas", "adfsadsasd", "asdjas", birth2, pos2, 100, 4.0, true, 0.9, 13, null ,13);
 
         Trip t = new Trip(1, start, end, time, price, date ,carPlate, u2, u1, 8);
         System.out.println("Antes viagem \n");
