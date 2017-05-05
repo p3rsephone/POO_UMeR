@@ -119,7 +119,7 @@ public class Client extends User {
 	}
 
 	/**
-	 * Faz um pedido para um condutor específico
+	 * Faz um pedido para um condutor específico através do email
 	 * @param email Email do condutor pretendido
 	 * @param drivers Map com todos os condutores
 	 * @return O condutor específico encontra-se disponível (true) ou não (false)
@@ -129,6 +129,8 @@ public class Client extends User {
 			return true;
 		else return false;
 	}
+
+	//TODO: Fazer um pedido para um veiculo especifico
 
 	/**
 	 * Adiciona uma nova viagem ao cliente

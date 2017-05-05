@@ -1,10 +1,10 @@
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
-
+import java.util.*;
 
 
 /**
- * Write a description of class Bike here.
+ * Bike for UMeR.
  *
  * @author (your name)
  * @version (a version number or a date)
@@ -37,10 +37,10 @@ public class Bike extends Vehicle {
      * @param seats
      * @param position
      */
-    public Bike(LinkedList<Client> queue, String registration, int speed, double price, int reliable, int available, int seats, Point2D.Double position) {
+    public Bike(LinkedList<Client> queue, String registration, double speed, double price, double reliable, boolean available, int seats, Point2D.Double position) {
         super(registration, speed, price, reliable, available, seats, position);
         this.setSeats(1);
-        this.setSpeed(65);
+        this.setSpeed(0.9);
         this.setPrice(.90);
         if (queue != null) this.queue = new LinkedList<>(queue);
         else this.queue = new LinkedList<>();
@@ -63,8 +63,23 @@ public class Bike extends Vehicle {
      * @return Cópia de Mota
      */
     public Bike clone(){
-    return new Bike(this);
+    	return new Bike(this);
     }
 
+	/**
+     * Calcula o trânsito à volta de uma mota
+     *
+     * @return Nível de trânsito
+     */
+	public int calculateTraffic(){
+		double minDist = 1;
+		int traffic = 1;
+		HashMap<String,Vehicle> vehicles = new HashMap<>();
+		for (Vehicle v : vehicles.values())
+			if (v.getPosition().distance(this.getPosition()) <= minDist);
+				traffic++;
+
+		return traffic;
+	}
 
 }

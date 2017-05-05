@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 
 /**
- * Write a description of class Helicopter here.
+ * Helicopter for UMeR.
  *
  * @author (your name)
  * @version (a version number or a date)
@@ -37,10 +37,10 @@ public class Helicopter extends Vehicle {
      * @param seats
      * @param position
      */
-    public Helicopter(LinkedList<Client> queue, String registration, int speed, double price, int reliable, int available, int seats, Point2D.Double position) {
+    public Helicopter(LinkedList<Client> queue, String registration, double speed, double price, double reliable, boolean available, int seats, Point2D.Double position) {
         super(registration, speed, price, reliable, available, seats, position);
         this.setSeats(3);
-        this.setSpeed(100);
+        this.setSpeed(0.6);
         this.setPrice(2.75);
         if (queue != null) this.queue = new LinkedList<>(queue);
         else this.queue = new LinkedList<>();
@@ -63,6 +63,15 @@ public class Helicopter extends Vehicle {
      * @return Cópia de Helicoptero
      */
     public Helicopter clone(){
-    return new Helicopter(this);
+    	return new Helicopter(this);
     }
+
+	/**
+	 * Calcula o trânsito à volta de um Helicoptero
+	 *
+	 * @return Nível de trânsito
+	 */
+	public int calculateTraffic(){
+		return 1;
+	}
 }

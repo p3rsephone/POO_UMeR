@@ -1,6 +1,6 @@
 import java.awt.geom.Point2D;
 /**
- * Write a description of class Vehicle here.
+ * Vehicle class for UMeR.
  *
  * @author (your name)
  * @version (a version number or a date)
@@ -8,10 +8,10 @@ import java.awt.geom.Point2D;
 public abstract class Vehicle {
 
     private String registration;
-    private int speed;
+    private double speed;
     private double price;
-    private int reliable;
-    private int available;
+    private double reliable;
+    private boolean available;
     private int seats;
     private Point2D.Double position;
 
@@ -26,7 +26,7 @@ public abstract class Vehicle {
         this.speed = 0;
         this.price = 0;
         this.reliable = 0;
-        this.available = 0;
+        this.available = true;
         this.seats = 0;
         this.position = new Point2D.Double(0, 0);
     }
@@ -42,7 +42,7 @@ public abstract class Vehicle {
      * @param seats Numeros de lugares
      * @param position Posição
      */
-    public Vehicle(String registration, int speed, double price, int reliable, int available, int seats, Point2D.Double position) {
+    public Vehicle(String registration, double speed, double price, double reliable, boolean available, int seats, Point2D.Double position) {
         this.registration = registration;
         this.speed = speed;
         this.price = price;
@@ -82,7 +82,7 @@ public abstract class Vehicle {
      *
      * @return speed Velocidade média do Veiculo
      */
-    public int getSpeed() {
+    public double getSpeed() {
         return this.speed;
     }
 
@@ -100,7 +100,7 @@ public abstract class Vehicle {
      *
      * @return reliable Fator de fiabilidade do veiculo
      */
-    public int getReliable() {
+    public double getReliable() {
         return this.reliable;
     }
 
@@ -109,7 +109,7 @@ public abstract class Vehicle {
      *
      * @return available Disponibilidade do veiculo
      */
-    public int getAvailable() {
+    public boolean getAvailable() {
         return this.available;
     }
 
@@ -148,7 +148,7 @@ public abstract class Vehicle {
      *
      * @param speed Nova velocidade
      */
-    public void setSpeed(int speed) {
+    public void setSpeed(double speed) {
         this.speed = speed;
     }
 
@@ -166,7 +166,7 @@ public abstract class Vehicle {
      *
      * @param reliable Novo fator de fiabilidade
      */
-    public void setReliable(int reliable) {
+    public void setReliable(double reliable) {
         this.reliable = reliable;
     }
 
@@ -175,7 +175,7 @@ public abstract class Vehicle {
      *
      * @param available Nova disponibilidade
      */
-    public void setAvailable(int available) {
+    public void setAvailable(boolean available) {
         this.available = available;
     }
 
@@ -217,6 +217,14 @@ public abstract class Vehicle {
      * @return Cópia de Veiculo
      */
     public abstract Vehicle clone();
+
+	/**
+     * Calcula o trânsito à volta de um veículo
+     *
+     * @return Nível de trânsito
+     */
+	public abstract int calculateTraffic(); //Só vai ajudar a calcular o tempo real
+
 
     /**
      * toString de um veiculo

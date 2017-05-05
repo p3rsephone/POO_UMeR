@@ -1,10 +1,10 @@
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
-
+import java.util.*;
 
 
 /**
- * Write a description of class Van here.
+ * Van for UMeR.
  *
  * @author (your name)
  * @version (a version number or a date)
@@ -17,7 +17,7 @@ public class Van extends Vehicle {
     /** CONSTRUTORES */
 
     /**
-     * Cria um Carrinha
+     * Cria uma Carrinha
      */
     public Van() {
         super();
@@ -26,7 +26,7 @@ public class Van extends Vehicle {
 
 
     /**
-     * Constroi um Carrinha passado os parâmetros
+     * Constroi uma Carrinha passado os parâmetros
      *
      * @param queue
      * @param registration
@@ -37,17 +37,17 @@ public class Van extends Vehicle {
      * @param seats
      * @param position
      */
-    public Van(LinkedList<Client> queue, String registration, int speed, double price, int reliable, int available, int seats, Point2D.Double position) {
+    public Van(LinkedList<Client> queue, String registration, double speed, double price, double reliable, boolean available, int seats, Point2D.Double position) {
         super(registration, speed, price, reliable, available, seats, position);
         this.setSeats(9);
-        this.setSpeed(65);
+        this.setSpeed(0.9);
         this.setPrice(1.80);
         if (queue != null) this.queue = new LinkedList<>(queue);
         else this.queue = new LinkedList<>();
     }
 
     /**
-     * Constroi um Carrinha a partir de um já existente
+     * Constroi uma Carrinha a partir de uma já existente
      *
      * @param v
      */
@@ -58,11 +58,27 @@ public class Van extends Vehicle {
     }
 
     /**
-     * Faz a cópia de um carrinha
+     * Faz a cópia de uma carrinha
      *
      * @return Cópia de Carrinha
      */
     public Van clone(){
-    return new Van(this);
+    	return new Van(this);
     }
+
+	/**
+	 * Calcula o trânsito à volta de uma carrinha
+	 *
+	 * @return Nível de trânsito
+	 */
+	public int calculateTraffic(){
+		double minDist = 3;
+		int traffic = 1;
+		HashMap<String,Vehicle> vehicles = new HashMap<>();
+		for (Vehicle v : vehicles.values())
+			if (v.getPosition().distance(this.getPosition()) <= minDist);
+				traffic++;
+
+		return traffic;
+	}
 }

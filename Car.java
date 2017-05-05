@@ -1,10 +1,10 @@
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
-
+import java.util.*;
 
 
 /**
- * Write a description of class Car here.
+ * Car for UMeR.
  *
  * @author (your name)
  * @version (a version number or a date)
@@ -20,7 +20,7 @@ public class Car extends Vehicle {
      * Cria um Carro
      */
     public Car() {
-        super();
+        super( );
         this.queue = new LinkedList<>();
     }
 
@@ -37,10 +37,10 @@ public class Car extends Vehicle {
      * @param seats
      * @param position
      */
-    public Car(LinkedList<Client> queue, String registration, int speed, double price, int reliable, int available, int seats, Point2D.Double position) {
+    public Car(LinkedList<Client> queue, String registration, double speed, double price, double reliable, boolean available, int seats, Point2D.Double position) {
         super(registration, speed, price, reliable, available, seats, position);
         this.setSeats(4);
-        this.setSpeed(80);
+        this.setSpeed(0.7);
         this.setPrice(1.10);
         if (queue != null) this.queue = new LinkedList<>(queue);
         else this.queue = new LinkedList<>();
@@ -63,6 +63,24 @@ public class Car extends Vehicle {
      * @return Cópia de Carro
      */
     public Car clone(){
-    return new Car(this);
+    	return new Car(this);
     }
+
+	/**
+     * Calcula o trânsito à volta de um carro
+     *
+     * @return Nível de trânsito
+     */
+	public int calculateTraffic(){
+		double minDist = 2;
+		int traffic = 1;
+		HashMap<String,Vehicle> vehicles = new HashMap<>();
+		for (Vehicle v : vehicles.values())
+			if (v.getPosition().distance(this.getPosition()) <= minDist);
+				traffic++;
+
+		return traffic;
+	}
+
+
 }
