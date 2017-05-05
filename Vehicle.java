@@ -38,7 +38,7 @@ public abstract class Vehicle {
      * @param speed Velocidade média por km
      * @param price Preço médio por km
      * @param reliable Fator de fiabilidade
-     * @param available Disponivilidade
+     * @param available Disponibilidade
      * @param seats Numeros de lugares
      * @param position Posição
      */
@@ -109,7 +109,7 @@ public abstract class Vehicle {
      *
      * @return available Disponibilidade do veiculo
      */
-    public boolean getAvailable() {
+    public boolean isAvailable() {
         return this.available;
     }
 
