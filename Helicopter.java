@@ -1,5 +1,6 @@
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
+import java.util.*;
 
 
 
@@ -71,7 +72,7 @@ public class Helicopter extends Vehicle {
 	 *
 	 * @return Nível de trânsito
 	 */
-	public int calculateTraffic(){
+	public int calculateTraffic(HashMap<String,Vehicle> vehicles){
 		return 1;
 	}
 }

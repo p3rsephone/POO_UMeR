@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.util.*;
 /**
  * Vehicle class for UMeR.
  *
@@ -223,7 +224,7 @@ public abstract class Vehicle {
      *
      * @return Nível de trânsito
      */
-	public abstract int calculateTraffic(); //Só vai ajudar a calcular o tempo real
+	public abstract int calculateTraffic(HashMap<String,Vehicle> vehicles); //Só vai ajudar a calcular o tempo real
 
 
     /**
