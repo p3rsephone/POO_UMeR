@@ -207,8 +207,8 @@ public abstract class User {
 
 
 	/**
-	 * toString de um user
-	 * @return String
+	 * Imprime a informação de um utilizador
+	 * @return String com a informação
 	 */
 	public String toString(){
 		return 	"Utilizador - " 		+ this.name 		+ "\n" +

@@ -125,19 +125,26 @@ public class Trip {
 		return this.client.clone();
 	}
 
+	/**
+	 * Retorna a classificação dada ao condutor pelo cliente
+	 * @return Classificação
+	 */
 	public int getRating(){
 		return this.rating;
 	}
 
 	/**
-     * Clone method for Trip
-     *
-     * @return     A copy of the Trip
-     */
+	 * Faz uma cópia da viagem
+	 * @return Cópia da viagem
+	 */
 	public Trip clone () {
 		return new Trip (this);
 	}
 
+	/**
+	 * Imprime a informação sobre uma viagem
+	 * @return String com a informação
+	 */
 	public String toString(){
 		return "Viagem de " + "("+ this.start.getX() + "," + this.start.getY() + ") ---> (" + this.end.getX() + "," + this.end.getY() + ")" + "\n" +
 				"Data : " + this.date + "\n" +

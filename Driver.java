@@ -15,6 +15,7 @@ public class Driver extends User {
 	private boolean availability;
 	private double timeCompliance;
 	private int numberOfReviews;
+	private int exp;
 
 	/**
 	 * Constrói um novo user a partir dos diferentes parametros fornecidos
@@ -87,15 +88,23 @@ public class Driver extends User {
 
 	/**
 	 * Retorna o número de classificações deste
-	 * @return
+	 * @return Número de classificações
 	 */
 	public int getNumberOfReviews(){
 		return this.numberOfReviews;
 	}
 
 	/**
+	 * Retorna a experiência do condutor
+	 * @return Experiência
+	 */
+	public int getExp(){
+		return this.exp;
+	}
+
+	/**
 	 * Altera a classificação de um driver
-	 * @param grading
+	 * @param grading Nova classificação
 	 */
 	public void setGrading(double grading){
 		this.grading = grading;
@@ -103,7 +112,7 @@ public class Driver extends User {
 
 	/**
 	 * Altera a disponibilidade de um driver
-	 * @param b
+	 * @param b Nova disponibilidade
 	 */
 	public void setAvailability(Boolean b) {
 		this.availability = b;
@@ -111,7 +120,7 @@ public class Driver extends User {
 
 	/**
 	 * Altera o grau de comprimento de um motorista
-	 * @param timeCompliance
+	 * @param timeCompliance Novo grau de cumprimento
 	 */
 	public void setTimeCompliance(double timeCompliance){
 		this.timeCompliance = timeCompliance;
@@ -119,7 +128,7 @@ public class Driver extends User {
 
 	/**
 	 * Altera o número de classificações de um driver
-	 * @param numberOfReviews
+	 * @param numberOfReviews Novo número de classificações
 	 */
 	public void setNumberOfReviews(int numberOfReviews){
 		this.numberOfReviews = numberOfReviews;
@@ -133,6 +142,10 @@ public class Driver extends User {
 		return new Driver(this);
 	}
 
+	/**
+	 * Imprime a informação de um condutor
+	 * @return String com a informação
+	 */
 	public String toString(){
 		return "Driver \n" + super.toString() + "\n" +
 				"Disponibilidade : " + this.availability + "\n" +
@@ -150,6 +163,10 @@ public class Driver extends User {
 		return this.getEmail().equals(d.getEmail());
 	}
 
+	/**
+	 * Adiciona uma nova viagem a um condutor
+	 * @param t Viagem a ser adicionada
+	 */
 	public void addTrip(Trip t){
 		super.addTrip(t);
 
@@ -158,6 +175,7 @@ public class Driver extends User {
 			this.numberOfReviews++;
 		}
 
+		this.exp += t.distance() / 3;
 	}
 
 }

@@ -136,30 +136,26 @@ public class UMeR{
         this.weather = weather;
     }
 
-    /**
-     * Regista um novo cliente, se ele não existir
-     * @param c Cliente a registar
-     * @return Registou o cliente com sucesso (true) ou ele já existe (false)
-     */
-    public boolean registerClient(Client c){
-        if (clients.get(c.getEmail()) == null && drivers.get(c.getEmail()) == null) {
-            clients.put(c.getEmail(), c);
-            return true;
-        }
-        else return false;
+    public String toString(){
+        return "----------------\nDrivers\n\n" + this.drivers +
+                "\n----------------\nClients\n\n" + this.clients +
+                "\n----------------\nVehicles\n\n" + this.vehicles +
+                "\n----------------\nTrips\n\n" + this.trips;
     }
 
     /**
-     * Regista um novo condutor, se ele não existir
-     * @param d Condutor a registar
-     * @return Registou o condutor com sucesso (true) ou ele já existe (false)
+     * Regista um utilizador (Condutor ou Cliente)
+     * @param u User a registar
+     * @return Registou com sucesso (true) ou já existe (false)
      */
-    public boolean registerDriver(Driver d){
-        if (drivers.get(d.getEmail()) == null && clients.get(d.getEmail()) == null) {
-            drivers.put(d.getEmail(), d);
+    public boolean registerUser(User u){
+        if (this.drivers.get(u.getEmail()) == null && this.clients.get(u.getEmail()) == null){
+            if (u instanceof Client)
+                this.clients.put(u.getEmail(), (Client) u);
+            else this.drivers.put(u.getEmail(), (Driver) u);
             return true;
         }
-        return false;
+        else return false;
     }
 
     /**
@@ -168,10 +164,32 @@ public class UMeR{
      * @return Registou o veículo com sucesso (true) ou ele já existe (false)
      */
     public boolean registerVehicle(Vehicle v){
-        if (vehicles.get(v.getRegistration()) == null){
-            vehicles.put(v.getRegistration(), v);
+        if (this.vehicles.get(v.getRegistration()) == null){
+            this.vehicles.put(v.getRegistration(), v);
             return true;
         }
         else return false;
     }
+
+    /**
+     * Remove um utilizador
+     * @param u Utilizador a remover
+     */
+    public void removeUser(User u){
+        if (u instanceof Client)
+            this.clients.remove(u);
+        else this.drivers.remove(u);
+    }
+
+    /**
+     * Remove um veículo
+     * @param v Veículo a remover
+     */
+    public void removeVehicle(Vehicle v){
+        this.vehicles.remove(v);
+    }
+
+    //TODO
+    //public void newTripClosest(Client c);
+    //public void newTripSpecific(Client c, String driverEmail);
 }
