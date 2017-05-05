@@ -52,7 +52,7 @@ public class Helicopter extends Vehicle {
      * @param v
      */
     public Helicopter(Helicopter v) {
-        super(v.getRegistration(), v.getSpeed(), v.getPrice(), v.getReliable(), v.getAvailable(), v.getSeats(), v.getPosition());
+        super(v.getRegistration(), v.getSpeed(), v.getPrice(), v.getReliable(), v.isAvailable(), v.getSeats(), v.getPosition());
         if (v.queue != null) this.queue = new LinkedList<>(v.queue);
         else this.queue = new LinkedList<>();
     }

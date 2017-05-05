@@ -52,7 +52,7 @@ public class Car extends Vehicle {
      * @param v
      */
     public Car(Car v) {
-        super(v.getRegistration(), v.getSpeed(), v.getPrice(), v.getReliable(), v.getAvailable(), v.getSeats(), v.getPosition());
+        super(v.getRegistration(), v.getSpeed(), v.getPrice(), v.getReliable(), v.isAvailable(), v.getSeats(), v.getPosition());
         if (v.queue != null) this.queue = new LinkedList<>(v.queue);
         else this.queue = new LinkedList<>();
     }
@@ -69,12 +69,12 @@ public class Car extends Vehicle {
 	/**
      * Calcula o trânsito à volta de um carro
      *
+	 * @param vehicles Map de todos os veículos
      * @return Nível de trânsito
      */
-	public int calculateTraffic(){
+	public int calculateTraffic(HashMap<String,Vehicle> vehicles){
 		double minDist = 2;
 		int traffic = 1;
-		HashMap<String,Vehicle> vehicles = new HashMap<>();
 		for (Vehicle v : vehicles.values())
 			if (v.getPosition().distance(this.getPosition()) <= minDist);
 				traffic++;

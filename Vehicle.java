@@ -63,7 +63,7 @@ public abstract class Vehicle {
         this.speed = v.getSpeed();
         this.price = v.getPrice();
         this.reliable = v.getReliable();
-        this.available = v.getAvailable();
+        this.available = v.isAvailable();
         this.seats = v.getSeats();
         this.position = v.getPosition();
     }
