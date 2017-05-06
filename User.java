@@ -41,8 +41,14 @@ public abstract class User {
 		this.address = address;
 		this.birthday = LocalDate.of(birthday.getYear(), birthday.getMonth(), birthday.getDayOfMonth());
 		this.totalDistance = totalDistance;
-		if (trips != null) this.trips = new ArrayList<>(trips);
+
+		if (trips != null) {
+			this.trips = new ArrayList<>();
+			for (Trip t: trips)
+				this.trips.add(t.clone());
+		}
 		else this.trips = new ArrayList<>();
+
 		this.numberOfTrips = numberOfTrips;
 	}
 
