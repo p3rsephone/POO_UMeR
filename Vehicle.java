@@ -16,6 +16,8 @@ public abstract class Vehicle {
     private int seats;
     private Point2D.Double position;
     private LinkedList<Client> queue = new LinkedList<>();
+    private ArrayList<Trip> trips = new ArrayList<>();
+
 
 
     /**Métodos de Instância*/
@@ -150,9 +152,8 @@ public abstract class Vehicle {
      * @param queue Nova fila de espera
      */
     public void setQueue(LinkedList<Client> queue){
-        this.queue = queue;
+        this.queue = new LinkedList<>(queue);
     }
-
 
     /**
      * Adiciona um Cliente a uma fila de espera
@@ -172,19 +173,11 @@ public abstract class Vehicle {
         return this.registration.equals(v.getRegistration());
     }
 
-
     /**
      * Faz a cópia de um veiculo
      * @return Cópia de Veiculo
      */
     public abstract Vehicle clone();
-
-    /**
-     * Calcula o trânsito à volta de um veículo
-     * @return Nível de trânsito
-     */
-    public abstract int calculateTraffic(HashMap<String,Vehicle> vehicles); //Só vai ajudar a calcular o tempo real
-
 
     /**
      * Imprime a informação de um veículo
@@ -217,5 +210,13 @@ public abstract class Vehicle {
             return s;
         }
         else return "Fila de espera vazia.";
+    }
+
+    /**
+     * Adiciona uma viagem a um veículo
+     * @param t Viagem a adicionar
+     */
+    public void addTrip(Trip t){
+        this.trips.add(t);
     }
 }

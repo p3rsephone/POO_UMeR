@@ -60,12 +60,4 @@ public class Helicopter extends Vehicle {
     public Helicopter clone(){
     	return new Helicopter(this);
     }
-
-	/**
-	 * Calcula o trânsito à volta de um Helicoptero
-	 * @return Nível de trânsito
-	 */
-	public int calculateTraffic(HashMap<String,Vehicle> vehicles){
-		return 1;
-	}
 }

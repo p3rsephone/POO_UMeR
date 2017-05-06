@@ -15,7 +15,7 @@ public class Driver extends User {
 	private boolean availability;
 	private double timeCompliance;
 	private int numberOfReviews;
-	private int exp;
+	private double exp;
 
 	/**
 	 * Constrói um novo user a partir dos diferentes parametros fornecidos
@@ -98,7 +98,7 @@ public class Driver extends User {
 	 * Retorna a experiência do condutor
 	 * @return Experiência
 	 */
-	public int getExp(){
+	public double getExp(){
 		return this.exp;
 	}
 
@@ -173,8 +173,10 @@ public class Driver extends User {
 		if (t.getRating() != -1) {
 			this.grading = (this.grading * numberOfReviews + t.getRating() * 20) / (numberOfReviews + 1);
 			this.numberOfReviews++;
+			if (t.getRating() > 2)
+				this.exp += ((t.distance()+1) * (t.getRating())/5);
 		}
-		this.exp += (t.distance() + (t.getRating()-3)) / 2;
+		else this.exp += (t.distance()+1)*2/5;
 	}
 
 }

@@ -34,7 +34,9 @@ public class Test {
         LocalDate birth2 = LocalDate.of(1965, 5, 21);
         Driver u2 = new Driver("dghsdad@ashjdas.com", "Fhshfbaas", "adfsadsasd", "asdjas", birth2, pos2, 100, 4.0, true, 0.9, 13, null ,13);
 
-        Trip t = new Trip(1, start, end, time, price,carPlate, u2, u1, 8);
+        LocalDateTime date = LocalDateTime.now();
+
+        Trip t = new Trip(1, start, end, time, price, date, carPlate, u2, u1, 8);
         System.out.println("Antes viagem \n");
 
         System.out.println(u2);
@@ -135,10 +137,10 @@ public class Test {
         cr.setSeats(4);
         cr.setPrice(1.1);
 
-        u.registerUser(c1);
-        u.registerUser(c2);
+        u.registerUser(c1, null);
+        u.registerUser(c2, null);
         u.registerVehicle(cr);
-        u.registerUser(d1);
+        u.registerUser(d1, null);
 
         System.out.println(u);
     }
@@ -146,7 +148,7 @@ public class Test {
     //-------------------------------------------------------------------------------//
 
     public static void main(String[] args){
-        testUser();
+        //testUser();
         //testTrip();
         //testeUmer();
         testeVehicle();

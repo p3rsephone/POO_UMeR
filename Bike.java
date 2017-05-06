@@ -61,18 +61,4 @@ public class Bike extends Vehicle {
     	return new Bike(this);
     }
 
-	/**
-     * Calcula o trânsito à volta de uma mota
-	 * @param vehicles Map de todos os veículos
-     * @return Nível de trânsito
-     */
-	public int calculateTraffic(HashMap<String,Vehicle> vehicles){
-		double minDist = 1;
-		int traffic = 1;
-		for (Vehicle v : vehicles.values())
-			if (v.getPosition().distance(this.getPosition()) <= minDist);
-				traffic++;
-
-		return traffic;
-	}
 }

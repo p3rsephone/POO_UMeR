@@ -62,19 +62,4 @@ public class Van extends Vehicle {
     public Van clone(){
         return new Van(this);
     }
-
-	/**
-	 * Calcula o trânsito à volta de uma carrinha
-	 * @param vehicles Map de todos os veículos
-	 * @return Nível de trânsito
-	 */
-	public int calculateTraffic(HashMap<String,Vehicle> vehicles){
-		double minDist = 3;
-		int traffic = 1;;
-		for (Vehicle v : vehicles.values())
-			if (v.getPosition().distance(this.getPosition()) <= minDist);
-				traffic++;
-
-		return traffic;
-	}
 }
