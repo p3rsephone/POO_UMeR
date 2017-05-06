@@ -67,6 +67,7 @@ public abstract class User {
 		this.birthday = LocalDate.of(0,0,0);
 		this.position = new Point2D.Double();
 		this.position.setLocation(0,0);
+		this.trips = new ArrayList<>();
 	}
 
 

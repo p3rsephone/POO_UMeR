@@ -15,59 +15,9 @@ public abstract class Vehicle {
     private boolean available;
     private int seats;
     private Point2D.Double position;
-
-
-    /** CONSTRUTORES*/
-
-    /**
-     * Constroi um veiculo
-     */
-    public Vehicle() {
-        this.registration = null;
-        this.speed = 0;
-        this.price = 0;
-        this.reliable = 0;
-        this.available = true;
-        this.seats = 0;
-        this.position = new Point2D.Double(0, 0);
-    }
-
-    /**
-     * Constroi um veiculo passado os parâmetros
-     *
-     * @param registration  Matricula
-     * @param speed Velocidade média por km
-     * @param price Preço médio por km
-     * @param reliable Fator de fiabilidade
-     * @param available Disponibilidade
-     * @param seats Numeros de lugares
-     * @param position Posição
-     */
-    public Vehicle(String registration, double speed, double price, double reliable, boolean available, int seats, Point2D.Double position) {
-        this.registration = registration;
-        this.speed = speed;
-        this.price = price;
-        this.reliable = reliable;
-        this.available = available;
-        this.seats = seats;
-        this.position = new Point2D.Double(position.getX(), position.getY());
-
-    }
-
-    /**
-     * Constroi um veiculo a partir de um já existente
-     *
-     * @param v Veiculo
-     */
-    public Vehicle(Vehicle v) {
-        this.registration = v.getRegistration();
-        this.speed = v.getSpeed();
-        this.price = v.getPrice();
-        this.reliable = v.getReliable();
-        this.available = v.isAvailable();
-        this.seats = v.getSeats();
-        this.position = v.getPosition();
-    }
+    private LinkedList<Client> queue;
+    
+    
 
     /**
      * Retorna a matricula de um veiculo
@@ -132,7 +82,20 @@ public abstract class Vehicle {
         return new Point2D.Double(this.position.getX(), this.position.getY());
     }
 
-
+    /**
+     * Retorna uma cópia da fila de espera
+     * @return Fila de Espera
+     */
+    public LinkedList<Client> getQueue() {
+        LinkedList<Client> queue = new LinkedList<>();
+        if (this.queue != null)
+            for(Client c : this.queue) {
+                queue.add(c.clone());
+            }
+        return queue;
+    }
+    
+    
     /**SETTERS*/
 
     /**
@@ -198,9 +161,25 @@ public abstract class Vehicle {
         this.position = new Point2D.Double(position.getX(), position.getY());
     }
 
-
+    /**
+     * Altera a fila de espera de um veiculo
+     * 
+     * @param queue Nova fila de espera
+     */
+    public void setQueue(LinkedList<Client> queue){
+        this.queue = queue;
+       }
+       
     /**MÉTODOS DE INSTÂNCIA*/
 
+    /**
+     * Adiciona um Cliente a uma fila de espera
+     * @param c Cliente a adicionar
+     */
+    public void addClient(Client c){
+        this.queue.addFirst(c.clone());
+    }
+    
     /**
      * Compara dois veiculos
      *
@@ -219,12 +198,12 @@ public abstract class Vehicle {
      */
     public abstract Vehicle clone();
 
-	/**
+    /**
      * Calcula o trânsito à volta de um veículo
      *
      * @return Nível de trânsito
      */
-	public abstract int calculateTraffic(HashMap<String,Vehicle> vehicles); //Só vai ajudar a calcular o tempo real
+    public abstract int calculateTraffic(HashMap<String,Vehicle> vehicles); //Só vai ajudar a calcular o tempo real
 
 
     /**
@@ -232,12 +211,14 @@ public abstract class Vehicle {
      * @return String
      */
     public String toString(){
-        return 	"Matricula - " 		+ this.registration 		+ "\n" +
-                "Velocidade média por km : " 				+ this.speed 		+ "\n" +
-                "Preço médio por km : " 			+ this.price 	+ "\n" +
-                "Fator de fiabilidade : " 			+ this.reliable 		+ "\n" +
-                "Disponibilidade : " + this.available 	+ "\n" +
-                "Numero de lugares" + this.seats + "\n" +
-                "Posição : " 			+ "(X - " + this.position.getX() + ", Y - " + this.position.getY() + ")\n";
+        return  "Tipo : " + this.getClass() + "\n" +
+                "Matricula : "      + this.registration         + "\n" +
+                "Velocidade média por km : "                + this.speed        + "\n" +
+                "Preço médio por km : "             + this.price    + "\n" +
+                "Fator de fiabilidade : "           + this.reliable         + "\n" +
+                "Disponibilidade : " + this.available   + "\n" +
+                "Numero de lugares: " + this.seats + "\n" +
+                "Posição : "            + "(X - " + this.position.getX() + ", Y - " + this.position.getY() + ")\n"+
+                "Fila de Espera : "+ (this.queue)+"\n";
     }
 }

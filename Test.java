@@ -1,6 +1,7 @@
 import java.awt.geom.Point2D;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * Created by Nuno on 02/05/2017.
@@ -42,7 +43,7 @@ public class Test {
         u1.addTrip(t);
         System.out.println(u2);
     }
-
+    
     public static void testeUmer(){
         UMeR u = new UMeR();
 
@@ -83,11 +84,66 @@ public class Test {
 
         System.out.println(u);
     }
+    
+     public static void testeVehicle(){
+        
+         //CLIENTES
+        String email1 = "asdgasd@ashjvasd.com";
+        String name1 = "Hshj asdvjasd";
+        String password1 = "llsvdhshdcdf";
+        String address1 = "12 hgdad d asjda";
+        Point2D.Double posx = new Point2D.Double(14.2, 8);
+        LocalDate birth1 = LocalDate.of(1965, 5, 21);
+        Client c1 = new Client(email1, name1, password1, address1, birth1, posx, 0, null, 0, 0.2, 0);
+
+        String email2 = "jhgdsad@ashjvasd.com";
+        String name2 = "KLaxsa hgsdashdh";
+        String password2 = "12u4ufwqgfei";
+        String address2 = "83 GHJAS asjda";
+        Point2D.Double pos2 = new Point2D.Double(7, 1);
+        LocalDate birth2 = LocalDate.of(1990, 8,9);
+        Client c2 = new Client(email2, name2, password2, address2, birth2, pos2, 0, null, 0, 0.4, 0);
+        //-----------------------------
+        
+        String matricula1 = "GS-23-34";
+        double fator1 = 1;
+        boolean disp1 = true;
+        Point2D.Double pos1 = new Point2D.Double(14, 8.5);
+        LinkedList<Client> queue1 = new LinkedList<Client>();
+        
+        
+        Car c = new Car(queue1, matricula1, fator1, disp1, pos1);
+        c.addClient(c1);
+        c.addClient(c2);
+        
+        Van v = new Van();
+        
+       
+        Bike b = new Bike();
+        b.setRegistration("17-OP-42");
+        b.setReliable(1);
+        b.setAvailable(true);
+        b.setPosition(new Point2D.Double(50, -30.72));
+        b.setSeats(4);
+        b.setSpeed(1000);
+        b.setPrice(1.10);
+
+
+        Helicopter h1 = new Helicopter(null,"51-12-XD",1,false,pos1);
+        Helicopter h2 = new Helicopter(h1);
+       
+        System.out.println(c);
+        System.out.println(v);
+        System.out.println(b);
+        System.out.println(h1);
+        System.out.println(h2);
+    }
 
     public static void main(String[] args){
         //testUser();
         //testTrip();
-        testeUmer();
-
+        //testeUmer();
+        testeVehicle();
+      
     }
 }

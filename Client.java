@@ -108,12 +108,14 @@ public class Client extends User {
 	 * @return Driver mais próximo (null se estiverem todos ocupados)
 	 */
 	public String requestClosestTaxi(Map<String, Driver> drivers){
-		int min = -1;
+		double min = 1000;
 		String closestDriver = null;
 		for (Driver d : drivers.values())
 			if (d.getAvailability() == true)
-				if (d.getPosition().distance(this.getPosition()) < min)
+				if (d.getPosition().distance(this.getPosition()) < min){
+				    min = d.getPosition().distance(this.getPosition());
 					closestDriver = d.getEmail();
+				}
 
 		return closestDriver;
 	}

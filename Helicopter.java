@@ -12,8 +12,6 @@ import java.util.*;
  */
 public class Helicopter extends Vehicle {
 
-    private LinkedList<Client> queue;
-
 
     /** CONSTRUTORES */
 
@@ -21,8 +19,14 @@ public class Helicopter extends Vehicle {
      * Cria um Helicoptero
      */
     public Helicopter() {
-        super();
-        this.queue = new LinkedList<>();
+        this.setRegistration(null);
+        this.setSpeed(110);
+        this.setPrice(2.85);
+        this.setReliable(0);
+        this.setAvailable(true);
+        this.setSeats(3);
+        this.setPosition(new Point2D.Double(0, 0));
+        this.setQueue(null);
     }
 
 
@@ -38,13 +42,15 @@ public class Helicopter extends Vehicle {
      * @param seats
      * @param position
      */
-    public Helicopter(LinkedList<Client> queue, String registration, double speed, double price, double reliable, boolean available, int seats, Point2D.Double position) {
-        super(registration, speed, price, reliable, available, seats, position);
+    public Helicopter(LinkedList<Client> queue, String registration, double reliable, boolean available, Point2D.Double position) {
+        this.setRegistration(registration);
+        this.setReliable(reliable);
+        this.setAvailable(available);
+        this.setPosition(new Point2D.Double(position.getX(), position.getY()));
         this.setSeats(3);
-        this.setSpeed(0.6);
-        this.setPrice(2.75);
-        if (queue != null) this.queue = new LinkedList<>(queue);
-        else this.queue = new LinkedList<>();
+        this.setSpeed(110);
+        this.setPrice(2.85);
+        this.setQueue(queue);
     }
 
     /**
@@ -53,9 +59,14 @@ public class Helicopter extends Vehicle {
      * @param v
      */
     public Helicopter(Helicopter v) {
-        super(v.getRegistration(), v.getSpeed(), v.getPrice(), v.getReliable(), v.isAvailable(), v.getSeats(), v.getPosition());
-        if (v.queue != null) this.queue = new LinkedList<>(v.queue);
-        else this.queue = new LinkedList<>();
+        this.setRegistration(v.getRegistration());
+        this.setSpeed(v.getSpeed());
+        this.setPrice(v.getPrice());
+        this.setReliable(v.getReliable());
+        this.setAvailable(v.isAvailable());
+        this.setSeats(v.getSeats());
+        this.setPosition(v.getPosition());
+        this.setQueue(v.getQueue());
     }
 
     /**

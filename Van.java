@@ -11,7 +11,6 @@ import java.util.*;
  */
 public class Van extends Vehicle {
 
-    private LinkedList<Client> queue;
 
 
     /** CONSTRUTORES */
@@ -20,8 +19,14 @@ public class Van extends Vehicle {
      * Cria uma Carrinha
      */
     public Van() {
-        super();
-        this.queue = new LinkedList<>();
+        this.setRegistration(null);
+        this.setSpeed(65);
+        this.setPrice(1.80);
+        this.setReliable(0);
+        this.setAvailable(true);
+        this.setSeats(9);
+        this.setPosition(new Point2D.Double(0, 0));
+        this.setQueue(null);
     }
 
 
@@ -37,13 +42,15 @@ public class Van extends Vehicle {
      * @param seats
      * @param position
      */
-    public Van(LinkedList<Client> queue, String registration, double speed, double price, double reliable, boolean available, int seats, Point2D.Double position) {
-        super(registration, speed, price, reliable, available, seats, position);
+    public Van(LinkedList<Client> queue, String registration, double reliable, boolean available, Point2D.Double position) {
+        this.setRegistration(registration);
+        this.setReliable(reliable);
+        this.setAvailable(available);
+        this.setPosition(new Point2D.Double(position.getX(), position.getY()));
         this.setSeats(9);
-        this.setSpeed(0.9);
+        this.setSpeed(65);
         this.setPrice(1.80);
-        if (queue != null) this.queue = new LinkedList<>(queue);
-        else this.queue = new LinkedList<>();
+        this.setQueue(queue);
     }
 
     /**
@@ -52,9 +59,14 @@ public class Van extends Vehicle {
      * @param v
      */
     public Van(Van v) {
-        super(v.getRegistration(), v.getSpeed(), v.getPrice(), v.getReliable(), v.isAvailable(), v.getSeats(), v.getPosition());
-        if (v.queue != null) this.queue = new LinkedList<>(v.queue);
-        else this.queue = new LinkedList<>();
+        this.setRegistration(v.getRegistration());
+        this.setSpeed(v.getSpeed());
+        this.setPrice(v.getPrice());
+        this.setReliable(v.getReliable());
+        this.setAvailable(v.isAvailable());
+        this.setSeats(v.getSeats());
+        this.setPosition(v.getPosition());
+        this.setQueue(v.getQueue());
     }
 
     /**
