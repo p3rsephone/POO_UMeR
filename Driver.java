@@ -170,12 +170,11 @@ public class Driver extends User {
 	public void addTrip(Trip t){
 		super.addTrip(t);
 
-		if (this.grading != -1) {
-			this.grading = (this.grading * numberOfReviews + t.getRating()) / (numberOfReviews + 1);
+		if (t.getRating() != -1) {
+			this.grading = (this.grading * numberOfReviews + t.getRating() * 20) / (numberOfReviews + 1);
 			this.numberOfReviews++;
 		}
-
-		this.exp += t.distance() / 3;
+		this.exp += (t.distance() + (t.getRating()-3)) / 2;
 	}
 
 }
