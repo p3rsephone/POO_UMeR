@@ -33,7 +33,7 @@ public class Driver extends User {
 	 * @param trips Viagens feitas
 	 */
     public Driver(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, double grading, Boolean availability, double timeCompliance, int numberOfReviews, ArrayList<Trip> trips, int numberOfTrips){
-		super(email, name, password, address, birthday, position, totalDistance, trips, numberOfTrips);
+		super(email, name, password, address, birthday, totalDistance, trips, numberOfTrips);
 		this.grading = grading;
 		this.availability = availability;
 		this.timeCompliance = timeCompliance;
@@ -46,7 +46,7 @@ public class Driver extends User {
 	* @param d
 	*/
 	public Driver(Driver d) {
-		super(d.getEmail(), d.getName(), d.getPassword(), d.getAddress(), d.getBirthday(), d.getPosition(), d.getTotalDistance(), d.getTrips(), d.getNumberOfTrips());
+		super(d.getEmail(), d.getName(), d.getPassword(), d.getAddress(), d.getBirthday(), d.getTotalDistance(), d.getTrips(), d.getNumberOfTrips());
 		this.grading = d.getGrading();
 		this.availability = d.getAvailability();
 		this.timeCompliance = d.getTimeCompliance();

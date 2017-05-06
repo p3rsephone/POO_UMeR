@@ -2,11 +2,11 @@ import java.awt.geom.Point2D;
 import java.util.*;
 /**
  * Vehicle class for UMeR.
- *
- * @author (your name)
- * @version (a version number or a date)
  */
+
 public abstract class Vehicle {
+
+    /** Variáveis de Instância */
 
     private String registration;
     private double speed;
@@ -15,14 +15,14 @@ public abstract class Vehicle {
     private boolean available;
     private int seats;
     private Point2D.Double position;
-    private LinkedList<Client> queue;
-    
-    
+    private LinkedList<Client> queue = new LinkedList<>();
+
+
+    /**Métodos de Instância*/
 
     /**
      * Retorna a matricula de um veiculo
-     *
-     * @return registration Matricula de Veiculo
+     * @return registration Matricula do Veículo
      */
     public String getRegistration() {
         return this.registration;
@@ -30,7 +30,6 @@ public abstract class Vehicle {
 
     /**
      * Retorna a velocidade média por km de um veiculo
-     *
      * @return speed Velocidade média do Veiculo
      */
     public double getSpeed() {
@@ -39,7 +38,6 @@ public abstract class Vehicle {
 
     /**
      * Retorna o preço médio por km de um veiculo
-     *
      * @return price Preço do Veiculo
      */
     public double getPrice() {
@@ -48,7 +46,6 @@ public abstract class Vehicle {
 
     /**
      * Retorna o fator de fiabilidade de um veiculo
-     *
      * @return reliable Fator de fiabilidade do veiculo
      */
     public double getReliable() {
@@ -57,7 +54,6 @@ public abstract class Vehicle {
 
     /**
      * Retorna a disponibilidade de um veiculo
-     *
      * @return available Disponibilidade do veiculo
      */
     public boolean isAvailable() {
@@ -66,7 +62,6 @@ public abstract class Vehicle {
 
     /**
      * Retorna o numero de lugares de um veiculo
-     *
      * @return seats Numeros de lugares do veiculo
      */
     public int getSeats() {
@@ -75,7 +70,6 @@ public abstract class Vehicle {
 
     /**
      * Retorna a posição de um veiculo
-     *
      * @return position Posiçao do veiculo
      */
     public Point2D.Double getPosition() {
@@ -94,13 +88,9 @@ public abstract class Vehicle {
             }
         return queue;
     }
-    
-    
-    /**SETTERS*/
 
     /**
      * Altera a matricula de um veiculo
-     *
      * @param registration Nova matricula
      */
     public void setRegistration(String registration) {
@@ -109,7 +99,6 @@ public abstract class Vehicle {
 
     /**
      * Altera a velocidade de um veiculo
-     *
      * @param speed Nova velocidade
      */
     public void setSpeed(double speed) {
@@ -118,8 +107,7 @@ public abstract class Vehicle {
 
     /**
      * Altera o preço medio por km de um veiculo
-     *
-     * @param price Nova preço
+     * @param price Novo preço
      */
     public void setPrice(double price) {
         this.price = price;
@@ -127,7 +115,6 @@ public abstract class Vehicle {
 
     /**
      * Altera o fator de fiabilidade de um veiculo
-     *
      * @param reliable Novo fator de fiabilidade
      */
     public void setReliable(double reliable) {
@@ -136,7 +123,6 @@ public abstract class Vehicle {
 
     /**
      * Altera a disponibilidade de um veiculo
-     *
      * @param available Nova disponibilidade
      */
     public void setAvailable(boolean available) {
@@ -145,7 +131,6 @@ public abstract class Vehicle {
 
     /**
      * Altera o numero de lugares de um veiculo
-     *
      * @param seats Novo numero de lugares
      */
     public void setSeats(int seats) {
@@ -154,7 +139,6 @@ public abstract class Vehicle {
 
     /**
      * Altera a posição de um veiculo
-     *
      * @param position Nova posição
      */
     public void setPosition(Point2D.Double position) {
@@ -163,14 +147,12 @@ public abstract class Vehicle {
 
     /**
      * Altera a fila de espera de um veiculo
-     * 
      * @param queue Nova fila de espera
      */
     public void setQueue(LinkedList<Client> queue){
         this.queue = queue;
-       }
-       
-    /**MÉTODOS DE INSTÂNCIA*/
+    }
+
 
     /**
      * Adiciona um Cliente a uma fila de espera
@@ -193,32 +175,47 @@ public abstract class Vehicle {
 
     /**
      * Faz a cópia de um veiculo
-     *
      * @return Cópia de Veiculo
      */
     public abstract Vehicle clone();
 
     /**
      * Calcula o trânsito à volta de um veículo
-     *
      * @return Nível de trânsito
      */
     public abstract int calculateTraffic(HashMap<String,Vehicle> vehicles); //Só vai ajudar a calcular o tempo real
 
 
     /**
-     * toString de um veiculo
-     * @return String
+     * Imprime a informação de um veículo
+     * @return String String com a informação
      */
     public String toString(){
         return  "Tipo : " + this.getClass() + "\n" +
-                "Matricula : "      + this.registration         + "\n" +
-                "Velocidade média por km : "                + this.speed        + "\n" +
-                "Preço médio por km : "             + this.price    + "\n" +
-                "Fator de fiabilidade : "           + this.reliable         + "\n" +
+                "Matricula : " + this.registration + "\n" +
+                "Velocidade média por km : " + this.speed + "\n" +
+                "Preço médio por km : " + this.price    + "\n" +
+                "Fator de fiabilidade : " + this.reliable + "\n" +
                 "Disponibilidade : " + this.available   + "\n" +
                 "Numero de lugares: " + this.seats + "\n" +
-                "Posição : "            + "(X - " + this.position.getX() + ", Y - " + this.position.getY() + ")\n"+
-                "Fila de Espera : "+ (this.queue)+"\n";
+                "Posição : " + "(" + this.position.getX() + "," + this.position.getY() + ")\n"+
+                "---------\nFila de Espera : \n"+ printQueue() +"\n\n";
+    }
+
+    /**
+     * Imprime a lista de espera de um veículo
+     * @return String com a lista de espera
+     */
+    public String printQueue(){
+        if (this.queue.size() > 0) {
+            String s = "";
+            int i = 1;
+            for (Client c : this.queue) {
+                s += i + "º lugar :" + c.getEmail() + "\n";
+                i++;
+            }
+            return s;
+        }
+        else return "Fila de espera vazia.";
     }
 }

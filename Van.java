@@ -2,21 +2,16 @@ import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import java.util.*;
 
-
 /**
  * Van for UMeR.
- *
- * @author (your name)
- * @version (a version number or a date)
  */
+
 public class Van extends Vehicle {
-
-
 
     /** CONSTRUTORES */
 
     /**
-     * Cria uma Carrinha
+     * Cria uma Carrinha sem parâmetros
      */
     public Van() {
         this.setRegistration(null);
@@ -26,37 +21,27 @@ public class Van extends Vehicle {
         this.setAvailable(true);
         this.setSeats(9);
         this.setPosition(new Point2D.Double(0, 0));
-        this.setQueue(null);
     }
 
-
     /**
-     * Constroi uma Carrinha passado os parâmetros
-     *
-     * @param queue
-     * @param registration
-     * @param speed
-     * @param price
-     * @param reliable
-     * @param available
-     * @param seats
-     * @param position
+     * Cria um Carrinha passado os parâmetros
+     * @param registration Matrícula
+     * @param reliable     Fator de fiabilidade
+     * @param position     Posição atual
      */
-    public Van(LinkedList<Client> queue, String registration, double reliable, boolean available, Point2D.Double position) {
+    public Van(String registration, double reliable, Point2D.Double position) {
         this.setRegistration(registration);
         this.setReliable(reliable);
-        this.setAvailable(available);
+        this.setAvailable(true);
         this.setPosition(new Point2D.Double(position.getX(), position.getY()));
         this.setSeats(9);
         this.setSpeed(65);
         this.setPrice(1.80);
-        this.setQueue(queue);
     }
 
     /**
      * Constroi uma Carrinha a partir de uma já existente
-     *
-     * @param v
+     * @param v Carrinha já definida
      */
     public Van(Van v) {
         this.setRegistration(v.getRegistration());
@@ -66,21 +51,20 @@ public class Van extends Vehicle {
         this.setAvailable(v.isAvailable());
         this.setSeats(v.getSeats());
         this.setPosition(v.getPosition());
-        this.setQueue(v.getQueue());
     }
+
+    /** Métodos de Intância */
 
     /**
      * Faz a cópia de uma carrinha
-     *
      * @return Cópia de Carrinha
      */
     public Van clone(){
-    	return new Van(this);
+        return new Van(this);
     }
 
 	/**
 	 * Calcula o trânsito à volta de uma carrinha
-	 *
 	 * @param vehicles Map de todos os veículos
 	 * @return Nível de trânsito
 	 */

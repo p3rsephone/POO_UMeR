@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class Client extends User {
 
 	/** Variáveis de Instância */
+	private Point2D.Double position;
 	private double rigor;
 	private int points;
 
@@ -26,7 +27,8 @@ public class Client extends User {
 	 * @param position Posição
 	 */
     public Client(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, ArrayList<Trip> trips, int numberOfTrips, double rigor, int points) {
-        super(email, name, password, address, birthday, position, totalDistance, trips, numberOfTrips);
+        super(email, name, password, address, birthday, totalDistance, trips, numberOfTrips);
+		this.position = new Point2D.Double(position.getX(), position.getY());
         this.rigor = rigor;
         this.points = points;
     }
@@ -36,9 +38,10 @@ public class Client extends User {
 	* @param c
 	*/
 	public Client(Client c) {
-		super(c.getEmail(), c.getName(), c.getPassword(), c.getAddress(), c.getBirthday(), c.getPosition(), c.getTotalDistance(), c.getTrips(), c.getNumberOfTrips());
+		super(c.getEmail(), c.getName(), c.getPassword(), c.getAddress(), c.getBirthday(), c.getTotalDistance(), c.getTrips(), c.getNumberOfTrips());
 		this.rigor = c.getRigor();
 		this.points = c.getPoints();
+		this.position = new Point2D.Double(c.getPosition().getX(), c.getPosition().getY());
     }
 
 	/**
@@ -69,6 +72,14 @@ public class Client extends User {
 	}
 
 	/**
+	 * Retorna a posição de um user
+	 * @return position
+	 */
+	public Point2D.Double getPosition(){
+		return new Point2D.Double(this.position.getX(), this.position.getY());
+	}
+
+	/**
 	 * Altera o grau de rigor de um cliente
 	 * @param rigor Novo grau de rigor
 	 */
@@ -85,6 +96,14 @@ public class Client extends User {
 	}
 
 	/**
+	 * Altera a posição de um user
+	 * @param position Nova posição
+	 */
+	public void setPosition(Point2D.Double position){
+		this.position = position;
+	}
+
+	/**
 	 * Retorna a cópia de um cliente
 	 * @return Cópia do cliente
 	 */
@@ -98,6 +117,7 @@ public class Client extends User {
 	 */
 	public String toString(){
 		return super.toString() + "\n" +
+				"Posição : " + "(" + this.position.getX() + "," + this.position.getY() + ")\n"+
 				"Rigor : " + this.rigor + "\n" +
 				"Pontos : " + this.points;
 	}
@@ -107,17 +127,17 @@ public class Client extends User {
 	 * @param drivers Map com todos os condutores
 	 * @return Driver mais próximo (null se estiverem todos ocupados)
 	 */
-	public String requestClosestTaxi(Map<String, Driver> drivers){
-		double min = 1000;
-		String closestDriver = null;
-		for (Driver d : drivers.values())
-			if (d.getAvailability() == true)
-				if (d.getPosition().distance(this.getPosition()) < min){
-				    min = d.getPosition().distance(this.getPosition());
-					closestDriver = d.getEmail();
+	public String requestClosestTaxi(Map<String, Vehicle> vehicles){
+		double min = Integer.MAX_VALUE;
+		String closestTaxi = null;
+		for (Vehicle c : vehicles.values())
+			if (c.isAvailable() == true)
+				if (c.getPosition().distance(this.getPosition()) < min){
+				    min = c.getPosition().distance(this.getPosition());
+					closestTaxi = c.getRegistration();
 				}
 
-		return closestDriver;
+		return closestTaxi;
 	}
 
 	/**
@@ -132,7 +152,17 @@ public class Client extends User {
 		else return false;
 	}
 
-	//TODO: Fazer um pedido para um veiculo especifico
+	/**
+	 * Faz um pedido para um taxi específico através da matrícula
+	 * @param registration Matrícula
+	 * @param vehicles	   Map com todos os veículos
+	 * @return			   O taxi específico encontra-se disponível (true) ou não (false)
+	 */
+	public boolean requestSpecificTaxi(String registration, Map<String, Vehicle> vehicles){
+		if (vehicles.get(registration).isAvailable() == true)
+			return true;
+		else return false;
+	}
 
 	/**
 	 * Adiciona uma nova viagem ao cliente
@@ -140,6 +170,7 @@ public class Client extends User {
 	 */
 	public void addTrip(Trip t){
 		super.addTrip(t);
+		this.position.setLocation(t.getEnd());
 		this.points += t.getPrice() / 4;
 	}
 }

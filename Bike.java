@@ -2,21 +2,16 @@ import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import java.util.*;
 
-
 /**
  * Bike for UMeR.
- *
- * @author (your name)
- * @version (a version number or a date)
  */
+
 public class Bike extends Vehicle {
-
-
 
     /** CONSTRUTORES */
 
     /**
-     * Cria um Mota
+     * Cria um Mota sem parâmetros
      */
     public Bike() {
         this.setRegistration(null);
@@ -26,37 +21,27 @@ public class Bike extends Vehicle {
         this.setAvailable(true);
         this.setSeats(1);
         this.setPosition(new Point2D.Double(0, 0));
-        this.setQueue(null);
     }
-
 
     /**
      * Constroi um Mota passado os parâmetros
-     *
-     * @param queue
-     * @param registration
-     * @param speed
-     * @param price
-     * @param reliable
-     * @param available
-     * @param seats
-     * @param position
+     * @param registration Matrícula
+     * @param reliable     Fator de fiabilidade
+     * @param position     Posição atual
      */
-    public Bike(LinkedList<Client> queue, String registration, double reliable, boolean available, Point2D.Double position) {
+    public Bike(String registration, double reliable, Point2D.Double position) {
         this.setRegistration(registration);
         this.setReliable(reliable);
-        this.setAvailable(available);
+        this.setAvailable(true);
         this.setPosition(new Point2D.Double(position.getX(), position.getY()));
         this.setSeats(1);
         this.setSpeed(65);
         this.setPrice(.90);
-        this.setQueue(queue);
     }
 
     /**
      * Constroi um Mota a partir de um já existente
-     *
-     * @param v
+     * @param v Mota já definida
      */
     public Bike(Bike v) {
         this.setRegistration(v.getRegistration());
@@ -66,12 +51,10 @@ public class Bike extends Vehicle {
         this.setAvailable(v.isAvailable());
         this.setSeats(v.getSeats());
         this.setPosition(v.getPosition());
-        this.setQueue(v.getQueue());
     }
 
     /**
      * Faz a cópia de uma mota
-     *
      * @return Cópia de Mota
      */
     public Bike clone(){
@@ -80,7 +63,6 @@ public class Bike extends Vehicle {
 
 	/**
      * Calcula o trânsito à volta de uma mota
-	 *
 	 * @param vehicles Map de todos os veículos
      * @return Nível de trânsito
      */
@@ -93,5 +75,4 @@ public class Bike extends Vehicle {
 
 		return traffic;
 	}
-
 }

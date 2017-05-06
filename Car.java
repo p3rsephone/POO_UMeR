@@ -2,23 +2,16 @@ import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import java.util.*;
 
-
 /**
  * Car for UMeR.
- *
- * @author (your name)
- * @version (a version number or a date)
  */
-public class Car extends Vehicle {
-    
-    
-    
 
+public class Car extends Vehicle {
 
     /** CONSTRUTORES */
 
     /**
-     * Cria um Carro
+     * Cria um Carro sem parâmetros
      */
     public Car() {
         this.setRegistration(null);
@@ -28,37 +21,27 @@ public class Car extends Vehicle {
         this.setAvailable(true);
         this.setSeats(4);
         this.setPosition(new Point2D.Double(0, 0));
-        this.setQueue(null);
     }
 
-
     /**
-     * Constroi um Carro passado os parâmetros
-     *
-     * @param queue
-     * @param registration
-     * @param speed
-     * @param price
-     * @param reliable
-     * @param available
-     * @param seats
-     * @param position
+     * Cria um Carro passado os parâmetros
+     * @param registration Matrícula
+     * @param reliable     Fator de fiabilidade
+     * @param position     Posição atual
      */
-    public Car(LinkedList<Client> queue, String registration, double reliable, boolean available, Point2D.Double position) {
+    public Car(String registration, double reliable, Point2D.Double position) {
         this.setRegistration(registration);
         this.setReliable(reliable);
-        this.setAvailable(available);
+        this.setAvailable(true);
         this.setPosition(new Point2D.Double(position.getX(), position.getY()));
         this.setSeats(4);
         this.setSpeed(80);
         this.setPrice(1.10);
-        this.setQueue(queue);
     }
 
     /**
      * Constroi um Carro a partir de um já existente
-     *
-     * @param v
+     * @param v Carro já definido
      */
     public Car(Car v) {
         this.setRegistration(v.getRegistration());
@@ -68,24 +51,18 @@ public class Car extends Vehicle {
         this.setAvailable(v.isAvailable());
         this.setSeats(v.getSeats());
         this.setPosition(v.getPosition());
-        this.setQueue(v.getQueue());
     }
 
     /**
      * Faz a cópia de um carro
-     *
      * @return Cópia de Carro
      */
     public Car clone(){
         return new Car(this);
     }
 
-    
-   
-		
     /**
      * Calcula o trânsito à volta de um carro
-     *
      * @param vehicles Map de todos os veículos
      * @return Nível de trânsito
      */
@@ -98,6 +75,4 @@ public class Car extends Vehicle {
 
         return traffic;
     }
-
-
 }

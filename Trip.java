@@ -17,7 +17,6 @@ public class Trip {
     private Point2D.Double end;
     private Double time;
     private Double price;
-    private LocalDateTime date;
     private String carPlate;
     private User driver, client;
     private int rating;
@@ -34,7 +33,6 @@ public class Trip {
         this.time = 0.0;
         this.price = 0.0;
         this.carPlate = null;
-        this.date =  LocalDateTime.of(2014, Month.JANUARY, 1, 0, 0, 0);
         this.driver = null;
         this.client = null;
         this.rating = 0;
@@ -52,14 +50,13 @@ public class Trip {
      * @param client        Cliente
      * @param rating        Classificação dada ao condutor pelo cliente
      */
-    public Trip (int id, Point2D.Double start, Point2D.Double end, Double time, Double price, LocalDateTime date, String carPlate, User driver, User client, int rating) {
+    public Trip (int id, Point2D.Double start, Point2D.Double end, Double time, Double price, String carPlate, User driver, User client, int rating) {
         this.id = id;
         this.start = start;
         this.end = end;
         this.time = time;
         this.price = price;
         this.carPlate = carPlate;
-        this.date = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), date.getHour(), date.getMinute(), date.getSecond());
         this.driver = driver;
         this.client = client;
         this.rating = rating;
@@ -70,7 +67,7 @@ public class Trip {
      * @param t Viagem
      */
     public Trip (Trip t) {
-        this(t.getID(), t.getStart(), t.getEnd(), t.getTime(), t.getPrice(), t.getDate(), t.getCarPlate(), t.getDriver(), t.getClient(), t.getRating());
+        this(t.getID(), t.getStart(), t.getEnd(), t.getTime(), t.getPrice(), t.getCarPlate(), t.getDriver(), t.getClient(), t.getRating());
     }
 
     /** Metodos de Instância */
@@ -111,10 +108,6 @@ public class Trip {
      */
     public Double getPrice() {
         return this.price;
-    }
-
-    public LocalDateTime getDate(){
-        return LocalDateTime.of(this.date.getYear(), this.date.getMonth(), this.date.getDayOfMonth(), this.date.getHour(), this.date.getMinute(), this.date.getSecond());
     }
 
     /**
@@ -163,7 +156,6 @@ public class Trip {
      */
     public String toString(){
         return "Viagem de " + "("+ this.start.getX() + "," + this.start.getY() + ") ---> (" + this.end.getX() + "," + this.end.getY() + ")" + "\n" +
-                "Data : " + this.date + "\n" +
                 "Distância : " + distance() + "km\n" +
                 "Duração :" + this.time + "\n" +
                 "Preço : " + this.price + "€\n" +

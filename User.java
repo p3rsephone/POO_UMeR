@@ -18,7 +18,6 @@ public abstract class User {
 	private String password;
 	private String address;
 	private LocalDate birthday;
-	private Point2D.Double position;
 	private double totalDistance;
 	private ArrayList<Trip> trips;
 	private int numberOfTrips;
@@ -35,13 +34,12 @@ public abstract class User {
 	 * @param birth Dia de nascimento
 	 * @param position Posição
 	 */
-	public User(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, ArrayList<Trip> trips, int numberOfTrips){
+	public User(String email, String name, String password, String address, LocalDate birthday, double totalDistance, ArrayList<Trip> trips, int numberOfTrips){
 		this.email = email;
 		this.name = name;
 		this.password = password;
 		this.address = address;
 		this.birthday = LocalDate.of(birthday.getYear(), birthday.getMonth(), birthday.getDayOfMonth());
-		this.position = new Point2D.Double(position.getX(), position.getY());
 		this.totalDistance = totalDistance;
 		if (trips != null) this.trips = new ArrayList<>(trips);
 		else this.trips = new ArrayList<>();
@@ -53,7 +51,7 @@ public abstract class User {
 	 * @param p
 	 */
 	public User(User p){
-		this(p.getEmail(), p.getName(), p.getPassword(), p.getAddress(), p.getBirthday(), p.getPosition(), p.getTotalDistance(), p.getTrips(), p.getNumberOfTrips());
+		this(p.getEmail(), p.getName(), p.getPassword(), p.getAddress(), p.getBirthday(), p.getTotalDistance(), p.getTrips(), p.getNumberOfTrips());
 	}
 
 	/**
@@ -65,8 +63,6 @@ public abstract class User {
 		this.password = null;
 		this.address = null;
 		this.birthday = LocalDate.of(0,0,0);
-		this.position = new Point2D.Double();
-		this.position.setLocation(0,0);
 		this.trips = new ArrayList<>();
 	}
 
@@ -112,14 +108,6 @@ public abstract class User {
  	public LocalDate getBirthday(){
  		return LocalDate.of(this.birthday.getYear(), this.birthday.getMonth(), this.birthday.getDayOfMonth());
  	}
-
-	/**
-	 * Retorna a posição de um user
-	 * @return position
-	 */
-	public Point2D.Double getPosition(){
- 		return new Point2D.Double(this.position.getX(), this.position.getY());
-	}
 
 	/**
 	 * Retorna o número de kilometros feitos pelo user
@@ -191,14 +179,6 @@ public abstract class User {
 	}
 
 	/**
-	 * Altera a posição de um user
-	 * @param position Nova posição
-	 */
-	public void setPosition(Point2D.Double position){
-		this.position = position;
-	}
-
-	/**
 	 * Altera o número de viagens de um user
 	 * @param numberOfTrips Novo número de viagens
 	 */
@@ -217,7 +197,6 @@ public abstract class User {
 				"Password : " 			+ this.password 	+ "\n" +
 				"Morada : " 			+ this.address 		+ "\n" +
 				"Data de nascimento : " + this.birthday 	+ "\n" +
-				"Posição : " 			+ "(X - " + this.position.getX() + ", Y - " + this.position.getY() + ")\n" +
 				"Distância Total : " 	+ this.totalDistance + "\n"+
 				"Número de viagens :"	+ this.numberOfTrips;
 	}
@@ -241,10 +220,9 @@ public abstract class User {
 	 * Adiciona uma viagem a um utilizador
 	 * @param trips Viagem a ser adicionada
 	 */
-	public void addTrip(Trip trips){
-		this.trips.add(trips.clone());
-		this.position.setLocation(trips.getEnd());
-		this.totalDistance += trips.distance();
+	public void addTrip(Trip t){
+		this.trips.add(t.clone());
+		this.totalDistance += t.distance();
 		this.numberOfTrips++;
 	}
 
