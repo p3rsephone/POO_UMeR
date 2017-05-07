@@ -124,48 +124,6 @@ public class Client extends User {
 	}
 
 	/**
-	 * Faz um pedido para o taxi mais próximo disponível
-	 * @param drivers Map com todos os condutores
-	 * @return Driver mais próximo (null se estiverem todos ocupados)
-	 */
-	public String closestTaxi(HashMap<String, Vehicle> vehicles){
-		double min = Integer.MAX_VALUE;
-		String closestTaxi = null;
-		for (Vehicle c : vehicles.values())
-			if (c.isAvailable() == true)
-				if (c.getPosition().distance(this.getPosition()) < min){
-				    min = c.getPosition().distance(this.getPosition());
-					closestTaxi = c.getRegistration();
-				}
-
-		return closestTaxi;
-	}
-
-	/**
-	 * Faz um pedido para um condutor específico através do email
-	 * @param email Email do condutor pretendido
-	 * @param drivers Map com todos os condutores
-	 * @return O condutor específico encontra-se disponível (true) ou não (false)
-	 */
-	public boolean specificDriver(String email, HashMap<String, Driver> drivers){
-		if (drivers.get(email).getAvailability() == true)
-			return true;
-		else return false;
-	}
-
-	/**
-	 * Faz um pedido para um taxi específico através da matrícula
-	 * @param registration Matrícula
-	 * @param vehicles	   Map com todos os veículos
-	 * @return			   O taxi específico encontra-se disponível (true) ou não (false)
-	 */
-	public boolean specificTaxi(String registration, HashMap<String, Vehicle> vehicles){
-		if (vehicles.get(registration).isAvailable() == true)
-			return true;
-		else return false;
-	}
-
-	/**
 	 * Adiciona uma nova viagem ao cliente
 	 * @param t Viagem a adicinar
 	 */

@@ -1,6 +1,7 @@
 import java.awt.geom.Point2D;
 import java.time.*;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Trip.
@@ -15,10 +16,10 @@ public class Trip {
     private int id;
     private Point2D.Double start;
     private Point2D.Double end;
-    private Double time;
-    private Double price;
-    private LocalDateTime date;
-    private String carPlate;
+    private double time;
+    private double price;
+    private LocalDate date;
+    private String registration;
     private User driver, client;
     private int rating;
 
@@ -33,8 +34,8 @@ public class Trip {
         this.end = new Point2D.Double(0, 0);
         this.time = 0.0;
         this.price = 0.0;
-        this.carPlate = null;
-        this.date =  LocalDateTime.of(2014, Month.JANUARY, 1, 0, 0, 0);
+        this.registration = null;
+        this.date =  LocalDate.MIN;
         this.driver = null;
         this.client = null;
         this.rating = 0;
@@ -47,19 +48,19 @@ public class Trip {
      * @param end           Posição do fim da viagem
      * @param time          Tempo da viagem
      * @param price         Preço da viagem
-     * @param carPlate      Matrícula do carro
+     * @param registration      Matrícula do carro
      * @param driver        Condutor
      * @param client        Cliente
      * @param rating        Classificação dada ao condutor pelo cliente
      */
-    public Trip (int id, Point2D.Double start, Point2D.Double end, Double time, Double price, LocalDateTime date, String carPlate, User driver, User client, int rating) {
+    public Trip (int id, Point2D.Double start, Point2D.Double end, Double time, Double price, LocalDate date, String registration, User driver, User client, int rating) {
         this.id = id;
         this.start = start;
         this.end = end;
         this.time = time;
         this.price = price;
-        this.carPlate = carPlate;
-        this.date = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), date.getHour(), date.getMinute(), date.getSecond());
+        this.registration = registration;
+        this.date = LocalDate.of(date.getYear(), date.getMonth(), date.getDayOfMonth());
         this.driver = driver;
         this.client = client;
         this.rating = rating;
@@ -70,7 +71,7 @@ public class Trip {
      * @param t Viagem
      */
     public Trip (Trip t) {
-        this(t.getID(), t.getStart(), t.getEnd(), t.getTime(), t.getPrice(), t.getDate(), t.getCarPlate(), t.getDriver(), t.getClient(), t.getRating());
+        this(t.getID(), t.getStart(), t.getEnd(), t.getTime(), t.getPrice(), t.getDate(), t.getregistration(), t.getDriver(), t.getClient(), t.getRating());
     }
 
     /** Metodos de Instância */
@@ -113,16 +114,20 @@ public class Trip {
         return this.price;
     }
 
-    public LocalDateTime getDate(){
-        return LocalDateTime.of(this.date.getYear(), this.date.getMonth(), this.date.getDayOfMonth(), this.date.getHour(), this.date.getMinute(), this.date.getSecond());
+    /**
+     * Retorna a data da viagem
+     * @return Data da viagem
+     */
+    public LocalDate getDate(){
+        return LocalDate.of(this.date.getYear(), this.date.getMonth(), this.date.getDayOfMonth());
     }
 
     /**
      * Retorna a matricula do carro onde a viagem foi realizada
      * @return Matrícula
      */
-    public String getCarPlate() {
-        return this.carPlate;
+    public String getregistration() {
+        return this.registration;
     }
 
     /**
@@ -165,7 +170,7 @@ public class Trip {
         return "Viagem de " + "("+ this.start.getX() + "," + this.start.getY() + ") ---> (" + this.end.getX() + "," + this.end.getY() + ")" + "\n" +
                 "Data : " + this.date + "\n" +
                 "Distância : " + distance() + "km\n" +
-                "Duração :" + this.time + "\n" +
+                "Duração : " + (int) this.time + "h:" + Math.round(this.time * 60)%60 + "m:" + Math.round(this.time * 3600)%60 + "s\n" +
                 "Preço : " + this.price + "€\n" +
                 "Email condutor : " + this.driver.getEmail() + "\n" +
                 "Email cliente : " + this.client.getEmail() + "\n" +

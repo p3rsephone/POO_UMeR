@@ -36,7 +36,7 @@ public class Bike extends Vehicle {
         this.setPosition(new Point2D.Double(position.getX(), position.getY()));
         this.setSeats(1);
         this.setSpeed(65);
-        this.setPrice(.90);
+        this.setPrice(1.1);
     }
 
     /**

@@ -16,7 +16,7 @@ public class Car extends Vehicle {
     public Car() {
         this.setRegistration(null);
         this.setSpeed(80);
-        this.setPrice(1.10);
+        this.setPrice(1.30);
         this.setReliable(0);
         this.setAvailable(true);
         this.setSeats(4);

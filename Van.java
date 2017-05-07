@@ -16,7 +16,7 @@ public class Van extends Vehicle {
     public Van() {
         this.setRegistration(null);
         this.setSpeed(65);
-        this.setPrice(1.80);
+        this.setPrice(1.90);
         this.setReliable(0);
         this.setAvailable(true);
         this.setSeats(9);

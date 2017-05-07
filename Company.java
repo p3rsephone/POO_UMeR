@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Company of UMeR
@@ -165,9 +166,26 @@ public class Company {
 
     /**
      * Adiciona um quantia ao número total de dinheiro gerado
-     * @param money
+     * @param money Quantia a adicionar
      */
     public void addMoney(double money){
         this.moneyGenerated += money;
+    }
+
+    /**
+     * Seleciona um condutor para conduzir um taxi da empresa
+     * @return Email do condutor escolhido ou null se estiverem todos ocupados
+     */
+    public String pickDriver(){
+        Random rand = new Random();
+        Driver[] drivers = (Driver[]) this.drivers.values()
+                                            .stream()
+                                            .filter(driver -> driver.getAvailability() == true)
+                                            .toArray();
+        if (drivers.length != 0) {
+            Driver d = drivers[rand.nextInt()];
+            return d.getEmail();
+        }
+        else return null;
     }
 }

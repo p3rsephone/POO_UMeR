@@ -36,7 +36,7 @@ public class Helicopter extends Vehicle {
         this.setPosition(new Point2D.Double(position.getX(), position.getY()));
         this.setSeats(3);
         this.setSpeed(110);
-        this.setPrice(2.85);
+        this.setPrice(8.5);
     }
 
     /**

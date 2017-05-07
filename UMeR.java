@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.ArrayList;
@@ -149,10 +150,10 @@ public class UMeR{
      * @return String com a informação
      */
     public String toString(){
-        return "----------------\nDrivers\n\n" + this.driversP +
-                "\n----------------\nClients\n\n" + this.clients +
-                "\n----------------\nVehicles\n\n" + this.vehiclesP +
-                "\n----------------\nTrips\n\n" + this.trips;
+        return "---Drivers---\n" + this.driversP.keySet() +
+                "\n---Clients---\n" + this.clients.keySet() +
+                "\n---Vehicles---\n" + this.vehiclesP.keySet() +
+                "\n---Number of trips---\n" + this.tripID;
     }
 
     /**
@@ -221,6 +222,32 @@ public class UMeR{
     }
 
     /**
+     * Adiciona uma viagem ao conjunto de viagens totais
+     * @param t Viagem a adicionar
+     */
+    public void addTrip(Trip t){
+        this.trips.add(t);
+    }
+
+    /**
+     * Faz um pedido para o taxi mais próximo disponível
+     * @param client  Cliente que pretende o taxi
+     * @return Driver mais próximo (null se estiverem todos ocupados)
+     */
+    public String closestAvailableTaxi(Client client){
+        double min = Integer.MAX_VALUE;
+        String closestTaxi = null;
+        for (Vehicle vehicle : this.allVehicles.values())
+            if (vehicle.isAvailable() == true)
+                if (vehicle.getPosition().distance(client.getPosition()) < min){
+                    min = vehicle.getPosition().distance(client.getPosition());
+                    closestTaxi = vehicle.getRegistration();
+                }
+
+        return closestTaxi;
+    }
+
+    /**
      * Calcula o tempo estimado de um ponto a outro
      * @param start         Ponto de partida
      * @param end           Ponto de chegada
@@ -279,11 +306,13 @@ public class UMeR{
         distS.addValues(0, 1 - driverSkillChance);
         int driverSkill = distS.pickNumber();
 
-        double driverMultiplier = ThreadLocalRandom.current().nextDouble(0.1, 0.2);
-        double carMultiplier = ThreadLocalRandom.current().nextDouble(0.1, 0.2);
-        double driverSkillMultiplier = ThreadLocalRandom.current().nextDouble(0.1, 0.2);
-        double weatherMultiplier = ThreadLocalRandom.current().nextDouble(0, 0.2);
-        double trafficMultiplier = Math.abs(ThreadLocalRandom.current().nextGaussian());
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+
+        double driverMultiplier       = random.nextDouble(0.1, 0.2);
+        double carMultiplier          = random.nextDouble(0.1, 0.2);
+        double driverSkillMultiplier  = random.nextDouble(0.1, 0.2);
+        double weatherMultiplier      = random.nextDouble(0, 0.2);
+        double trafficMultiplier      = Math.abs(random.nextGaussian());
 
         double trafficDelay = Math.min(traffic * trafficMultiplier / 100, 0.5);
         double weatherDelay = this.weather * (weatherMultiplier / 5);
@@ -295,9 +324,40 @@ public class UMeR{
         return realTime;
     }
 
+    /**
+     * Realiza uma viagem
+     * @param client        Cliente
+     * @param driver        Condutor
+     * @param vehicle       Veículo
+     * @param destination   Destino
+     * @return Viagem realizada
+     */
+    public Trip newTrip(Client client, Driver driver, Vehicle vehicle, Point2D.Double destination){
+        LocalDate date = LocalDate.now();
 
-    //TODO
-    //public void newTrip(Client c, Driver d, Vehicle v, Point2D destination)
+        //Times
+        double etaToClient = estimatedTime(vehicle.getPosition(), client.getPosition(), vehicle.getSpeed());
+        double realTimeToClient = realTime(vehicle.getPosition(), client.getPosition(), driver, vehicle);
+        double etaToDest = estimatedTime(client.getPosition(), destination, vehicle.getSpeed());
+        double realTimeToDest = realTime(client.getPosition(), destination, driver, vehicle);
+        double timeDiffPercentage =  (realTimeToClient + realTimeToDest) / (etaToClient + etaToDest);
+
+        //Price
+        double price = 2;
+        double distanceToDest = client.getPosition().distance(destination);
+        System.out.println(timeDiffPercentage);
+        if (timeDiffPercentage <= 1.25)
+            price += vehicle.getPrice() * distanceToDest * timeDiffPercentage;
+        else price = (vehicle.getPrice() * distanceToDest) - (vehicle.getPrice() * distanceToDest * (timeDiffPercentage-1));
+
+        //Todo : adicionar classificação dada pelo cliente
+        int rating = 5;
+
+        Trip trip = new Trip(++this.tripID, client.getPosition(), destination, realTimeToDest,
+                             price, date, vehicle.getRegistration(), driver, client, rating);
+
+        return trip;
+    }
     //public boolean newTripClosest(Client c, Point2D.Double destination){
     //public void newTripSpecific(Client c, String driverEmail);
 }

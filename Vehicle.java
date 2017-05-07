@@ -17,6 +17,7 @@ public abstract class Vehicle {
     private Point2D.Double position;
     private LinkedList<Client> queue = new LinkedList<>();
     private ArrayList<Trip> trips = new ArrayList<>();
+    private String owner = null;
 
 
 
@@ -89,6 +90,14 @@ public abstract class Vehicle {
                 queue.add(c.clone());
             }
         return queue;
+    }
+
+    /**
+     * Indica o dono do veículo
+     * @return Dono
+     */
+    public String getOwner(){
+        return this.owner;
     }
 
     /**
@@ -210,6 +219,19 @@ public abstract class Vehicle {
             return s;
         }
         else return "Fila de espera vazia.";
+    }
+
+    /**
+     * Associa um condutor/empresa a um veículo
+     * @param owner Condutor/Empresa
+     * @return Adicionado com sucesso (true) ou já tinha dono (false)
+     */
+    public boolean addOwner(String owner){
+        if (this.owner != null) {
+            this.owner = owner;
+            return true;
+        }
+        else return false;
     }
 
     /**

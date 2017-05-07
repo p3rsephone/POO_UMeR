@@ -19,20 +19,19 @@ public class Driver extends User {
 
 	/**
 	 * Constrói um novo user a partir dos diferentes parametros fornecidos
-	 * @param email Email
-	 * @param address 	Morada
-	 * @param name 	Nome
-	 * @param birthday Dia de nascimento
-	 * @param password	Password
-	 * @param position Posição
-	 * @param grading Classificação do motorista
-	 * @param availability Disponibilidade
-	 * @param mileage Kilometragem
-	 * @param timeCompliance Grau de cumprimento de horário
-	 * @param numberOfReviews Número de avaliações
-	 * @param trips Viagens feitas
+	 * @param email 			Email
+	 * @param address 			Morada
+	 * @param name 				Nome
+	 * @param birthday 			Dia de nascimento
+	 * @param password			Password
+	 * @param grading 			Classificação do motorista
+	 * @param availability 		Disponibilidade
+	 * @param mileage		 	Kilometragem
+	 * @param timeCompliance 	Grau de cumprimento de horário
+	 * @param numberOfReviews 	Número de avaliações
+	 * @param trips 			Viagens feitas
 	 */
-    public Driver(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, double grading, Boolean availability, double timeCompliance, int numberOfReviews, ArrayList<Trip> trips, int numberOfTrips){
+    public Driver(String email, String name, String password, String address, LocalDate birthday, double totalDistance, double grading, Boolean availability, double timeCompliance, int numberOfReviews, ArrayList<Trip> trips, int numberOfTrips){
 		super(email, name, password, address, birthday, totalDistance, trips, numberOfTrips);
 		this.grading = grading;
 		this.availability = availability;
