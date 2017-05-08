@@ -13,7 +13,7 @@ public class Test {
         System.out.println("Test User" + "\n" + "-----------------");
         Point2D.Double pos = new Point2D.Double(14.2, 8);
         LocalDate birth = LocalDate.of(1965, 5, 21);
-        Client u = new Client("as31sd@ashjdas.com", "asdjasd", "ahdja3r1rf", "asdjas", birth, pos, 1200, null, 0, 0.2, 20);
+        Client u = new Client("as31sd@ashjdas.com", "asdjasd", "ahdja3r1rf", "asdjas", birth, pos, 1200, null, 0, 20, 10.69);
         System.out.println(u);
     }
 
@@ -29,7 +29,7 @@ public class Test {
 
         Point2D.Double pos1 = new Point2D.Double(14.2, 8);
         LocalDate birth1 = LocalDate.of(1965, 5, 21);
-        Client u1 = new Client("asdasd@ashjdas.com", "Kashjgdsad", "ghsjdsad", "nsjfdka", birth1, pos1, 100, null, 12, 0.2, 20);
+        Client u1 = new Client("asdasd@ashjdas.com", "Kashjgdsad", "ghsjdsad", "nsjfdka", birth1, pos1, 100, null, 12, 20, 9.47);
 
         LocalDate birth2 = LocalDate.of(1965, 5, 21);
         Driver u2 = new Driver("dghsdad@ashjdas.com", "Fhshfbaas", "adfsadsasd", "asdjas", birth2, 100, 4.0, true, 0.9, 13, null ,13);
@@ -38,12 +38,14 @@ public class Test {
 
         Trip t = new Trip(1, start, end, time, price, date, carPlate, u2, u1, 8);
         System.out.println("Antes viagem \n");
-
+        
+        System.out.println(u1);
         System.out.println(u2);
         System.out.println("\n" + "Trip " + "\n" + t + "\n");
         System.out.println("Depois viagem \n");
         u2.addTrip(t);
         u1.addTrip(t);
+        System.out.println(u1);
         System.out.println(u2);
     }
 
@@ -58,7 +60,7 @@ public class Test {
         String address1 = "12 hgdad d asjda";
         Point2D.Double posx = new Point2D.Double(14.2, 8);
         LocalDate birth1 = LocalDate.of(1965, 5, 21);
-        Client c1 = new Client(email1, name1, password1, address1, birth1, posx, 0, null, 0, 0.2, 0);
+        Client c1 = new Client(email1, name1, password1, address1, birth1, posx, 0, null, 0, 0, 22);
 
         String email2 = "jhgdsad@ashjvasd.com";
         String name2 = "KLaxsa hgsdashdh";
@@ -66,7 +68,7 @@ public class Test {
         String address2 = "83 GHJAS asjda";
         Point2D.Double pos2 = new Point2D.Double(7, 1);
         LocalDate birth2 = LocalDate.of(1990, 8,9);
-        Client c2 = new Client(email2, name2, password2, address2, birth2, pos2, 0, null, 0, 0.4, 0);
+        Client c2 = new Client(email2, name2, password2, address2, birth2, pos2, 0, null, 0, 0, 42);
         //-----------------------------
 
         String matricula1 = "GS-23-34";
@@ -129,12 +131,12 @@ public class Test {
         LocalDate birth8 = LocalDate.of(1987, 1, 14);
         LocalDate birth9 = LocalDate.of(1991, 10, 4);
 
-        Client c1 = new Client("c1@abc.com", "c1", "ihpdha", "12 dass", birth1, pos1, 0, null, 0, 0.2, 0);
-        Client c2 = new Client("c2@abc.com", "c2", "12SDFASF", "53 sd", birth2, pos2, 0, null, 0, 0.4, 0);
-        Client c3 = new Client("c3@abc.com", "c3", "JBDFBJC", "98 djhgf", birth3, pos3, 0, null, 0, 0.4, 0);
-        Client c4 = new Client("c4@abc.com", "c4", "nahdiuags", "91 iuas", birth4, pos4, 0, null, 0, 0.4, 0);
-        Client c5 = new Client("c5@abc.com", "c5", "u296asd", "987 add", birth5, pos5, 0, null, 0, 0.4, 0);
-        Client c6 = new Client("c6@abc.com", "c6", "6dcasg", "67 adsst", birth6, pos6, 0, null, 0, 0.4, 0);
+        Client c1 = new Client("c1@abc.com", "c1", "ihpdha", "12 dass", birth1, pos1, 0, null, 0, 0, 1.2);
+        Client c2 = new Client("c2@abc.com", "c2", "12SDFASF", "53 sd", birth2, pos2, 0, null, 0, 0, 20);
+        Client c3 = new Client("c3@abc.com", "c3", "JBDFBJC", "98 djhgf", birth3, pos3, 0, null, 0, 0, .30);
+        Client c4 = new Client("c4@abc.com", "c4", "nahdiuags", "91 iuas", birth4, pos4, 0, null, 0, 0, 12);
+        Client c5 = new Client("c5@abc.com", "c5", "u296asd", "987 add", birth5, pos5, 0, null, 0, 0, 3.2);
+        Client c6 = new Client("c6@abc.com", "c6", "6dcasg", "67 adsst", birth6, pos6, 0, null, 0, 0, 2);
         Driver d1 = new Driver("d1@abc.com", "d1", "nbsf2wd", "i9 jasd", birth7, 0, 0, true, 0.8, 0, null, 0);
         Driver d2 = new Driver("d2@abc.com", "d2", "iiasds12", "092dd cssda", birth8, 0, 0, true, 0.8, 0, null, 0);
         Driver d3 = new Driver("d3@abc.com", "d3", "oiuas01", "ua2 iqd", birth9, 0, 0, true, 0.8, 0, null, 0);
@@ -175,6 +177,44 @@ public class Test {
         System.out.println("\n-----Nova Viagem-----\n\n" + t);
         System.out.println("\n\n" + u);
     }
+    
+//-------------------------------------------------------------------------------------------
+public static void testeTop(){
+        
+        UMeR u = new UMeR();
+        Point2D.Double pos = new Point2D.Double(105.9, 20.4);
+        LocalDate birth1 = LocalDate.of(1985, 12, 2);
+        
+        Client c1 = new Client("c1@abc.com", "c1", "ihpdha", "12 dass", birth1, pos, 0, null, 0, 0, 12.2);
+        Client c2 = new Client("c2@abc.com", "c2", "12SDFASF", "53 sd", birth1, pos, 0, null, 0, 0, 221);
+        Client c3 = new Client("c3@abc.com", "c3", "JBDFBJC", "98 djhgf", birth1, pos, 0, null, 0, 0, .320);
+        Client c4 = new Client("c4@abc.com", "c4", "nahdiuags", "91 iuas", birth1, pos, 0, null, 0, 0, 122);
+        Client c5 = new Client("c5@abc.com", "c5", "u296asd", "987 add", birth1, pos, 0, null, 0, 0, 32.2);
+        Client c6 = new Client("c6@abc.com", "c6", "6dcasg", "67 adsst", birth1, pos, 0, null, 0, 0, 22);
+        Client c7 = new Client("c1@12.com", "c7", "ihpdha", "12 dass", birth1, pos, 0, null, 0, 0, 12.2);
+        Client c8 = new Client("c2@aD21A SAbc.com", "c8", "12SDFASF", "53 sd", birth1, pos, 0, null, 0, 0, 220);
+        Client c9 = new Client("c3@aDS Abc.com", "c9", "JBDFBJC", "98 djhgf", birth1, pos, 0, null, 0, 0, .230);
+        Client c10 = new Client("c4@DSA2SAabc.com", "c10", "nahdiuags", "91 iuas", birth1, pos, 0, null, 0, 0, 212);
+        Client c11 = new Client("c52@abas2c.com", "c11", "u296asd", "987 add", birth1, pos, 0, null, 0, 0, 32.0);
+        Client c12 = new Client("c6@abc.11com", "c12", "6dcasg", "67 adsst", birth1, pos, 0, null, 0, 0, 2.2);
+        
+        u.registerUser(c1, null);
+        u.registerUser(c2, null);
+        u.registerUser(c3, null);
+        u.registerUser(c4, null);
+        u.registerUser(c5, null);
+        u.registerUser(c6, null);
+        u.registerUser(c7, null);
+        u.registerUser(c8, null);
+        u.registerUser(c9, null);
+        u.registerUser(c10, null);
+        u.registerUser(c11, null);
+        u.registerUser(c12, null);
+        
+        System.out.println("---------------- TOP 10 ----------------\n");
+        u.topClient();
+
+    }
 
     //-------------------------------------------------------------------------------//
 
@@ -182,6 +222,7 @@ public class Test {
         //testUser();
         //testTrip();
         //testeVehicle();
-        testeUmer();
+        //testeUmer();
+        testeTop();
     }
 }

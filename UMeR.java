@@ -2,15 +2,15 @@ import java.awt.geom.Point2D;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.lang.Comparable;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
-
 
 /**
  * Write a description of class UMeR here.
  */
 
-public class UMeR{
+public class UMeR {
 
     /** Variáveis de instância */
     private HashMap<String, Driver> driversP;
@@ -21,7 +21,6 @@ public class UMeR{
     private ArrayList<Trip> trips;
     private int tripID;
     private int weather;
-
 
     /** Construtores */
     public UMeR(){
@@ -35,7 +34,6 @@ public class UMeR{
         this.weather     = 0;
     }
 
-
     /** Métodos de instância */
     /**
      * Retorna uma cópia com o Map de drivers
@@ -44,8 +42,8 @@ public class UMeR{
     public HashMap<String, Driver> getDrivers() {
         HashMap<String,Driver> newDrivers = new HashMap<>();
         for (Driver d: this.driversP.values())
-            driversP.put(d.getEmail(), d.clone());
-        return driversP;
+            newDrivers.put(d.getEmail(), d.clone());
+        return newDrivers;
     }
 
     /**
@@ -151,9 +149,9 @@ public class UMeR{
      */
     public String toString(){
         return "---Drivers---\n" + this.driversP.keySet() +
-                "\n---Clients---\n" + this.clients.keySet() +
-                "\n---Vehicles---\n" + this.vehiclesP.keySet() +
-                "\n---Number of trips---\n" + this.tripID;
+        "\n---Clients---\n" + this.clients.keySet() +
+        "\n---Vehicles---\n" + this.vehiclesP.keySet() +
+        "\n---Number of trips---\n" + this.tripID;
     }
 
     /**
@@ -275,7 +273,6 @@ public class UMeR{
         return traffic;
     }
 
-
     /**
      * Calcula o tempo real de uma viagem, a partir de uma série de variáveis e de fatores aleatótios
      * @param start     Início da viagem
@@ -318,7 +315,7 @@ public class UMeR{
         double weatherDelay = this.weather * (weatherMultiplier / 5);
 
         double multiplier = 0.9 + driverSuccess*driverMultiplier + carSuccess*carMultiplier
-                            + trafficDelay + weatherDelay - driverSkill*driverMultiplier;
+            + trafficDelay + weatherDelay - driverSkill*driverMultiplier;
 
         double realTime = eta*multiplier;
         return realTime;
@@ -354,10 +351,47 @@ public class UMeR{
         int rating = 5;
 
         Trip trip = new Trip(++this.tripID, client.getPosition(), destination, realTimeToDest,
-                             price, date, vehicle.getRegistration(), driver, client, rating);
+                price, date, vehicle.getRegistration(), driver, client, rating);
 
         return trip;
     }
-    //public boolean newTripClosest(Client c, Point2D.Double destination){
-    //public void newTripSpecific(Client c, String driverEmail);
+
+    public void topClient(){
+        List<Client> list = new ArrayList<Client>(this.clients.values());
+        Collections.sort(list,new Comparator<Client>(){
+                @Override
+                public int compare(Client c1, Client c2) {
+                    if(c1.getMoney() < c2.getMoney()){
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+            
+        int size = list.size();
+        int n=10;
+        if (size < 10)  n = size;
+        
+        ArrayList<Client> top = new ArrayList<>(n);
+        for(int i=0; i<n; i++){
+            top.add(i,list.get(i));
+        }
+
+        printTop(top);
+
+    }
+
+
+
+    public void printTop (ArrayList<Client> top){
+
+        for(Client c : top){
+            System.out.print("Utilizador - " + c.getName() + " Gastou: " + c.getMoney() + " euros" + "\n");
+        }
+
+    }
+
+    //TODO: public boolean newTripClosest(Client c, Point2D.Double destination)
+    //TODO: public void newTripSpecific(Client c, String driverEmail);
 }
