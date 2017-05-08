@@ -16,7 +16,7 @@ public class Van extends Vehicle {
     public Van() {
         this.setRegistration(null);
         this.setSpeed(65);
-        this.setPrice(1.80);
+        this.setPrice(1.90);
         this.setReliable(0);
         this.setAvailable(true);
         this.setSeats(9);
@@ -62,19 +62,4 @@ public class Van extends Vehicle {
     public Van clone(){
         return new Van(this);
     }
-
-	/**
-	 * Calcula o trânsito à volta de uma carrinha
-	 * @param vehicles Map de todos os veículos
-	 * @return Nível de trânsito
-	 */
-	public int calculateTraffic(HashMap<String,Vehicle> vehicles){
-		double minDist = 3;
-		int traffic = 1;;
-		for (Vehicle v : vehicles.values())
-			if (v.getPosition().distance(this.getPosition()) <= minDist);
-				traffic++;
-
-		return traffic;
-	}
 }

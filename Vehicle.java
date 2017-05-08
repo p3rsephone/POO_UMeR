@@ -16,6 +16,9 @@ public abstract class Vehicle {
     private int seats;
     private Point2D.Double position;
     private LinkedList<Client> queue = new LinkedList<>();
+    private ArrayList<Trip> trips = new ArrayList<>();
+    private String owner = null;
+
 
 
     /**Métodos de Instância*/
@@ -90,6 +93,14 @@ public abstract class Vehicle {
     }
 
     /**
+     * Indica o dono do veículo
+     * @return Dono
+     */
+    public String getOwner(){
+        return this.owner;
+    }
+
+    /**
      * Altera a matricula de um veiculo
      * @param registration Nova matricula
      */
@@ -150,9 +161,8 @@ public abstract class Vehicle {
      * @param queue Nova fila de espera
      */
     public void setQueue(LinkedList<Client> queue){
-        this.queue = queue;
+        this.queue = new LinkedList<>(queue);
     }
-
 
     /**
      * Adiciona um Cliente a uma fila de espera
@@ -172,19 +182,11 @@ public abstract class Vehicle {
         return this.registration.equals(v.getRegistration());
     }
 
-
     /**
      * Faz a cópia de um veiculo
      * @return Cópia de Veiculo
      */
     public abstract Vehicle clone();
-
-    /**
-     * Calcula o trânsito à volta de um veículo
-     * @return Nível de trânsito
-     */
-    public abstract int calculateTraffic(HashMap<String,Vehicle> vehicles); //Só vai ajudar a calcular o tempo real
-
 
     /**
      * Imprime a informação de um veículo
@@ -217,5 +219,26 @@ public abstract class Vehicle {
             return s.toString();
         }
         else return "Fila de espera vazia.";
+    }
+
+    /**
+     * Associa um condutor/empresa a um veículo
+     * @param owner Condutor/Empresa
+     * @return Adicionado com sucesso (true) ou já tinha dono (false)
+     */
+    public boolean addOwner(String owner){
+        if (this.owner != null) {
+            this.owner = owner;
+            return true;
+        }
+        else return false;
+    }
+
+    /**
+     * Adiciona uma viagem a um veículo
+     * @param t Viagem a adicionar
+     */
+    public void addTrip(Trip t){
+        this.trips.add(t);
     }
 }

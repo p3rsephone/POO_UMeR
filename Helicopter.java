@@ -36,7 +36,7 @@ public class Helicopter extends Vehicle {
         this.setPosition(new Point2D.Double(position.getX(), position.getY()));
         this.setSeats(3);
         this.setSpeed(110);
-        this.setPrice(2.85);
+        this.setPrice(8.5);
     }
 
     /**
@@ -60,12 +60,4 @@ public class Helicopter extends Vehicle {
     public Helicopter clone(){
     	return new Helicopter(this);
     }
-
-	/**
-	 * Calcula o trânsito à volta de um Helicoptero
-	 * @return Nível de trânsito
-	 */
-	public int calculateTraffic(HashMap<String,Vehicle> vehicles){
-		return 1;
-	}
 }
