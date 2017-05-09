@@ -39,7 +39,7 @@ public class UMeR {
      * Retorna uma cópia com o Map de drivers
      * @return Map drivers
      */
-    public HashMap<String, Driver> getDrivers() {
+    public HashMap<String, Driver> getDriversP() {
         HashMap<String,Driver> newDrivers = new HashMap<>();
         for (Driver d: this.driversP.values())
             newDrivers.put(d.getEmail(), d.clone());
@@ -144,6 +144,17 @@ public class UMeR {
     }
 
     /**
+     * Retorna uma cópia das empresas
+     * @return Empresas
+     */
+    public HashMap<String, Company> getCompanies() {
+        HashMap<String,Company> newCompanies = new HashMap<>();
+        for (Company c: this.companies.values())
+            newCompanies.put(c.getName(), c.clone());
+        return newCompanies;
+    }
+
+    /**
      * Imprime a informação da Empresa
      * @return String com a informação
      */
@@ -154,6 +165,19 @@ public class UMeR {
         "\n---Number of trips---\n" + this.tripID;
     }
 
+    public HashMap<String, User> allUsers(){
+        HashMap<String, User> allUsers = new HashMap<>();
+        for (Client client : this.clients.values())
+            allUsers.put(client.getEmail(), client.clone());
+        for (Driver driver : this.driversP.values())
+            allUsers.put(driver.getEmail(), driver.clone());
+        for (Company company : this.companies.values())
+            for (Driver driver : company.getDrivers().values())
+                allUsers.put(driver.getEmail(), driver.clone());
+
+        return allUsers;
+    }
+
     /**
      * Regista um utilizador (Condutor ou Cliente). Caso seja para registar um condutor numa empresa, passar o nome desta como parámetro
      * @param u         User a registar
@@ -161,7 +185,8 @@ public class UMeR {
      * @return Registou com sucesso (true) ou já existe (false)
      */
     public boolean registerUser(User u, String company){
-        if (this.driversP.get(u.getEmail()) == null && this.clients.get(u.getEmail()) == null){
+        if (this.driversP.get(u.getEmail()) == null && this.clients.get(u.getEmail()) == null
+                && this.companies.get(u.getName()) == null){
             if (u instanceof Client)
                 this.clients.put(u.getEmail(), (Client) u.clone());
             else this.driversP.put(u.getEmail(), (Driver) u.clone());
@@ -180,6 +205,20 @@ public class UMeR {
             Vehicle vehicle = v.clone();
             this.vehiclesP.put(vehicle.getRegistration(), vehicle);
             this.allVehicles.put(vehicle.getRegistration(), vehicle);
+            return true;
+        }
+        else return false;
+    }
+
+    /**
+     * Regista uma empresa
+     * @param name Nome da empresa
+     * @return Registou com sucesso (true) ou empresa já existe (false)-
+     */
+    public boolean registerCompany(String name, String password){
+        if (this.companies.get(name) == null && this.allUsers().get(name) == null){
+            Company c = new Company(name, password);
+            this.companies.put(name, c.clone());
             return true;
         }
         else return false;

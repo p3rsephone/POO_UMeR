@@ -41,6 +41,22 @@ public class Driver extends User {
     }
 
 	/**
+	 * Cria um novo condutor a partir de parametros de registo
+	 * @param email		Email
+	 * @param name		Name
+	 * @param password	Password
+	 * @param address	Morada
+	 * @param birthday	Aniversário
+	 */
+    public Driver(String email, String name, String password, String address, LocalDate birthday, double timeCompliance){
+    	super(email, name, password, address, birthday, 0, null, 0);
+    	this.grading = 0;
+    	this.availability = true;
+    	this.timeCompliance = timeCompliance;
+    	this.numberOfReviews = 0;
+	}
+
+	/**
 	* Constroi um motorista a partir de um já definido
 	* @param d
 	*/
