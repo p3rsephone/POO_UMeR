@@ -48,7 +48,7 @@ public class Client extends User {
      * @param birthday  Dia de nascimento
      * @param position  Posição
      */
-    public Client(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position){
+    public Client(String email, String name, String password, String address, LocalDate birthday){
         super(email, name, password, address, birthday, 0, null, 0);
         this.points = 0;
         this.position = new Point2D.Double(position.getX(), position.getY());
