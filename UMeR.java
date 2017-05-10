@@ -2,19 +2,19 @@ import java.awt.geom.Point2D;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.lang.Comparable;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
-
 
 /**
  * Write a description of class UMeR here.
  */
 
-public class UMeR{
+public class UMeR {
 
     /** Variáveis de instância */
     private HashMap<String, Driver> driversP;
-	private HashMap<String, Driver> allDrivers;
+    private HashMap<String, Driver> allDrivers;
     private HashMap<String, Client> clients;
     private HashMap<String, Vehicle> vehiclesP;
     private HashMap<String, Vehicle> allVehicles;
@@ -23,11 +23,10 @@ public class UMeR{
     private int tripID;
     private int weather;
 
-
     /** Construtores */
     public UMeR(){
         this.driversP    = new HashMap<>();
-		this.allDrivers  = new HashMap<>();
+        this.allDrivers  = new HashMap<>();
         this.clients     = new HashMap<>();
         this.vehiclesP   = new HashMap<>();
         this.allVehicles = new HashMap<>();
@@ -37,18 +36,16 @@ public class UMeR{
         this.weather     = 0;
     }
 
-
     /** Métodos de instância */
     /**
      * Retorna uma cópia com o Map de drivers
      * @return Map drivers
      */
-    public HashMap<String, Driver> getDrivers() {
+    public HashMap<String, Driver> getDriversP() {
         HashMap<String,Driver> newDrivers = new HashMap<>();
-        for (Driver d: this.driversP.values()) {
-            driversP.put(d.getEmail(), d.clone());
-		}
-        return driversP;
+        for (Driver d: this.driversP.values())
+            newDrivers.put(d.getEmail(), d.clone());
+        return newDrivers;
     }
 
     /**
@@ -67,7 +64,7 @@ public class UMeR{
         HashMap<String,Client> newClients = new HashMap<>();
         for (Client c: this.clients.values()) {
             newClients.put(c.getEmail(), c.clone());
-		}
+        }
         return newClients;
     }
 
@@ -87,7 +84,7 @@ public class UMeR{
         HashMap<String,Vehicle> newVehicles = new HashMap<>();
         for (Vehicle v: this.vehiclesP.values()) {
             newVehicles.put(v.getRegistration(), v.clone());
-		}
+        }
         return vehiclesP;
     }
 
@@ -107,7 +104,7 @@ public class UMeR{
         ArrayList<Trip> newTrips = new ArrayList<>();
         for (Trip t: this.trips) {
             newTrips.add(t);
-		}
+        }
         return newTrips;
     }
 
@@ -152,14 +149,38 @@ public class UMeR{
     }
 
     /**
+     * Retorna uma cópia das empresas
+     * @return Empresas
+     */
+    public HashMap<String, Company> getCompanies() {
+        HashMap<String,Company> newCompanies = new HashMap<>();
+        for (Company c: this.companies.values())
+            newCompanies.put(c.getName(), c.clone());
+        return newCompanies;
+    }
+
+    /**
      * Imprime a informação da Empresa
      * @return String com a informação
      */
     public String toString(){
         return "---Drivers---\n" + this.driversP.keySet() +
-                "\n---Clients---\n" + this.clients.keySet() +
-                "\n---Vehicles---\n" + this.vehiclesP.keySet() +
-                "\n---Number of trips---\n" + this.tripID;
+        "\n---Clients---\n" + this.clients.keySet() +
+        "\n---Vehicles---\n" + this.vehiclesP.keySet() +
+        "\n---Number of trips---\n" + this.tripID;
+    }
+
+    public HashMap<String, User> allUsers(){
+        HashMap<String, User> allUsers = new HashMap<>();
+        for (Client client : this.clients.values())
+            allUsers.put(client.getEmail(), client.clone());
+        for (Driver driver : this.driversP.values())
+            allUsers.put(driver.getEmail(), driver.clone());
+        for (Company company : this.companies.values())
+            for (Driver driver : company.getDrivers().values())
+                allUsers.put(driver.getEmail(), driver.clone());
+
+        return allUsers;
     }
 
     /**
@@ -169,13 +190,14 @@ public class UMeR{
      * @return Registou com sucesso (true) ou já existe (false)
      */
     public boolean registerUser(User u, String company){
-        if (this.driversP.get(u.getEmail()) == null && this.clients.get(u.getEmail()) == null){
-            if (u instanceof Client){
+        if (this.driversP.get(u.getEmail()) == null && this.clients.get(u.getEmail()) == null
+                && this.companies.get(u.getName()) == null){
+            if (u instanceof Client) {
                 this.clients.put(u.getEmail(), (Client) u.clone());
             } else {
-				this.driversP.put(u.getEmail(), (Driver) u.clone());
-				this.allDrivers.put(u.getEmail(), (Driver) u.clone());
-			}
+                this.driversP.put(u.getEmail(), (Driver) u.clone());
+                this.allDrivers.put(u.getEmail(), (Driver) u.clone());
+            }
             return true;
         }
         else return false;
@@ -191,6 +213,20 @@ public class UMeR{
             Vehicle vehicle = v.clone();
             this.vehiclesP.put(vehicle.getRegistration(), vehicle);
             this.allVehicles.put(vehicle.getRegistration(), vehicle);
+            return true;
+        }
+        else return false;
+    }
+
+    /**
+     * Regista uma empresa
+     * @param name Nome da empresa
+     * @return Registou com sucesso (true) ou empresa já existe (false)-
+     */
+    public boolean registerCompany(String name, String password){
+        if (this.companies.get(name) == null && this.allUsers().get(name) == null){
+            Company c = new Company(name, password);
+            this.companies.put(name, c.clone());
             return true;
         }
         else return false;
@@ -219,7 +255,7 @@ public class UMeR{
     public void removeUser(User u){
         if (u instanceof Client) {
             this.clients.remove(u);
-		}
+        }
         else this.driversP.remove(u);
     }
 
@@ -253,8 +289,8 @@ public class UMeR{
                     min = vehicle.getPosition().distance(client.getPosition());
                     closestTaxi = vehicle.getRegistration();
                 }
-			}
-		}
+            }
+        }
         return closestTaxi;
     }
 
@@ -281,41 +317,41 @@ public class UMeR{
         int traffic = 1;
         for (Vehicle vehicles : this.allVehicles.values()) {
             if (vehicles.getPosition().distance(v.getPosition()) <= radius) {
-        		traffic++;
-			}
-		}
+                traffic++;
+            }
+        }
         return traffic;
     }
 
-	/**
+    /**
      * Retorna o driver com este email
      * @param driverEmail
      * @return Veículo
      */
-	public Vehicle findDriver(String driverEmail) {
-		for (Driver driver : this.allDrivers.values()) {
-            if (driver.getOwner() == driverEmail) {
-        		return driver;
-			}
-		}
-		return new Driver();
-		//TODO: Exceptions
-	}
+    public Driver findDriver(String driverEmail) {
+        for (Driver driver : this.allDrivers.values()) {
+            if (driver.getEmail() == driverEmail) {
+                return driver;
+            }
+        }
+        return new Driver();
+        //TODO: Exceptions
+    }
 
-	/**
+    /**
      * Retorna o veículo cujo dono tem este email
      * @param driverEmail
      * @return Veículo
      */
-	public Vehicle findVehicle(String driverEmail) {
-		for (Vehicle vehicle : this.allVehicles.values()) {
+    public Vehicle findVehicle(String driverEmail) {
+        for (Vehicle vehicle : this.allVehicles.values()) {
             if (vehicle.getOwner() == driverEmail) {
-        		return vehicle;
-			}
-		}
-		return new Car();
-		//TODO: Exceptions
-	}
+                return vehicle;
+            }
+        }
+        return new Car();
+        //TODO: Exceptions
+    }
 
     /**
      * Calcula o tempo real de uma viagem, a partir de uma série de variáveis e de fatores aleatótios
@@ -359,7 +395,7 @@ public class UMeR{
         double weatherDelay = this.weather * (weatherMultiplier / 5);
 
         double multiplier = 0.9 + driverSuccess*driverMultiplier + carSuccess*carMultiplier
-                            + trafficDelay + weatherDelay - driverSkill*driverMultiplier;
+            + trafficDelay + weatherDelay - driverSkill*driverMultiplier;
 
         double realTime = eta*multiplier;
         return realTime;
@@ -375,72 +411,106 @@ public class UMeR{
      */
     public Trip newTrip(Client client, Driver driver, Vehicle vehicle, Point2D.Double destination){
         LocalDate date = LocalDate.now();
-		if (vehicle instanceof Helicopter && !client.isPremium()){
-			newTrip(client, driver, new Car(), destination);
-			//TODO:Exception
-		} else {
+        Trip trip;
+        if (vehicle instanceof Helicopter && !client.isPremium()){
+            trip = newTrip(client, driver, new Car(), destination);
+            //TODO:Exception
+        } else {
 
-	        //Times
-	        double etaToDest = estimatedTime(client.getPosition(), destination, vehicle.getSpeed());
-	        double realTimeToDest = realTime(client.getPosition(), destination, driver, vehicle);
-	        double timeDiffPercentage =  realTimeToDest / etaToDest ;
+            //Times
+            double etaToDest = estimatedTime(client.getPosition(), destination, vehicle.getSpeed());
+            double realTimeToDest = realTime(client.getPosition(), destination, driver, vehicle);
+            double timeDiffPercentage =  realTimeToDest / etaToDest ;
 
-	        //Price
-	        double price = 2;
-	        double distanceToDest = client.getPosition().distance(destination);
-	        System.out.println(timeDiffPercentage);
-	        if (timeDiffPercentage <= 1.25)
-	            price += vehicle.getPrice() * distanceToDest * timeDiffPercentage;
-	        else price = (vehicle.getPrice() * distanceToDest) - (vehicle.getPrice() * distanceToDest * (timeDiffPercentage-1));
+            //Price
+            double price = 2;
+            double distanceToDest = client.getPosition().distance(destination);
+            System.out.println(timeDiffPercentage);
+            if (timeDiffPercentage <= 1.25)
+                price += vehicle.getPrice() * distanceToDest * timeDiffPercentage;
+            else price = (vehicle.getPrice() * distanceToDest) - (vehicle.getPrice() * distanceToDest * (timeDiffPercentage-1));
 
-			//TODO: Adicionar rating -->fazer diretamente na GUI
-	        int rating = 5;
+            //TODO: Adicionar rating -->fazer diretamente na GUI
+            int rating = 5;
 
-	        Trip trip = new Trip(++this.tripID, client.getPosition(), destination, realTimeToDest,
-	                             price, date, vehicle.getRegistration(), driver, client, rating);
-
-	        return trip;
-		}
+            trip = new Trip(++this.tripID, client.getPosition(), destination, realTimeToDest,
+                                 price, date, vehicle.getRegistration(), driver, client, rating);
+        }
+        return trip;
     }
 
-	/**
-     * Realiza uma viagem com o veiculo disponivel mais próximo
-     * @param c        			Cliente
+    /**
+     * Realiza uma viagem para um condutor especifico
+     * @param c                 Cliente
+     * @param driverEmail       Email do condutor
      * @param destination       Destino
      */
-	public void newTripClosest(Client c, Point2D.Double destination){
-		double min = Integer.MAX_VALUE;
-        Vehicle closestTaxi;
+    public void newTripSpecific(Client c, String driverEmail, Point2D.Double destination){
+        for (Driver driver : this.allDrivers.values()) {
+            if (driver.getEmail() == driverEmail) {
+                Vehicle vehicle = findVehicle(driverEmail);
+                if (driver.isAvailable() && vehicle.isAvailable()) {
+                    newTrip(c, driver, vehicle, destination);//TODO: Adicionar destino do cliente
+                }
+                if (!driver.isAvailable()); //TODO:Exceptions
+                if (driver.isAvailable() && !vehicle.isAvailable()) {
+                    vehicle.addClient(c);
+                }
+            }
+        }
+    }
+
+    /**
+     * Realiza uma viagem com o veiculo disponivel mais próximo
+     * @param c                 Cliente
+     * @param destination       Destino
+     */
+    public Trip newTripClosest(Client c, Point2D.Double destination){
+        double min = Integer.MAX_VALUE;
+        Vehicle closestTaxi = null;
         for (Vehicle vehicle : this.allVehicles.values()){
             if (vehicle.isAvailable() == true) {
-                if (vehicle.getPosition().distance(client.getPosition()) < min){
-                    min = vehicle.getPosition().distance(client.getPosition());
-                    closestTaxi = new Vehicle(vehicle);
+                if (vehicle.getPosition().distance(c.getPosition()) < min){
+                    min = vehicle.getPosition().distance(c.getPosition());
+                    closestTaxi = vehicle;
                 }
-			}
-		}
-		newTrip(c, findDriver(closestTaxi.getOwner()), closestTaxi, destination);
+            }
+        }
+		Trip trip = newTrip(c, findDriver(closestTaxi.getOwner()), closestTaxi, destination);
+		return trip;
+    }
 
-	}
+    public void topClient(){
+        List<Client> list = new ArrayList<Client>(this.clients.values());
+        Collections.sort(list,new Comparator<Client>(){
+                @Override
+                public int compare(Client c1, Client c2) {
+                    if(c1.getMoney() < c2.getMoney()){
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
 
-	/**
-     * Realiza uma viagem para um condutor especifico
-     * @param c        			Cliente
-     * @param driverEmail       Email do condutor
-	 * @param destination 		Destino
-     */
-	public void newTripSpecific(Client c, String driverEmail, Point2D.Double destination){
-		for (Driver driver : this.allDrivers.values()) {
-            if (driver.getEmail() == driverEmail) {
-				Vehicle vehicle = new Vehicle(findVehicle(driverEmail));
-				if (driver.isAvailable() && vehicle.isAvailable()) {
-        			newTrip(c, driver, v, destination);//TODO: Adicionar destino do cliente
-				}
-				if (!driver.isAvailable()); //TODO:Exceptions
-				if (driver.isAvailable() && !vehicle.isAvailable()) {
-					vehicle.addClient(c);
-				}
-			}
-		}
-	}
+        int size = list.size();
+        int n=10;
+        if (size < 10)  n = size;
+
+        ArrayList<Client> top = new ArrayList<>(n);
+        for(int i=0; i<n; i++){
+            top.add(i,list.get(i));
+        }
+
+        printTop(top);
+
+    }
+
+    public void printTop (ArrayList<Client> top){
+
+        for(Client c : top){
+            System.out.print("Utilizador - " + c.getName() + " Gastou: " + c.getMoney() + " euros" + "\n");
+        }
+
+    }
 }

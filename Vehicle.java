@@ -210,13 +210,13 @@ public abstract class Vehicle {
      */
     public String printQueue(){
         if (this.queue.size() > 0) {
-            String s = "";
+            StringBuilder s = new StringBuilder();
             int i = 1;
             for (Client c : this.queue) {
-                s += i + "º lugar :" + c.getEmail() + "\n";
+                s.append(i + "º lugar :" + c.getEmail() + "\n");
                 i++;
             }
-            return s;
+            return s.toString();
         }
         else return "Fila de espera vazia.";
     }

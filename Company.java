@@ -6,7 +6,7 @@ import java.util.Random;
  */
 
 public class Company {
-    private String name;
+    private String name, password;
     private HashMap<String, Driver> drivers;
     private HashMap<String, Vehicle> vehicles;
     private double moneyGenerated;
@@ -16,8 +16,9 @@ public class Company {
      * Criar uma nova empresa a partir do nome
      * @param name Nome da empresa
      */
-    public Company(String name){
+    public Company(String name, String password){
         this.name = name;
+        this.password = password;
         this.moneyGenerated = 0;
         this.totalTrips = 0;
         this.drivers = new HashMap<>();
@@ -30,6 +31,7 @@ public class Company {
      */
     public Company(Company c){
         this.name = c.getName();
+        this.password = c.getPassword();
         this.drivers = new HashMap<>(c.getDrivers());
         this.vehicles = new HashMap<>(c.getVehicles());
         this.moneyGenerated = moneyGenerated;
@@ -42,6 +44,14 @@ public class Company {
      */
     public String getName(){
         return this.name;
+    }
+
+    /**
+     * Retorna a password da empresa
+     * @return Nome da empresa
+     */
+    public String getPassword(){
+        return this.password;
     }
 
     /**
@@ -81,7 +91,6 @@ public class Company {
     public int getTotalTrips() {
         return this.totalTrips;
     }
-
     /**
      * Imprime a informação de uma empresa
      * @return String com a informação da empresa
@@ -89,7 +98,7 @@ public class Company {
     public String toString(){
         return "Empresa " + this.name + "\n" +
                 "---Condutores " + "\n" + printDrivers() + "\n" +
-                "---Veículos + " + "\n" + printVehicles() + "\n" +
+                "---Veículos " + "\n" + printVehicles() + "\n" +
                 "Número de viagens : " + this.totalTrips + "\n" +
                 "Dinheiro gerado : " + this.moneyGenerated + "\n";
     }
