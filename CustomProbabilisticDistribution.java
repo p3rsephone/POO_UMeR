@@ -15,7 +15,7 @@ public class CustomProbabilisticDistribution {
     /** Contrutores */
 
     /**
-     * Constroi um nova distrinuição de probabilidades
+     * Constroi um nova distribuição de probabilidades
      */
     public CustomProbabilisticDistribution(){
         this.size = 100;

@@ -15,6 +15,7 @@ public class Client extends User {
 	/** Variáveis de Instância */
 	private Point2D.Double position;
 	private int points;
+	private boolean premium;
 
 
 	/**
@@ -29,11 +30,13 @@ public class Client extends User {
 	 * @param trips				Viagens feitas
 	 * @param numberOfTrips		Número de viagens
 	 * @param points			Pontos
+	 * @param premium			Premium
 	 */
-    public Client(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, ArrayList<Trip> trips, int numberOfTrips, double rigor, int points) {
+    public Client(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, ArrayList<Trip> trips, int numberOfTrips, double rigor, int points, boolean premium) {
         super(email, name, password, address, birthday, totalDistance, trips, numberOfTrips);
 		this.position = new Point2D.Double(position.getX(), position.getY());
         this.points = points;
+		this.premium = premium;
     }
 
 	/**
@@ -48,6 +51,7 @@ public class Client extends User {
 	public Client(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position){
     	super(email, name, password, address, birthday, 0, null, 0);
     	this.points = 0;
+		this.premium = false;
     	this.position = new Point2D.Double(position.getX(), position.getY());
 	}
 
@@ -58,6 +62,7 @@ public class Client extends User {
 	public Client(Client c) {
 		super(c.getEmail(), c.getName(), c.getPassword(), c.getAddress(), c.getBirthday(), c.getTotalDistance(), c.getTrips(), c.getNumberOfTrips());
 		this.points = c.getPoints();
+		this.premium = c.isPremium();
 		this.position = new Point2D.Double(c.getPosition().getX(), c.getPosition().getY());
     }
 
@@ -67,9 +72,18 @@ public class Client extends User {
 	public Client(){
 		super();
 		this.points = 0;
+		this.premium = false;
 	}
 
     /** Metodos de instância */
+
+	/**
+	 * Verifica se um cliente é premium
+	 * @return Se é premium (True) ou não (False)
+	 */
+	public boolean isPremium() {
+		return premium;
+	}
 
 	/**
 	 * Retorna o número de pontos de um cliente
@@ -104,6 +118,14 @@ public class Client extends User {
 	}
 
 	/**
+	 * Altera o estado premium de um user
+	 * @param b Novo estado
+	 */
+	public void setPremium(boolean b) {
+		this.premium=b;
+	}
+
+	/**
 	 * Retorna a cópia de um cliente
 	 * @return Cópia do cliente
 	 */
@@ -118,7 +140,8 @@ public class Client extends User {
 	public String toString(){
 		return super.toString() + "\n" +
 				"Posição : " + "(" + this.position.getX() + "," + this.position.getY() + ")\n"+
-				"Pontos : " + this.points;
+				"Pontos : " + this.points +
+				"Premium: " + this.premium;
 	}
 
 	/**
@@ -129,5 +152,6 @@ public class Client extends User {
 		super.addTrip(t);
 		this.position.setLocation(t.getEnd());
 		this.points += t.getPrice() / 4;
+		if (!this.premium && (this.points >= 500)) this.setPremium(true);
 	}
 }

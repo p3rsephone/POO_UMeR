@@ -117,7 +117,7 @@ public abstract class Vehicle {
     }
 
     /**
-     * Altera o preço medio por km de um veiculo
+     * Altera o preço médio por km de um veiculo
      * @param price Novo preço
      */
     public void setPrice(double price) {
@@ -171,7 +171,7 @@ public abstract class Vehicle {
     public void addClient(Client c){
         this.queue.addFirst(c.clone());
     }
-    
+
     /**
      * Compara dois veiculos
      *
@@ -190,7 +190,7 @@ public abstract class Vehicle {
 
     /**
      * Imprime a informação de um veículo
-     * @return String String com a informação
+     * @return String com a informação
      */
     public String toString(){
         return  "Tipo : " + this.getClass() + "\n" +

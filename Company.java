@@ -103,6 +103,10 @@ public class Company {
         return c.getName().equals(this.getName());
     }
 
+	/**
+     * Faz clone de uma empresa
+     * @return Cópia da empresa
+     */
     public Company clone(){
         return new Company(this);
     }
@@ -180,7 +184,7 @@ public class Company {
         Random rand = new Random();
         Driver[] drivers = (Driver[]) this.drivers.values()
                                             .stream()
-                                            .filter(driver -> driver.getAvailability() == true)
+                                            .filter(driver -> driver.isAvailable() == true)
                                             .toArray();
         if (drivers.length != 0) {
             Driver d = drivers[rand.nextInt()];

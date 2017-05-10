@@ -26,6 +26,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.scene.paint.Color;
 
 import java.awt.geom.Point2D;
 import java.time.LocalDate;
@@ -55,11 +56,12 @@ public class GUI extends Application{
 
         //Logo
         ImageView logo = new ImageView("images/logo.png");
-        logo.setFitWidth(160);
-        logo.setFitHeight(160);
+        logo.setPreserveRatio(true);
+		logo.setSmooth(true);
+		logo.setFitWidth(300);
 
         //Login button
-        login_button = new Button("LogIn");
+        login_button = new Button("Login");
         login_button.setMaxWidth(150);
         login_button.setOnAction(e -> {
                     System.out.println("Login pressed");
@@ -179,6 +181,7 @@ public class GUI extends Application{
         signupClient_layout.setPadding(new Insets(50, 50, 50, 50));
         signupClient_layout.getChildren().addAll(clientTitle_label, clientName_hbox, clientEmail_hbox, clientAddress_hbox, clientBday_hbox, clientPosition_hbox, clientPassword_hbox, signupClientDone_button, back_button);
         signupClient_menu = new Scene(signupClient_layout, 350, 570);
+		//signupClient_layout.setStyle("-fx-background-color: #FFFFFF;");
 
 
         //Menu
@@ -186,7 +189,7 @@ public class GUI extends Application{
         menu_layout.setPadding(new Insets(20, 100, 20, 100));
         menu_layout.getChildren().addAll(logo, login_button, signupClient_button, signupDriver_button, quit_button);
         menu = new Scene(menu_layout, 350, 570);
-
+		menu_layout.setStyle("-fx-background-color: #FFFFFF;");
 
         this.window.setScene(menu);
         this.window.show();

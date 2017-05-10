@@ -11,7 +11,7 @@ public class Bike extends Vehicle {
     /** CONSTRUTORES */
 
     /**
-     * Cria um Mota sem parâmetros
+     * Cria uma Mota sem parâmetros
      */
     public Bike() {
         this.setRegistration(null);
@@ -24,7 +24,7 @@ public class Bike extends Vehicle {
     }
 
     /**
-     * Constroi um Mota passado os parâmetros
+     * Constroi uma Mota passado os parâmetros
      * @param registration Matrícula
      * @param reliable     Fator de fiabilidade
      * @param position     Posição atual
@@ -40,7 +40,7 @@ public class Bike extends Vehicle {
     }
 
     /**
-     * Constroi um Mota a partir de um já existente
+     * Constroi uma Mota a partir de um já existente
      * @param v Mota já definida
      */
     public Bike(Bike v) {

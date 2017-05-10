@@ -53,7 +53,7 @@ public class Van extends Vehicle {
         this.setPosition(v.getPosition());
     }
 
-    /** Métodos de Intância */
+    /** Métodos de Instância */
 
     /**
      * Faz a cópia de uma carrinha

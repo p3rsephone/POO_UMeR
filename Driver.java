@@ -47,7 +47,7 @@ public class Driver extends User {
 	public Driver(Driver d) {
 		super(d.getEmail(), d.getName(), d.getPassword(), d.getAddress(), d.getBirthday(), d.getTotalDistance(), d.getTrips(), d.getNumberOfTrips());
 		this.grading = d.getGrading();
-		this.availability = d.getAvailability();
+		this.availability = d.isAvailable();
 		this.timeCompliance = d.getTimeCompliance();
 		this.numberOfReviews = d.getNumberOfReviews();
 	}
@@ -73,7 +73,7 @@ public class Driver extends User {
 	 * Retorna a disponibilidade do motorista
 	 * @return Disponibilidade
 	 */
-	public Boolean getAvailability() {
+	public Boolean isAvailable() {
 		return this.availability;
 	}
 

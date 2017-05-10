@@ -14,6 +14,7 @@ public class UMeR{
 
     /** Variáveis de instância */
     private HashMap<String, Driver> driversP;
+	private HashMap<String, Driver> allDrivers;
     private HashMap<String, Client> clients;
     private HashMap<String, Vehicle> vehiclesP;
     private HashMap<String, Vehicle> allVehicles;
@@ -26,6 +27,7 @@ public class UMeR{
     /** Construtores */
     public UMeR(){
         this.driversP    = new HashMap<>();
+		this.allDrivers  = new HashMap<>();
         this.clients     = new HashMap<>();
         this.vehiclesP   = new HashMap<>();
         this.allVehicles = new HashMap<>();
@@ -43,8 +45,9 @@ public class UMeR{
      */
     public HashMap<String, Driver> getDrivers() {
         HashMap<String,Driver> newDrivers = new HashMap<>();
-        for (Driver d: this.driversP.values())
+        for (Driver d: this.driversP.values()) {
             driversP.put(d.getEmail(), d.clone());
+		}
         return driversP;
     }
 
@@ -62,8 +65,9 @@ public class UMeR{
      */
     public HashMap<String, Client> getClients() {
         HashMap<String,Client> newClients = new HashMap<>();
-        for (Client c: this.clients.values())
+        for (Client c: this.clients.values()) {
             newClients.put(c.getEmail(), c.clone());
+		}
         return newClients;
     }
 
@@ -81,8 +85,9 @@ public class UMeR{
      */
     public HashMap<String, Vehicle> getVehicles() {
         HashMap<String,Vehicle> newVehicles = new HashMap<>();
-        for (Vehicle v: this.vehiclesP.values())
+        for (Vehicle v: this.vehiclesP.values()) {
             newVehicles.put(v.getRegistration(), v.clone());
+		}
         return vehiclesP;
     }
 
@@ -100,8 +105,9 @@ public class UMeR{
      */
     public ArrayList<Trip> getTrips() {
         ArrayList<Trip> newTrips = new ArrayList<>();
-        for (Trip t: this.trips)
+        for (Trip t: this.trips) {
             newTrips.add(t);
+		}
         return newTrips;
     }
 
@@ -164,9 +170,12 @@ public class UMeR{
      */
     public boolean registerUser(User u, String company){
         if (this.driversP.get(u.getEmail()) == null && this.clients.get(u.getEmail()) == null){
-            if (u instanceof Client)
+            if (u instanceof Client){
                 this.clients.put(u.getEmail(), (Client) u.clone());
-            else this.driversP.put(u.getEmail(), (Driver) u.clone());
+            } else {
+				this.driversP.put(u.getEmail(), (Driver) u.clone());
+				this.allDrivers.put(u.getEmail(), (Driver) u.clone());
+			}
             return true;
         }
         else return false;
@@ -208,8 +217,9 @@ public class UMeR{
      * @param u Utilizador a remover
      */
     public void removeUser(User u){
-        if (u instanceof Client)
+        if (u instanceof Client) {
             this.clients.remove(u);
+		}
         else this.driversP.remove(u);
     }
 
@@ -237,13 +247,14 @@ public class UMeR{
     public String closestAvailableTaxi(Client client){
         double min = Integer.MAX_VALUE;
         String closestTaxi = null;
-        for (Vehicle vehicle : this.allVehicles.values())
-            if (vehicle.isAvailable() == true)
+        for (Vehicle vehicle : this.allVehicles.values()){
+            if (vehicle.isAvailable() == true) {
                 if (vehicle.getPosition().distance(client.getPosition()) < min){
                     min = vehicle.getPosition().distance(client.getPosition());
                     closestTaxi = vehicle.getRegistration();
                 }
-
+			}
+		}
         return closestTaxi;
     }
 
@@ -268,13 +279,43 @@ public class UMeR{
         if (v instanceof Helicopter) return 1;
 
         int traffic = 1;
-        for (Vehicle vehicles : this.allVehicles.values())
-            if (vehicles.getPosition().distance(v.getPosition()) <= radius);
-        traffic++;
-
+        for (Vehicle vehicles : this.allVehicles.values()) {
+            if (vehicles.getPosition().distance(v.getPosition()) <= radius) {
+        		traffic++;
+			}
+		}
         return traffic;
     }
 
+	/**
+     * Retorna o driver com este email
+     * @param driverEmail
+     * @return Veículo
+     */
+	public Vehicle findDriver(String driverEmail) {
+		for (Driver driver : this.allDrivers.values()) {
+            if (driver.getOwner() == driverEmail) {
+        		return driver;
+			}
+		}
+		return new Driver();
+		//TODO: Exceptions
+	}
+
+	/**
+     * Retorna o veículo cujo dono tem este email
+     * @param driverEmail
+     * @return Veículo
+     */
+	public Vehicle findVehicle(String driverEmail) {
+		for (Vehicle vehicle : this.allVehicles.values()) {
+            if (vehicle.getOwner() == driverEmail) {
+        		return vehicle;
+			}
+		}
+		return new Car();
+		//TODO: Exceptions
+	}
 
     /**
      * Calcula o tempo real de uma viagem, a partir de uma série de variáveis e de fatores aleatótios
@@ -334,30 +375,72 @@ public class UMeR{
      */
     public Trip newTrip(Client client, Driver driver, Vehicle vehicle, Point2D.Double destination){
         LocalDate date = LocalDate.now();
+		if (vehicle instanceof Helicopter && !client.isPremium()){
+			newTrip(client, driver, new Car(), destination);
+			//TODO:Exception
+		} else {
 
-        //Times
-        double etaToClient = estimatedTime(vehicle.getPosition(), client.getPosition(), vehicle.getSpeed());
-        double realTimeToClient = realTime(vehicle.getPosition(), client.getPosition(), driver, vehicle);
-        double etaToDest = estimatedTime(client.getPosition(), destination, vehicle.getSpeed());
-        double realTimeToDest = realTime(client.getPosition(), destination, driver, vehicle);
-        double timeDiffPercentage =  (realTimeToClient + realTimeToDest) / (etaToClient + etaToDest);
+	        //Times
+	        double etaToDest = estimatedTime(client.getPosition(), destination, vehicle.getSpeed());
+	        double realTimeToDest = realTime(client.getPosition(), destination, driver, vehicle);
+	        double timeDiffPercentage =  realTimeToDest / etaToDest ;
 
-        //Price
-        double price = 2;
-        double distanceToDest = client.getPosition().distance(destination);
-        System.out.println(timeDiffPercentage);
-        if (timeDiffPercentage <= 1.25)
-            price += vehicle.getPrice() * distanceToDest * timeDiffPercentage;
-        else price = (vehicle.getPrice() * distanceToDest) - (vehicle.getPrice() * distanceToDest * (timeDiffPercentage-1));
+	        //Price
+	        double price = 2;
+	        double distanceToDest = client.getPosition().distance(destination);
+	        System.out.println(timeDiffPercentage);
+	        if (timeDiffPercentage <= 1.25)
+	            price += vehicle.getPrice() * distanceToDest * timeDiffPercentage;
+	        else price = (vehicle.getPrice() * distanceToDest) - (vehicle.getPrice() * distanceToDest * (timeDiffPercentage-1));
 
-        //Todo : adicionar classificação dada pelo cliente
-        int rating = 5;
+			//TODO: Adicionar rating -->fazer diretamente na GUI
+	        int rating = 5;
 
-        Trip trip = new Trip(++this.tripID, client.getPosition(), destination, realTimeToDest,
-                             price, date, vehicle.getRegistration(), driver, client, rating);
+	        Trip trip = new Trip(++this.tripID, client.getPosition(), destination, realTimeToDest,
+	                             price, date, vehicle.getRegistration(), driver, client, rating);
 
-        return trip;
+	        return trip;
+		}
     }
-    //public boolean newTripClosest(Client c, Point2D.Double destination){
-    //public void newTripSpecific(Client c, String driverEmail);
+
+	/**
+     * Realiza uma viagem com o veiculo disponivel mais próximo
+     * @param c        			Cliente
+     * @param destination       Destino
+     */
+	public void newTripClosest(Client c, Point2D.Double destination){
+		double min = Integer.MAX_VALUE;
+        Vehicle closestTaxi;
+        for (Vehicle vehicle : this.allVehicles.values()){
+            if (vehicle.isAvailable() == true) {
+                if (vehicle.getPosition().distance(client.getPosition()) < min){
+                    min = vehicle.getPosition().distance(client.getPosition());
+                    closestTaxi = new Vehicle(vehicle);
+                }
+			}
+		}
+		newTrip(c, findDriver(closestTaxi.getOwner()), closestTaxi, destination);
+
+	}
+
+	/**
+     * Realiza uma viagem para um condutor especifico
+     * @param c        			Cliente
+     * @param driverEmail       Email do condutor
+	 * @param destination 		Destino
+     */
+	public void newTripSpecific(Client c, String driverEmail, Point2D.Double destination){
+		for (Driver driver : this.allDrivers.values()) {
+            if (driver.getEmail() == driverEmail) {
+				Vehicle vehicle = new Vehicle(findVehicle(driverEmail));
+				if (driver.isAvailable() && vehicle.isAvailable()) {
+        			newTrip(c, driver, v, destination);//TODO: Adicionar destino do cliente
+				}
+				if (!driver.isAvailable()); //TODO:Exceptions
+				if (driver.isAvailable() && !vehicle.isAvailable()) {
+					vehicle.addClient(c);
+				}
+			}
+		}
+	}
 }

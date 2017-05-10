@@ -40,7 +40,7 @@ public class Trip {
         this.client = null;
         this.rating = 0;
     }
-    
+
     /**
      * Constroi uma viagem a partir de vários parametros
      * @param id            ID da viagem
