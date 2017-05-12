@@ -8,7 +8,7 @@ public abstract class Vehicle {
 
     /** Variáveis de Instância */
 
-    private String registration;
+    private String licencePlate;
     private double speed;
     private double price;
     private double reliable;
@@ -25,10 +25,10 @@ public abstract class Vehicle {
 
     /**
      * Retorna a matricula de um veiculo
-     * @return registration Matricula do Veículo
+     * @return licencePlate Matricula do Veículo
      */
-    public String getRegistration() {
-        return this.registration;
+    public String getLicencePlate() {
+        return this.licencePlate;
     }
 
     /**
@@ -102,10 +102,10 @@ public abstract class Vehicle {
 
     /**
      * Altera a matricula de um veiculo
-     * @param registration Nova matricula
+     * @param licencePlate Nova matricula
      */
-    public void setRegistration(String registration) {
-        this.registration = registration;
+    public void setLicencePlate(String licencePlate) {
+        this.licencePlate = licencePlate;
     }
 
     /**
@@ -169,7 +169,7 @@ public abstract class Vehicle {
      * @param c Cliente a adicionar
      */
     public void addClient(Client c){
-        this.queue.addFirst(c.clone());
+        this.queue.addLast(c.clone());
     }
 
     /**
@@ -179,7 +179,7 @@ public abstract class Vehicle {
      * @return É o mesmo veiculo (true) ou não (false)
      */
     public boolean equals(Vehicle v) {
-        return this.registration.equals(v.getRegistration());
+        return this.licencePlate.equals(v.getLicencePlate());
     }
 
     /**
@@ -194,13 +194,14 @@ public abstract class Vehicle {
      */
     public String toString(){
         return  "Tipo : " + this.getClass() + "\n" +
-                "Matricula : " + this.registration + "\n" +
+                "Matricula : " + this.licencePlate + "\n" +
                 "Velocidade média por km : " + this.speed + "\n" +
                 "Preço médio por km : " + this.price    + "\n" +
                 "Fator de fiabilidade : " + this.reliable + "\n" +
                 "Disponibilidade : " + this.available   + "\n" +
                 "Numero de lugares: " + this.seats + "\n" +
                 "Posição : " + "(" + this.position.getX() + "," + this.position.getY() + ")\n"+
+                "Owner : " + this.owner + "\n" +
                 "---------\nFila de Espera : \n"+ printQueue() +"\n\n";
     }
 
@@ -224,14 +225,9 @@ public abstract class Vehicle {
     /**
      * Associa um condutor/empresa a um veículo
      * @param owner Condutor/Empresa
-     * @return Adicionado com sucesso (true) ou já tinha dono (false)
      */
-    public boolean addOwner(String owner){
-        if (this.owner != null) {
-            this.owner = owner;
-            return true;
-        }
-        else return false;
+    public void addOwner(String owner){
+        this.owner = owner;
     }
 
     /**

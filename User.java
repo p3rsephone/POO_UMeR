@@ -21,6 +21,7 @@ public abstract class User {
 	private double totalDistance;
 	private ArrayList<Trip> trips;
 	private int numberOfTrips;
+	private double money;
 
 
     /** Construtores */
@@ -34,13 +35,14 @@ public abstract class User {
 	 * @param birth Dia de nascimento
 	 * @param position Posição
 	 */
-	public User(String email, String name, String password, String address, LocalDate birthday, double totalDistance, ArrayList<Trip> trips, int numberOfTrips){
+	public User(String email, String name, String password, String address, LocalDate birthday, double totalDistance, ArrayList<Trip> trips, int numberOfTrips, double money){
 		this.email = email;
 		this.name = name;
 		this.password = password;
 		this.address = address;
 		this.birthday = LocalDate.of(birthday.getYear(), birthday.getMonth(), birthday.getDayOfMonth());
 		this.totalDistance = totalDistance;
+		this.money = money;
 
 		if (trips != null) {
 			this.trips = new ArrayList<>();
@@ -57,7 +59,7 @@ public abstract class User {
 	 * @param p
 	 */
 	public User(User p){
-		this(p.getEmail(), p.getName(), p.getPassword(), p.getAddress(), p.getBirthday(), p.getTotalDistance(), p.getTrips(), p.getNumberOfTrips());
+		this(p.getEmail(), p.getName(), p.getPassword(), p.getAddress(), p.getBirthday(), p.getTotalDistance(), p.getTrips(), p.getNumberOfTrips(), p.getMoney());
 	}
 
 	/**
@@ -70,6 +72,7 @@ public abstract class User {
 		this.address = null;
 		this.birthday = LocalDate.of(0,0,0);
 		this.trips = new ArrayList<>();
+		this.money = 0;
 	}
 
 
@@ -145,6 +148,14 @@ public abstract class User {
 	}
 
 	/**
+	 * Retorna a quantia de dinheiro gasta/ganha pelo utilizador
+	 * @return
+	 */
+	public double getMoney(){
+		return this.money;
+	}
+
+	/**
 	 * Altera o email de um user
 	 * @param email Novo email
 	 */
@@ -192,19 +203,27 @@ public abstract class User {
 		this.numberOfTrips = numberOfTrips;
 	}
 
+	/**
+	 * Altera o dinheiro gasto/ganho pelo user
+	 * @param money Nova quantia
+	 */
+	public void setMoney(double money){
+		this.money = money;
+	}
 
 	/**
 	 * Imprime a informação de um utilizador
 	 * @return String com a informação
 	 */
 	public String toString(){
-		return 	"Utilizador - " 		+ this.name 		+ "\n" +
-				"eMail : " 				+ this.email 		+ "\n" +
-				"Password : " 			+ this.password 	+ "\n" +
-				"Morada : " 			+ this.address 		+ "\n" +
-				"Data de nascimento : " + this.birthday 	+ "\n" +
-				"Distância Total : " 	+ this.totalDistance + "\n"+
-				"Número de viagens :"	+ this.numberOfTrips;
+		return 	"Utilizador - " 		 + this.name 		  + "\n" +
+				"eMail : " 				 + this.email 		  + "\n" +
+				"Password : " 			 + this.password 	  + "\n" +
+				"Morada : " 			 + this.address 	  + "\n" +
+				"Data de nascimento : "  + this.birthday 	  + "\n" +
+				"Distância Total : " 	 + this.totalDistance + "\n"+
+				"Dinheiro gasto/ganho : "+ this.money 		  + "\n" +
+				"Número de viagens :"	 + this.numberOfTrips;
 	}
 
 	/**
@@ -221,7 +240,7 @@ public abstract class User {
 	 * @return Cópia de User
 	 */
 	public abstract User clone();
-	
+
 	/**
 	 * Adiciona uma viagem a um utilizador
 	 * @param trips Viagem a ser adicionada
@@ -230,6 +249,18 @@ public abstract class User {
 		this.trips.add(t.clone());
 		this.totalDistance += t.distance();
 		this.numberOfTrips++;
+		this.money += t.getPrice();
 	}
 
+	/**
+	 * Retorna as (diferentes) datas das viagens feitas
+	 * @return Datas das viagens
+	 */
+	public ArrayList<String> getDates(){
+		ArrayList<String> dates = new ArrayList<>();
+		for (Trip t: this.trips)
+			if (!dates.contains(t.getDate().toString()))
+				dates.add(t.getDate().toString());
+		return dates;
+	}
 }

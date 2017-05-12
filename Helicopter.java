@@ -14,7 +14,7 @@ public class Helicopter extends Vehicle {
      * Cria um Helicoptero sem parâmetros
      */
     public Helicopter() {
-        this.setRegistration(null);
+        this.setLicencePlate(null);
         this.setSpeed(110);
         this.setPrice(2.85);
         this.setReliable(0);
@@ -25,12 +25,12 @@ public class Helicopter extends Vehicle {
 
     /**
      * Constroi um Helicoptero passado os parâmetros
-     * @param registration Matrícula
+     * @param licencePlate Matrícula
      * @param reliable     Fator de fiabilidade
      * @param position     Posição atual
      */
-    public Helicopter(String registration, double reliable, Point2D.Double position) {
-        this.setRegistration(registration);
+    public Helicopter(String licencePlate, double reliable, Point2D.Double position) {
+        this.setLicencePlate(licencePlate);
         this.setReliable(reliable);
         this.setAvailable(true);
         this.setPosition(new Point2D.Double(position.getX(), position.getY()));
@@ -44,7 +44,7 @@ public class Helicopter extends Vehicle {
      * @param v
      */
     public Helicopter(Helicopter v) {
-        this.setRegistration(v.getRegistration());
+        this.setLicencePlate(v.getLicencePlate());
         this.setSpeed(v.getSpeed());
         this.setPrice(v.getPrice());
         this.setReliable(v.getReliable());

@@ -16,6 +16,7 @@ public class Driver extends User {
 	private double timeCompliance;
 	private int numberOfReviews;
 	private double exp;
+	private String vehicle;
 
 	/**
 	 * Constrói um novo user a partir dos diferentes parametros fornecidos
@@ -31,13 +32,13 @@ public class Driver extends User {
 	 * @param numberOfReviews 	Número de avaliações
 	 * @param trips 			Viagens feitas
 	 */
-    public Driver(String email, String name, String password, String address, LocalDate birthday, double totalDistance, double grading, Boolean availability, double timeCompliance, int numberOfReviews, ArrayList<Trip> trips, int numberOfTrips){
-		super(email, name, password, address, birthday, totalDistance, trips, numberOfTrips);
+    public Driver(String email, String name, String password, String address, LocalDate birthday, double totalDistance, double grading, Boolean availability, double timeCompliance, int numberOfReviews, ArrayList<Trip> trips, int numberOfTrips, double money, String vehicle){
+		super(email, name, password, address, birthday, totalDistance, trips, numberOfTrips, money);
 		this.grading = grading;
 		this.availability = availability;
 		this.timeCompliance = timeCompliance;
 		this.numberOfReviews = numberOfReviews;
-
+		this.vehicle = vehicle;
     }
 
 	/**
@@ -49,11 +50,12 @@ public class Driver extends User {
 	 * @param birthday	Aniversário
 	 */
     public Driver(String email, String name, String password, String address, LocalDate birthday, double timeCompliance){
-    	super(email, name, password, address, birthday, 0, null, 0);
+    	super(email, name, password, address, birthday, 0, null, 0, 0);
     	this.grading = 0;
     	this.availability = true;
     	this.timeCompliance = timeCompliance;
     	this.numberOfReviews = 0;
+    	this.vehicle = vehicle;
 	}
 
 	/**
@@ -61,11 +63,12 @@ public class Driver extends User {
 	* @param d
 	*/
 	public Driver(Driver d) {
-		super(d.getEmail(), d.getName(), d.getPassword(), d.getAddress(), d.getBirthday(), d.getTotalDistance(), d.getTrips(), d.getNumberOfTrips());
+		super(d.getEmail(), d.getName(), d.getPassword(), d.getAddress(), d.getBirthday(), d.getTotalDistance(), d.getTrips(), d.getNumberOfTrips(), d.getMoney());
 		this.grading = d.getGrading();
 		this.availability = d.isAvailable();
 		this.timeCompliance = d.getTimeCompliance();
 		this.numberOfReviews = d.getNumberOfReviews();
+		this.vehicle = d.getVehicle();
 	}
 
 	public Driver(){
@@ -118,6 +121,14 @@ public class Driver extends User {
 	}
 
 	/**
+	 * Retorna a matrícula do seu veículo (se for condutor privado)
+	 * @return Matrícula
+	 */
+	public String getVehicle(){
+		return this.vehicle;
+	}
+
+	/**
 	 * Altera a classificação de um driver
 	 * @param grading Nova classificação
 	 */
@@ -147,6 +158,22 @@ public class Driver extends User {
 	 */
 	public void setNumberOfReviews(int numberOfReviews){
 		this.numberOfReviews = numberOfReviews;
+	}
+
+	/**
+	 * Altera a quantidade de experiencia
+	 * @param exp Nova quantia
+	 */
+	public void setExp(double exp){
+		this.exp = exp;
+	}
+
+	/**
+	 * Altera a matrícula do veículo do driver
+	 * @param vehicle Nova matrícula
+	 */
+	public void setVehicle(String vehicle){
+		this.vehicle = vehicle;
 	}
 
 	/**

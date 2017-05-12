@@ -72,7 +72,7 @@ public class Company {
     public HashMap<String, Vehicle> getVehicles(){
         HashMap<String, Vehicle> vehicles = new HashMap<>();
         for (Vehicle v: this.vehicles.values())
-            vehicles.put(v.getRegistration(), v.clone());
+            vehicles.put(v.getLicencePlate(), v.clone());
         return vehicles;
     }
 
@@ -138,7 +138,7 @@ public class Company {
     public String printVehicles(){
         String s = null;
         for (Vehicle d: this.vehicles.values())
-            s += d.getRegistration() + "\n";
+            s += d.getLicencePlate() + "\n";
         return s;
     }
 
@@ -163,7 +163,7 @@ public class Company {
      */
     public boolean addVehicle(Vehicle v){
         int size = this.vehicles.size();
-        this.vehicles.put(v.getRegistration(), v);
+        this.vehicles.put(v.getLicencePlate(), v);
 
         if (size != this.vehicles.size())
             return true;

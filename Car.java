@@ -14,7 +14,7 @@ public class Car extends Vehicle {
      * Cria um Carro sem parâmetros
      */
     public Car() {
-        this.setRegistration(null);
+        this.setLicencePlate(null);
         this.setSpeed(80);
         this.setPrice(1.30);
         this.setReliable(0);
@@ -25,12 +25,12 @@ public class Car extends Vehicle {
 
     /**
      * Cria um Carro passado os parâmetros
-     * @param registration Matrícula
+     * @param licencePlate Matrícula
      * @param reliable     Fator de fiabilidade
      * @param position     Posição atual
      */
-    public Car(String registration, double reliable, Point2D.Double position) {
-        this.setRegistration(registration);
+    public Car(String licencePlate, double reliable, Point2D.Double position){
+        this.setLicencePlate(licencePlate);
         this.setReliable(reliable);
         this.setAvailable(true);
         this.setPosition(new Point2D.Double(position.getX(), position.getY()));
@@ -44,7 +44,7 @@ public class Car extends Vehicle {
      * @param v Carro já definido
      */
     public Car(Car v) {
-        this.setRegistration(v.getRegistration());
+        this.setLicencePlate(v.getLicencePlate());
         this.setSpeed(v.getSpeed());
         this.setPrice(v.getPrice());
         this.setReliable(v.getReliable());

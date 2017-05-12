@@ -19,7 +19,7 @@ public class Trip {
     private double time;
     private double price;
     private LocalDate date;
-    private String registration;
+    private String licencePlate;
     private User driver, client;
     private int rating;
 
@@ -34,7 +34,7 @@ public class Trip {
         this.end = new Point2D.Double(0, 0);
         this.time = 0.0;
         this.price = 0.0;
-        this.registration = null;
+        this.licencePlate = null;
         this.date =  LocalDate.MIN;
         this.driver = null;
         this.client = null;
@@ -48,18 +48,18 @@ public class Trip {
      * @param end           Posição do fim da viagem
      * @param time          Tempo da viagem
      * @param price         Preço da viagem
-     * @param registration      Matrícula do carro
+     * @param licencePlate      Matrícula do carro
      * @param driver        Condutor
      * @param client        Cliente
      * @param rating        Classificação dada ao condutor pelo cliente
      */
-    public Trip (int id, Point2D.Double start, Point2D.Double end, Double time, Double price, LocalDate date, String registration, User driver, User client, int rating) {
+    public Trip (int id, Point2D.Double start, Point2D.Double end, Double time, Double price, LocalDate date, String licencePlate, User driver, User client, int rating) {
         this.id = id;
         this.start = start;
         this.end = end;
         this.time = time;
         this.price = price;
-        this.registration = registration;
+        this.licencePlate = licencePlate;
         this.date = LocalDate.of(date.getYear(), date.getMonth(), date.getDayOfMonth());
         this.driver = driver;
         this.client = client;
@@ -71,7 +71,7 @@ public class Trip {
      * @param t Viagem
      */
     public Trip (Trip t) {
-        this(t.getID(), t.getStart(), t.getEnd(), t.getTime(), t.getPrice(), t.getDate(), t.getregistration(), t.getDriver(), t.getClient(), t.getRating());
+        this(t.getID(), t.getStart(), t.getEnd(), t.getTime(), t.getPrice(), t.getDate(), t.getLicencePlate(), t.getDriver(), t.getClient(), t.getRating());
     }
 
     /** Metodos de Instância */
@@ -126,8 +126,8 @@ public class Trip {
      * Retorna a matricula do carro onde a viagem foi realizada
      * @return Matrícula
      */
-    public String getregistration() {
-        return this.registration;
+    public String getLicencePlate() {
+        return this.licencePlate;
     }
 
     /**
@@ -162,6 +162,12 @@ public class Trip {
         return new Trip (this);
     }
 
+    public String printRating(){
+        if (this.rating == -1)
+            return "Não classificado";
+        else return Integer.toString(this.rating);
+    }
+
     /**
      * Imprime a informação sobre uma viagem
      * @return String com a informação
@@ -174,7 +180,7 @@ public class Trip {
                 "Preço : " + this.price + "€\n" +
                 "Email condutor : " + this.driver.getEmail() + "\n" +
                 "Email cliente : " + this.client.getEmail() + "\n" +
-                "Classificação :" + this.rating;
+                "Classificação :" + printRating();
     }
 
     /**

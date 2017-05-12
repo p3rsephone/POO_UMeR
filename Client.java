@@ -1,4 +1,3 @@
-
 import java.awt.geom.Point2D;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -16,8 +15,7 @@ public class Client extends User {
     /** Variáveis de Instância */
     private Point2D.Double position;
     private int points;
-    private double money;
-	private boolean premium;
+    boolean premium;
 
 
     /**
@@ -32,15 +30,14 @@ public class Client extends User {
      * @param trips             Viagens feitas
      * @param numberOfTrips     Número de viagens
      * @param points            Pontos
-     * @param money				Dinheiro
-	 * @param premium			Premium
+     * @param money
      */
     public Client(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, ArrayList<Trip> trips, int numberOfTrips,  int points, double money, boolean premium) {
-        super(email, name, password, address, birthday, totalDistance, trips, numberOfTrips);
+        super(email, name, password, address, birthday, totalDistance, trips, numberOfTrips, money);
         this.position = new Point2D.Double(position.getX(), position.getY());
         this.points = points;
-        this.money = money;
-		this.premium = false;
+        this.position = new Point2D.Double(0,0);
+        this.premium = premium;
     }
 
     /**
@@ -53,9 +50,10 @@ public class Client extends User {
      * @param position  Posição
      */
     public Client(String email, String name, String password, String address, LocalDate birthday){
-        super(email, name, password, address, birthday, 0, null, 0);
+        super(email, name, password, address, birthday, 0, null, 0, 0);
         this.points = 0;
-		this.premium = false;
+        this.premium = false;
+        this.position = new Point2D.Double(0,0);
         this.position = new Point2D.Double(position.getX(), position.getY());
     }
 
@@ -64,10 +62,8 @@ public class Client extends User {
     * @param c
     */
     public Client(Client c) {
-        super(c.getEmail(), c.getName(), c.getPassword(), c.getAddress(), c.getBirthday(), c.getTotalDistance(), c.getTrips(), c.getNumberOfTrips());
+        super(c.getEmail(), c.getName(), c.getPassword(), c.getAddress(), c.getBirthday(), c.getTotalDistance(), c.getTrips(), c.getNumberOfTrips(), c.getMoney());
         this.points = c.getPoints();
-        this.money = c.getMoney();
-		this.premium = c.isPremium();
         this.position = new Point2D.Double(c.getPosition().getX(), c.getPosition().getY());
     }
 
@@ -77,28 +73,10 @@ public class Client extends User {
     public Client(){
         super();
         this.points = 0;
-        this.money = 0;
-		this.premium = false;
     }
 
     /** Metodos de instância */
-
-	/**
-	 * Verifica se um cliente é premium
-	 * @return Se é premium (True) ou não (False)
-	 */
-	public boolean isPremium() {
-		return premium;
-	}
-
-    /**
-     * Retorna o dinheiro gasto por um cliente
-     * @return Valor do dinheiro gasto
-     */
-    public double getMoney() {
-        return money;
-    }
-
+    
     /**
      * Retorna o número de pontos de um cliente
      * @return Número de pontos
@@ -114,21 +92,21 @@ public class Client extends User {
     public Point2D.Double getPosition(){
         return new Point2D.Double(this.position.getX(), this.position.getY());
     }
-
-    /**
-     * Altera o dinheiro gasto de um cliente
-     * @param points Novo valor do dinheiro gasto
-     */
-    public void setMoney(double money) {
-        this.money = money;
-    }
-
+    
     /**
      * Altera o número de pontos de um cliente
      * @param points Novo número de pontos
      */
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    /**
+     * Verifica se um cliente é premium
+     * @return Se é premium (True) ou não (False)
+     */
+    public boolean isPremium() {
+        return premium;
     }
 
     /**
@@ -139,13 +117,13 @@ public class Client extends User {
         this.position.setLocation(position.getX(), position.getY());
     }
 
-	/**
-	 * Altera o estado premium de um user
-	 * @param b Novo estado
-	 */
-	public void setPremium(boolean b) {
-		this.premium=b;
-	}
+    /**
+     * Altera o estado premium de um user
+     * @param b Novo estado
+     */
+    public void setPremium(boolean b) {
+        this.premium=b;
+    }
 
     /**
      * Retorna a cópia de um cliente
@@ -162,7 +140,8 @@ public class Client extends User {
     public String toString(){
         return super.toString() + "\n" +
                 "Posição : " + "(" + this.position.getX() + "," + this.position.getY() + ")\n"+
-                "Pontos : " + this.points + "\n" + "Dinheiro gasto: " + this.money + "\n";
+                "Pontos : " + this.points + "\n" +
+                "Premium : " + this.premium;
     }
 
     /**
@@ -173,7 +152,5 @@ public class Client extends User {
         super.addTrip(t);
         this.position.setLocation(t.getEnd());
         this.points += t.getPrice() / 4;
-        this.money += t.getPrice();
-		if (!this.premium && (this.points >= 500)) this.setPremium(true);
     }
 }
