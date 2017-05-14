@@ -14,43 +14,34 @@ public class Car extends Vehicle {
      * Cria um Carro sem parâmetros
      */
     public Car() {
-        this.setLicencePlate(null);
-        this.setSpeed(80);
-        this.setPrice(1.30);
-        this.setReliable(0);
-        this.setAvailable(true);
+        super();
+        this.setSpeed(65);
+        this.setPrice(1.5);
         this.setSeats(4);
-        this.setPosition(new Point2D.Double(0, 0));
     }
 
     /**
-     * Cria um Carro passado os parâmetros
+     * Constroi um Carro passado os parâmetros
      * @param licencePlate Matrícula
      * @param reliable     Fator de fiabilidade
      * @param position     Posição atual
      */
-    public Car(String licencePlate, double reliable, Point2D.Double position){
-        this.setLicencePlate(licencePlate);
-        this.setReliable(reliable);
-        this.setAvailable(true);
-        this.setPosition(new Point2D.Double(position.getX(), position.getY()));
+    public Car(String licencePlate, double reliable, Point2D.Double position, String owner) {
+        super(licencePlate, reliable, position, true, null, null, null, owner);
+        this.setSpeed(65);
+        this.setPrice(1.5);
         this.setSeats(4);
-        this.setSpeed(80);
-        this.setPrice(1.10);
     }
 
     /**
-     * Constroi um Carro a partir de um já existente
-     * @param v Carro já definido
+     * Constroi uma Carro a partir de uma já existente
+     * @param v Carro
      */
     public Car(Car v) {
-        this.setLicencePlate(v.getLicencePlate());
-        this.setSpeed(v.getSpeed());
-        this.setPrice(v.getPrice());
-        this.setReliable(v.getReliable());
-        this.setAvailable(v.isAvailable());
-        this.setSeats(v.getSeats());
-        this.setPosition(v.getPosition());
+        super(v.getLicencePlate(), v.getReliable(), v.getPosition(), v.isAvailable(), v.getQueue(), v.getQueueInfo(), v.getTrips(), v.getOwner());
+        this.setSpeed(65);
+        this.setPrice(1.5);
+        this.setSeats(4);
     }
 
     /**

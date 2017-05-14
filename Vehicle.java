@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.sql.Array;
 import java.util.*;
 /**
  * Vehicle class for UMeR.
@@ -15,11 +16,36 @@ public abstract class Vehicle {
     private boolean available;
     private int seats;
     private Point2D.Double position;
-    private LinkedList<Client> queue = new LinkedList<>();
+    private LinkedList<String> queue = new LinkedList<>();
+    private HashMap<String, ArrayList<Point2D.Double>> queueInfo = new HashMap<String, ArrayList<Point2D.Double>>();
     private ArrayList<Trip> trips = new ArrayList<>();
     private String owner = null;
 
 
+
+    public Vehicle(String licencePlate, double reliable, Point2D.Double position, boolean available, LinkedList<String> queue, HashMap<String, ArrayList<Point2D.Double>> queueInfo, ArrayList<Trip> trips, String owner){
+        this.licencePlate = licencePlate;
+        this.reliable = reliable;
+        this.position = new Point2D.Double(position.getX(), position.getY());
+        this.available = true;
+        this.queue = new LinkedList<>();
+        setQueue(queue);
+        this.queueInfo = new HashMap<>();
+        setQueueInfo(queueInfo);
+        //this.trips = new ArrayList<>();
+        setTrips(trips);
+        this.owner = owner;
+    }
+
+    public Vehicle(){
+        this.licencePlate = null;
+        this.reliable = 0;
+        this.position = new Point2D.Double(0,0);
+        this.queue = new LinkedList<>(null);
+        this.queueInfo = new HashMap<>(null);
+        this.trips = new ArrayList<>(null);
+        this.owner = null;
+    }
 
     /**Métodos de Instância*/
 
@@ -83,13 +109,37 @@ public abstract class Vehicle {
      * Retorna uma cópia da fila de espera
      * @return Fila de Espera
      */
-    public LinkedList<Client> getQueue() {
-        LinkedList<Client> queue = new LinkedList<>();
+    public LinkedList<String> getQueue() {
+        LinkedList<String> queue = new LinkedList<>();
         if (this.queue != null)
-            for(Client c : this.queue) {
-                queue.add(c.clone());
+            for(String c : this.queue) {
+                queue.add(c);
             }
         return queue;
+    }
+
+    /**
+     * Retorna uma cópia da informação da fila de espera
+     * @return Fila de Espera
+     */
+    public HashMap<String, ArrayList<Point2D.Double>> getQueueInfo() {
+        HashMap<String, ArrayList<Point2D.Double>> queue = new HashMap<>();
+        if (this.queue != null)
+            for(String c : this.queueInfo.keySet()) {
+                queue.put(c, this.queueInfo.get(c));
+            }
+        return queue;
+    }
+
+    /**
+     * Retorna uma cópia da informação da lista de viagens
+     * @return Lista de viagens
+     */
+    public ArrayList<Trip> getTrips(){
+        ArrayList<Trip> trips = new ArrayList<>();
+        for (Trip t: this.trips)
+            trips.add(t);
+        return trips;
     }
 
     /**
@@ -157,19 +207,67 @@ public abstract class Vehicle {
     }
 
     /**
-     * Altera a fila de espera de um veiculo
+     * Altera a fila de espera
      * @param queue Nova fila de espera
      */
-    public void setQueue(LinkedList<Client> queue){
-        this.queue = new LinkedList<>(queue);
+    public void setQueue(LinkedList<String> queue){
+        if (queue != null)
+            for (String s: queue)
+                this.queue.addLast(s);
+    }
+
+    /**
+     * Altera a informação da fila de espera
+     * @param queueInfo Nova informação
+     */
+    public void setQueueInfo(HashMap<String, ArrayList<Point2D.Double>> queueInfo){
+        if (queueInfo != null) {
+            ArrayList<Point2D.Double> a = new ArrayList<>();
+            for (String s : queueInfo.keySet()) {
+                for (Point2D.Double p : queueInfo.get(s))
+                    a.add(new Point2D.Double(p.getX(), p.getY()));
+                this.queueInfo.put(s, a);
+            }
+        }
+    }
+
+    /**
+     * Altera o arraylist de viagens
+     * @param trips Novas viagens
+     */
+    /**
+    public void setTrips(ArrayList<Trip> trips){
+        if (trips != null) {
+            for (Trip t : trips)
+                this.trips.add(t.clone());
+        }
+    }
+     */
+    public void setTrips(ArrayList<Trip> trips){
+        if (trips != null)
+            this.trips = new ArrayList<>(trips);
+        else this.trips = new ArrayList<>();
     }
 
     /**
      * Adiciona um Cliente a uma fila de espera
      * @param c Cliente a adicionar
      */
-    public void addClient(Client c){
-        this.queue.addLast(c.clone());
+    public void addClient(String c, Point2D.Double start, Point2D.Double end){
+        ArrayList<Point2D.Double> p = new ArrayList<>();
+        p.add(new Point2D.Double(start.getX(), start.getY()));
+        p.add(new Point2D.Double(end.getX(), end.getY()));
+        this.queue.addLast(c);
+        this.queueInfo.put(c, p);
+    }
+
+    /**
+     * Remove um cliente da fila de espera
+     * @param c Cliente a remover
+     */
+    public void removeClient(String c){
+        this.queue.remove(c);
+        this.queueInfo.remove(c);
     }
 
     /**
@@ -187,6 +285,7 @@ public abstract class Vehicle {
      * @return Cópia de Veiculo
      */
     public abstract Vehicle clone();
+
 
     /**
      * Imprime a informação de um veículo
@@ -213,8 +312,8 @@ public abstract class Vehicle {
         if (this.queue.size() > 0) {
             StringBuilder s = new StringBuilder();
             int i = 1;
-            for (Client c : this.queue) {
-                s.append(i + "º lugar :" + c.getEmail() + "\n");
+            for (String c : this.queue) {
+                s.append(i + "º lugar :" + c + "\n");
                 i++;
             }
             return s.toString();
@@ -226,7 +325,7 @@ public abstract class Vehicle {
      * Associa um condutor/empresa a um veículo
      * @param owner Condutor/Empresa
      */
-    public void addOwner(String owner){
+    public void setOwner(String owner){
         this.owner = owner;
     }
 

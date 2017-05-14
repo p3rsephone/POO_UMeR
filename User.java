@@ -44,11 +44,8 @@ public abstract class User {
 		this.totalDistance = totalDistance;
 		this.money = money;
 
-		if (trips != null) {
-			this.trips = new ArrayList<>();
-			for (Trip t: trips)
-				this.trips.add(t.clone());
-		}
+		if (trips != null)
+			this.trips = new ArrayList<>(trips);
 		else this.trips = new ArrayList<>();
 
 		this.numberOfTrips = numberOfTrips;
@@ -204,6 +201,14 @@ public abstract class User {
 	}
 
 	/**
+	 * Altera a distância total percorrida
+	 * @param totalDistance Nova distância total
+	 */
+	public void setTotalDistance(double totalDistance){
+		this.totalDistance = totalDistance;
+	}
+
+	/**
 	 * Altera o dinheiro gasto/ganho pelo user
 	 * @param money Nova quantia
 	 */
@@ -246,7 +251,7 @@ public abstract class User {
 	 * @param trips Viagem a ser adicionada
 	 */
 	public void addTrip(Trip t){
-		this.trips.add(t.clone());
+		this.trips.add(t);
 		this.totalDistance += t.distance();
 		this.numberOfTrips++;
 		this.money += t.getPrice();

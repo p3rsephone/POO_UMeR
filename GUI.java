@@ -46,7 +46,9 @@ public class GUI extends Application{
     private Stage window;
     private Scene menu, login_menu, signupClient_menu, signupDriver_menu, signupCompany_menu, user_menu, signupVehicle_menu;
     private String current_user, current_class;
-    private boolean driverAvailiable = true, driverVehicle = true;
+    private boolean driverAvailiable = true, noAvailiableTaxis = true;
+    private String currentTripDriver, currentTripVehicle;
+    private int currentTripId;
 
     private HBox company_hbox;
 
@@ -62,7 +64,7 @@ public class GUI extends Application{
     public boolean addDriver(String email, String name, String password, String address, LocalDate date, String company){
         if (email != null && name != null && password != null && address != null && date != null &&
                 !email.equals("") && !name.equals("") && !password.equals("") && !address.equals("")){
-            int timeComplience = ThreadLocalRandom.current().nextInt(1, 10);
+            int timeComplience = ThreadLocalRandom.current().nextInt(10, 100);
             Driver driver = new Driver(email, name, password, address, date, timeComplience);
             return umer.registerUser(driver, company);
         }
@@ -86,16 +88,13 @@ public class GUI extends Application{
             if (condition.equals("Muito Mau"))  reliable = ThreadLocalRandom.current().nextDouble(0, 20);
 
             Vehicle vehicle = null;
-            if (vehicleClass.equals("Carro"))       vehicle = new Car(licencePlate, reliable, position);
-            if (vehicleClass.equals("Mota"))        vehicle = new Car(licencePlate, reliable, position);
-            if (vehicleClass.equals("Carrinha"))    vehicle = new Car(licencePlate, reliable, position);
-            if (vehicleClass.equals("Helicóptero")) vehicle = new Car(licencePlate, reliable, position);
-
-            vehicle.addOwner(this.current_user);
-            System.out.println(vehicle);
+            if (vehicleClass.equals("Carro"))       vehicle = new Car(licencePlate, reliable, position, this.current_user);
+            if (vehicleClass.equals("Mota"))        vehicle = new Car(licencePlate, reliable, position, this.current_user);
+            if (vehicleClass.equals("Carrinha"))    vehicle = new Car(licencePlate, reliable, position, this.current_user);
+            if (vehicleClass.equals("Helicóptero")) vehicle = new Car(licencePlate, reliable, position, this.current_user);
 
             if (this.current_class.equals("Driver")) {
-                if (umer.registerVehicleP(vehicle)) {
+                    if (umer.registerVehicleP(vehicle)) {
                     umer.changeDriverVehicle(current_user, licencePlate);
                     return true;
                 }
@@ -109,26 +108,30 @@ public class GUI extends Application{
     public Trip newTrip(Client client, String d, Point2D.Double start, Point2D.Double end){
         if(start != null && end != null){
             client.setPosition(start);
-            Driver driver;
-            Vehicle vehicle;
-            if (d.equals("--condutor mais próximo--")) {
+            Driver driver = null;
+            Vehicle vehicle = null;
+            if (d.equals("--condutor mais próximo--")){
                 vehicle = umer.getAllVehicles().get(umer.closestAvailableTaxi(client));
-                driver = umer.getAllDrivers().get(vehicle.getOwner());
+                if (vehicle != null)
+                    driver = umer.getAllDrivers().get(vehicle.getOwner());
             }
             else {
                 driver = umer.getDriversP().get(d);
                 vehicle = umer.getVehiclesP().get(driver.getVehicle());
             }
-            if (vehicle != null) {
-                this.driverVehicle = true;
+            if (vehicle != null && driver != null) {
+                this.noAvailiableTaxis = false;
                 Trip trip = umer.newTrip(client, driver, vehicle, end);
 
                 if (trip == null) this.driverAvailiable = false;
                 else this.driverAvailiable = true;
+
+                this.currentTripDriver = driver.getEmail();
+                this.currentTripVehicle = vehicle.getLicencePlate();
+
                 return trip;
             }
-
-            else this.driverVehicle = false;
+            else this.noAvailiableTaxis = true;
         }
         return null;
     }
@@ -334,27 +337,42 @@ public class GUI extends Application{
     }
 
     public VBox userHeaderBox(User user){
-        VBox header = new VBox(0);
+        VBox header = new VBox(5);
+        header.setPadding(new Insets(10, 10, 0, 10));
 
         HBox headerInfo = new HBox(5);
-        header.setPadding(new Insets(10, 10, 0, 10));
+        HBox headerInfo2 = new HBox(5);
 
         ImageView thumbnail;
         if (user instanceof Client)
             thumbnail = new ImageView("images/client_small.png");
         else thumbnail = new ImageView("images/driver_small.png");
 
-
         Label name = new Label(user.getName());
         name.setFont(Font.font(30));
+
+        Label points = new Label();
+        if (user instanceof Client)
+            points.setText(Integer.toString(((Client) user).getPoints()) + " pontos");
+        else points.setText(Integer.toString(((Driver) user).getExp()) + " exp");
 
         Button logout = new Button("Logout ✖");
         logout.setOnAction(e->{
             loadMenu();
         });
 
+        Button reload_button = new Button("⟳");
+
+        reload_button.setOnAction(e ->{
+            if (user instanceof Client) clientMenu();
+            else driverMenu();
+
+            window.setScene(user_menu);
+        });
+
         headerInfo.getChildren().addAll(thumbnail, name);
-        header.getChildren().addAll(headerInfo, logout);
+        headerInfo2.getChildren().addAll(logout, reload_button, points);
+        header.getChildren().addAll(headerInfo, headerInfo2);
         return header;
     }
 
@@ -402,7 +420,7 @@ public class GUI extends Application{
 
 
     public void clientSignupMenu(){
-        VBox signupClient_layout = new VBox(20);
+        VBox signupClient_layout = new VBox(15);
         signupClient_layout.setPadding(new Insets(35, 50, 20, 50));
 
         Label driverTitle_label = new Label("Registar Cliente");
@@ -612,7 +630,8 @@ public class GUI extends Application{
             else if (current_class.equals("Client")) {
                 clientMenu();
                 window.setScene(user_menu);
-            } else if (current_class.equals("Driver")) {
+            }
+            else if (current_class.equals("Driver")) {
                 driverMenu();
                 window.setScene(user_menu);
             }
@@ -647,54 +666,102 @@ public class GUI extends Application{
         newTrip_title.setFont(Font.font(30));
         newTrip_title.setUnderline(true);
 
-        ObservableList<String> driversList = FXCollections.observableArrayList();
-        driversList.add("--condutor mais próximo--");
-        for (Driver d: umer.getDriversP().values())
-            driversList.add(d.getEmail());
-        ComboBox<String> drivers_box = new ComboBox<>(driversList);
-        drivers_box.getSelectionModel().selectFirst();
 
-        HBox positionStart_hbox = positionBox("Posição atual");
-        HBox positionEnd_hbox = positionBox("Posição final");
+        if (client.getQueue() != null){
+            Label queue_label = new Label("Em fila de espera...");
+            queue_label.setFont(Font.font(20));
 
-        Label error = errorLabel("");
-        Label success = successLabel("");
-        ScrollPane tripInfo_pane = new ScrollPane();
+            Button cancel_button = new Button("Cancelar");
+            cancel_button.setFont(Font.font(15));
+            cancel_button.setTextFill(Color.RED);
+            cancel_button.setOnAction(e -> {
+                umer.cancelTripQueue(client.getEmail());
+                clientMenu();
+                window.setScene(user_menu);
+            });
 
-        Button newTrip_button = new Button("Realizar viagem");
-        newTrip_button.setOnAction(e -> {
-            newTrip_tabVBox.getChildren().removeAll(error, tripInfo_pane);
-            String driver = drivers_box.getValue();
+            newTrip_tabVBox.getChildren().addAll(queue_label, cancel_button);
+        }
 
-            try {
-                double posStartX = Double.parseDouble(((TextField) positionStart_hbox.getChildren().get(1)).getText());
-                double posStartY = Double.parseDouble(((TextField) positionStart_hbox.getChildren().get(2)).getText());
-                double posEndX = Double.parseDouble(((TextField) positionEnd_hbox.getChildren().get(1)).getText());
-                double posEndY = Double.parseDouble(((TextField) positionEnd_hbox.getChildren().get(2)).getText());
+        else {
+            ObservableList<String> driversList = FXCollections.observableArrayList();
+            driversList.add("--condutor mais próximo--");
+            for (Driver d : umer.getDriversP().values())
+                driversList.add(d.getEmail());
+            ComboBox<String> drivers_box = new ComboBox<>(driversList);
+            drivers_box.getSelectionModel().selectFirst();
 
-                Point2D.Double posStart = new Point2D.Double(posStartX, posStartY);
-                Point2D.Double posEnd = new Point2D.Double(posEndX, posEndY);
+            HBox positionStart_hbox = positionBox("Posição atual");
+            HBox positionEnd_hbox = positionBox("Posição final");
 
-                Trip trip = newTrip(client, driver, posStart, posEnd);
+            Label error = errorLabel("");
+            Label success = successLabel("");
+            ScrollPane tripInfo_pane = new ScrollPane();
 
-                if (!driverAvailiable) {
-                    success.setText("Colocado na fila de espera de " + driver);
-                    newTrip_tabVBox.getChildren().add(success);
+            ObservableList<Integer> rateList = FXCollections.observableArrayList(5, 4, 3, 2, 1);
+            ComboBox<Integer> rateDriver_cbox = new ComboBox<Integer>(rateList);
+            rateDriver_cbox.getSelectionModel().selectFirst();
+            Button rateDriver_button = new Button("Classificar");
+
+            HBox rate_hbox = new HBox(10);
+
+            Button newTrip_button = new Button("Realizar viagem");
+            newTrip_button.setOnAction(e -> {
+                newTrip_tabVBox.getChildren().removeAll(error, rate_hbox, tripInfo_pane, success);
+                String driver = drivers_box.getValue();
+
+                try {
+                    double posStartX = Double.parseDouble(((TextField) positionStart_hbox.getChildren().get(1)).getText());
+                    double posStartY = Double.parseDouble(((TextField) positionStart_hbox.getChildren().get(2)).getText());
+                    double posEndX = Double.parseDouble(((TextField) positionEnd_hbox.getChildren().get(1)).getText());
+                    double posEndY = Double.parseDouble(((TextField) positionEnd_hbox.getChildren().get(2)).getText());
+
+                    Point2D.Double posStart = new Point2D.Double(posStartX, posStartY);
+                    Point2D.Double posEnd = new Point2D.Double(posEndX, posEndY);
+
+                    Trip trip = newTrip(client, driver, posStart, posEnd);
+                    if (trip != null)
+                        currentTripId = trip.getID();
+
+                    if (!driverAvailiable && !noAvailiableTaxis) {
+                        newTrip_tabVBox.getChildren().removeAll(success, drivers_box, positionStart_hbox, positionEnd_hbox, newTrip_button);
+                        success.setText("Colocado na fila de espera de " + driver);
+                        newTrip_tabVBox.getChildren().add(success);
+                        umer.addQueue(client.getEmail(), driver, posStart, posEnd);
+                    }
+                    else if (noAvailiableTaxis) {
+                        error.setText("Não existem taxis disponíveis");
+                        newTrip_tabVBox.getChildren().add(error);
+                    }
+                    else {
+                        rate_hbox.getChildren().removeAll(rateDriver_cbox, rateDriver_button);
+                        success.setText(trip.toString());
+                        rate_hbox.getChildren().addAll(rateDriver_cbox, rateDriver_button);
+                        tripInfo_pane.setContent(null);
+                        tripInfo_pane.setContent(success);
+                        newTrip_tabVBox.getChildren().addAll(rate_hbox, tripInfo_pane);
+
+                        umer.addTrip(client.getEmail(), currentTripDriver, currentTripVehicle, trip);
+                    }
                 }
-                else {
-                    success.setText(trip.toString());
-                    tripInfo_pane.setContent(success);
-                    newTrip_tabVBox.getChildren().add(tripInfo_pane);
+                catch (NumberFormatException exception) {
+                    error.setText("Posição inserida incorretamente");
+                    newTrip_tabVBox.getChildren().add(error);
                 }
-            }
+            });
 
-            catch (NumberFormatException exception) {
-                error.setText("Posição inserida incorretamente");
-                newTrip_tabVBox.getChildren().add(error);
-            }
-        });
+            rateDriver_button.setOnAction(e -> {
+                int rating = rateDriver_cbox.getValue();
+                umer.addRating(currentTripDriver, rating, currentTripId);
 
-        newTrip_tabVBox.getChildren().addAll(newTrip_title, drivers_box, positionStart_hbox, positionEnd_hbox, newTrip_button);
+                newTrip_tabVBox.getChildren().removeAll(error, rate_hbox, tripInfo_pane, success);
+                success.setText("Classificação adicionada");
+                newTrip_tabVBox.getChildren().add(success);
+
+            });
+
+            newTrip_tabVBox.getChildren().addAll(newTrip_title, drivers_box, positionStart_hbox, positionEnd_hbox, newTrip_button);
+        }
         newTrip_tab.setContent(newTrip_tabVBox);
 
         //------------
@@ -708,12 +775,10 @@ public class GUI extends Application{
         Driver driver = umer.getAllDrivers().get(current_user);
 
         VBox menu_vbox = new VBox();
-
         TabPane menu_tab = new TabPane();
         menu_tab.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         VBox header = userHeaderBox(driver);
-
         Tab info_tab = infoTab(driver);
 
         Tab trips_tab = tripsTab(driver);
@@ -742,23 +807,25 @@ public class GUI extends Application{
         occupied_radioButton.setUserData(false);
 
         status_box.getChildren().addAll(free_radioButton, occupied_radioButton);
-
         Label currentStatus = new Label("Disponibilidade atual: " + driver.isAvailable());
         currentStatus.setFont(Font.font(15));
 
+        Label queueNumber = new Label("Número de clientes em fila de espera - " + umer.getAllVehicles().get(driver.getVehicle()).getQueue().size());
 
         Button changeStatusButton = new Button("Alterar disponibilidade");
         changeStatusButton.setFont(Font.font(15));
         changeStatusButton.setOnAction(e -> {
-            work_tabVbox.getChildren().remove(currentStatus);
+            work_tabVbox.getChildren().removeAll(currentStatus, queueNumber);
             umer.changeDriverAvailability(driver.getEmail(), (boolean) status_group.getSelectedToggle().getUserData());
             driver.setAvailability((boolean) status_group.getSelectedToggle().getUserData());
             currentStatus.setText("Disponibilidade atual: " + driver.isAvailable());
-            work_tabVbox.getChildren().add(currentStatus);
+            queueNumber.setText("Número de clientes em fila de espera - 0");
+            work_tabVbox.getChildren().addAll(currentStatus, queueNumber);
+            umer.doAllTripsQueue(driver.getEmail());
 
         });
 
-        work_tabVbox.getChildren().addAll(status_title, status_box, changeStatusButton, currentStatus);
+        work_tabVbox.getChildren().addAll(status_title, status_box, changeStatusButton, currentStatus, queueNumber);
         work_tab.setContent(work_tabVbox);
 
 
@@ -842,6 +909,8 @@ public class GUI extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        umer = new UMeR();
+
         System.setProperty("prism.lcdtext", "false");
         this.window = primaryStage;
         this.window.setWidth(350);
@@ -852,7 +921,8 @@ public class GUI extends Application{
     }
 
     public void Main(String[] args){
-        umer = new UMeR();
         launch(args);
     }
 }
+
+//Todo condutor executar as viagens em fila de espera

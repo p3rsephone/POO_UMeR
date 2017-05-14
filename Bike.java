@@ -14,13 +14,10 @@ public class Bike extends Vehicle {
      * Cria uma Mota sem parâmetros
      */
     public Bike() {
-        this.setLicencePlate(null);
-        this.setSpeed(65);
-        this.setPrice(.90);
-        this.setReliable(0);
-        this.setAvailable(true);
+        super();
+        this.setSpeed(75);
+        this.setPrice(0.9);
         this.setSeats(1);
-        this.setPosition(new Point2D.Double(0, 0));
     }
 
     /**
@@ -29,28 +26,22 @@ public class Bike extends Vehicle {
      * @param reliable     Fator de fiabilidade
      * @param position     Posição atual
      */
-    public Bike(String licencePlate, double reliable, Point2D.Double position) {
-        this.setLicencePlate(licencePlate);
-        this.setReliable(reliable);
-        this.setAvailable(true);
-        this.setPosition(new Point2D.Double(position.getX(), position.getY()));
+    public Bike(String licencePlate, double reliable, Point2D.Double position, String owner) {
+        super(licencePlate, reliable, position, true, null, null, null, owner);
+        this.setSpeed(75);
+        this.setPrice(0.9);
         this.setSeats(1);
-        this.setSpeed(65);
-        this.setPrice(1.1);
     }
 
     /**
-     * Constroi uma Mota a partir de um já existente
-     * @param v Mota já definida
+     * Constroi uma Mota a partir de uma já existente
+     * @param v Mota
      */
     public Bike(Bike v) {
-        this.setLicencePlate(v.getLicencePlate());
-        this.setSpeed(v.getSpeed());
-        this.setPrice(v.getPrice());
-        this.setReliable(v.getReliable());
-        this.setAvailable(v.isAvailable());
-        this.setSeats(v.getSeats());
-        this.setPosition(v.getPosition());
+        super(v.getLicencePlate(), v.getReliable(), v.getPosition(), v.isAvailable(), v.getQueue(), v.getQueueInfo(), v.getTrips(), v.getOwner());
+        this.setSpeed(75);
+        this.setPrice(0.9);
+        this.setSeats(1);
     }
 
     /**

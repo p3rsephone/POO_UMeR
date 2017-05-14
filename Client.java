@@ -15,7 +15,8 @@ public class Client extends User {
     /** Variáveis de Instância */
     private Point2D.Double position;
     private int points;
-    boolean premium;
+    private boolean premium;
+    private String queue;
 
 
     /**
@@ -30,9 +31,11 @@ public class Client extends User {
      * @param trips             Viagens feitas
      * @param numberOfTrips     Número de viagens
      * @param points            Pontos
-     * @param money
+     * @param money             Dinehiro gasto
+     * @param premium           Se tem conta premium
+     * @param queue             Veículo onde está em fila de espera
      */
-    public Client(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, ArrayList<Trip> trips, int numberOfTrips,  int points, double money, boolean premium) {
+    public Client(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, ArrayList<Trip> trips, int numberOfTrips,  int points, double money, boolean premium, String inQueue) {
         super(email, name, password, address, birthday, totalDistance, trips, numberOfTrips, money);
         this.position = new Point2D.Double(position.getX(), position.getY());
         this.points = points;
@@ -47,7 +50,6 @@ public class Client extends User {
      * @param password  Password
      * @param address   Morada
      * @param birthday  Dia de nascimento
-     * @param position  Posição
      */
     public Client(String email, String name, String password, String address, LocalDate birthday){
         super(email, name, password, address, birthday, 0, null, 0, 0);
@@ -58,13 +60,15 @@ public class Client extends User {
     }
 
     /**
-    * Constroi um cliente a partir de um já definido
-    * @param c
-    */
+     * Constroi um cliente a partir de um já definido
+     * @param c Cliente
+     */
     public Client(Client c) {
         super(c.getEmail(), c.getName(), c.getPassword(), c.getAddress(), c.getBirthday(), c.getTotalDistance(), c.getTrips(), c.getNumberOfTrips(), c.getMoney());
         this.points = c.getPoints();
         this.position = new Point2D.Double(c.getPosition().getX(), c.getPosition().getY());
+        this.premium = c.isPremium();
+        this.queue = c.getQueue();
     }
 
     /**
@@ -73,6 +77,8 @@ public class Client extends User {
     public Client(){
         super();
         this.points = 0;
+        this.premium = false;
+        this.queue = null;
     }
 
     /** Metodos de instância */
@@ -106,7 +112,15 @@ public class Client extends User {
      * @return Se é premium (True) ou não (False)
      */
     public boolean isPremium() {
-        return premium;
+        return this.premium;
+    }
+
+    /**
+     * Retorna a matrícula do veículo onde está em fila de espera
+     * @return Matrícula
+     */
+    public String getQueue(){
+        return this.queue;
     }
 
     /**
@@ -122,7 +136,15 @@ public class Client extends User {
      * @param b Novo estado
      */
     public void setPremium(boolean b) {
-        this.premium=b;
+        this.premium = b;
+    }
+
+    /**
+     * Altera o veículo onde o cliente está em fila de espera
+     * @param b Nova matrícula
+     */
+    public void setQueue(String queue){
+        this.queue = queue;
     }
 
     /**
@@ -141,7 +163,8 @@ public class Client extends User {
         return super.toString() + "\n" +
                 "Posição : " + "(" + this.position.getX() + "," + this.position.getY() + ")\n"+
                 "Pontos : " + this.points + "\n" +
-                "Premium : " + this.premium;
+                "Premium : " + this.premium + "\n" +
+                "Fila de espera : " + this.queue;
     }
 
     /**
@@ -151,6 +174,6 @@ public class Client extends User {
     public void addTrip(Trip t){
         super.addTrip(t);
         this.position.setLocation(t.getEnd());
-        this.points += t.getPrice() / 4;
+        this.points += t.getPrice() / 2 + t.distance() / 4;
     }
 }

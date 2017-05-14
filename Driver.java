@@ -15,24 +15,28 @@ public class Driver extends User {
 	private boolean availability;
 	private double timeCompliance;
 	private int numberOfReviews;
-	private double exp;
+	private int exp;
 	private String vehicle;
 
+
 	/**
-	 * Constrói um novo user a partir dos diferentes parametros fornecidos
-	 * @param email 			Email
+	 *
+	 * @param email				Email
+	 * @param name 				Morada
+	 * @param password 			Password
 	 * @param address 			Morada
-	 * @param name 				Nome
-	 * @param birthday 			Dia de nascimento
-	 * @param password			Password
-	 * @param grading 			Classificação do motorista
+	 * @param birthday 			Data de nascimento
+	 * @param totalDistance 	Distância total percorrida
+	 * @param grading			Classificação
 	 * @param availability 		Disponibilidade
-	 * @param mileage		 	Kilometragem
-	 * @param timeCompliance 	Grau de cumprimento de horário
-	 * @param numberOfReviews 	Número de avaliações
-	 * @param trips 			Viagens feitas
+	 * @param timeCompliance 	Dia de nascimento
+	 * @param numberOfReviews 	Número de classificações
+	 * @param trips				Viagens feitas
+	 * @param numberOfTrips 	Número de viagens
+	 * @param money				Dinheiro ganho
+	 * @param vehicle 			Matrícula do seu veículo
 	 */
-    public Driver(String email, String name, String password, String address, LocalDate birthday, double totalDistance, double grading, Boolean availability, double timeCompliance, int numberOfReviews, ArrayList<Trip> trips, int numberOfTrips, double money, String vehicle){
+    public Driver(String email, String name, String password, String address, LocalDate birthday, double totalDistance, double grading, Boolean availability, double timeCompliance, int numberOfReviews, ArrayList<Trip> trips, int numberOfTrips, double money, double exp, String vehicle){
 		super(email, name, password, address, birthday, totalDistance, trips, numberOfTrips, money);
 		this.grading = grading;
 		this.availability = availability;
@@ -68,6 +72,7 @@ public class Driver extends User {
 		this.availability = d.isAvailable();
 		this.timeCompliance = d.getTimeCompliance();
 		this.numberOfReviews = d.getNumberOfReviews();
+		this.exp = d.getExp();
 		this.vehicle = d.getVehicle();
 	}
 
@@ -116,7 +121,7 @@ public class Driver extends User {
 	 * Retorna a experiência do condutor
 	 * @return Experiência
 	 */
-	public double getExp(){
+	public int getExp(){
 		return this.exp;
 	}
 
@@ -164,7 +169,7 @@ public class Driver extends User {
 	 * Altera a quantidade de experiencia
 	 * @param exp Nova quantia
 	 */
-	public void setExp(double exp){
+	public void setExp(int exp){
 		this.exp = exp;
 	}
 
@@ -193,7 +198,8 @@ public class Driver extends User {
 				"Disponibilidade : " + this.availability + "\n" +
 				"Classificação : " + this.grading + "\n" +
 				"Grau de cumprimento : " + this.timeCompliance + "\n" +
-				"Número de classificações : " + this.numberOfReviews;
+				"Número de classificações : " + this.numberOfReviews + "\n" +
+				"Veículo : " + this.vehicle;
 	}
 
 	/**
@@ -211,14 +217,19 @@ public class Driver extends User {
 	 */
 	public void addTrip(Trip t){
 		super.addTrip(t);
-
-		if (t.getRating() != -1) {
-			this.grading = (this.grading * numberOfReviews + t.getRating() * 20) / (numberOfReviews + 1);
-			this.numberOfReviews++;
-			if (t.getRating() > 2)
-				this.exp += ((t.distance()+1) * (t.getRating())/5);
-		}
-		else this.exp += (t.distance()+1)*2/5;
+		this.setTotalDistance(this.getTotalDistance() + t.getTaxiPos().distance(t.getStart()));
+		this.exp += (t.distance()+1)/2;
 	}
 
+	/**
+	 * Adiciona uma classificação ao condutor
+	 * @param rating Classificação
+	 */
+	public void addRating(int rating){
+		this.grading = (this.grading * numberOfReviews + rating * 20) / (numberOfReviews + 1);
+		this.numberOfReviews++;
+		if (rating > 2)
+			this.exp += 3 * (rating/5);
+		else this.exp -= 4-rating;
+	}
 }

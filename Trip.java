@@ -20,8 +20,12 @@ public class Trip {
     private double price;
     private LocalDate date;
     private String licencePlate;
-    private User driver, client;
+    private String driver, client;
     private int rating;
+    private double estimatedTimeToDest;
+    private Point2D.Double taxiPos;
+    private double estimatedTimeToClient;
+    private double realTimeToClient;
 
 
     /** Constructores */
@@ -43,20 +47,24 @@ public class Trip {
 
     /**
      * Constroi uma viagem a partir de vários parametros
-     * @param id            ID da viagem
-     * @param start         Posição do início da viagem
-     * @param end           Posição do fim da viagem
-     * @param time          Tempo da viagem
-     * @param price         Preço da viagem
-     * @param licencePlate      Matrícula do carro
-     * @param driver        Condutor
-     * @param client        Cliente
-     * @param rating        Classificação dada ao condutor pelo cliente
+     * @param id                    ID da viagem
+     * @param start                 Posição do início da viagem
+     * @param end                   Posição do fim da viagem
+     * @param time                  Tempo da viagem
+     * @param price                 Preço da viagem
+     * @param licencePlate          Matrícula do carro
+     * @param driver                Condutor
+     * @param client                Cliente
+     * @param rating                Classificação dada ao condutor pelo cliente
+     * @param estimatedTimeToDest   Tempo estimado até ao destino
+     * @param taxiPos               Posição incial do taxi
+     * @param estimatedTimeToClient Tempo estimado até ao cliente
+     * @param realTimeToClient      Tempo real até ao cliente
      */
-    public Trip (int id, Point2D.Double start, Point2D.Double end, Double time, Double price, LocalDate date, String licencePlate, User driver, User client, int rating) {
+    public Trip (int id, Point2D.Double start, Point2D.Double end, Double time, Double price, LocalDate date, String licencePlate, String driver, String client, int rating, double estimatedTimeToDest, Point2D.Double taxiPos, double estimatedTimeToClient, double realTimeToClient) {
         this.id = id;
-        this.start = start;
-        this.end = end;
+        this.start = new Point2D.Double(start.getX(), start.getY());
+        this.end = new Point2D.Double(end.getX(), end.getY());
         this.time = time;
         this.price = price;
         this.licencePlate = licencePlate;
@@ -64,6 +72,10 @@ public class Trip {
         this.driver = driver;
         this.client = client;
         this.rating = rating;
+        this.estimatedTimeToDest = estimatedTimeToDest;
+        this.taxiPos = new Point2D.Double(taxiPos.getX(), taxiPos.getY());
+        this.estimatedTimeToClient = estimatedTimeToClient;
+        this.realTimeToClient = realTimeToClient;
     }
 
     /**
@@ -71,7 +83,7 @@ public class Trip {
      * @param t Viagem
      */
     public Trip (Trip t) {
-        this(t.getID(), t.getStart(), t.getEnd(), t.getTime(), t.getPrice(), t.getDate(), t.getLicencePlate(), t.getDriver(), t.getClient(), t.getRating());
+        this(t.getID(), t.getStart(), t.getEnd(), t.getTime(), t.getPrice(), t.getDate(), t.getLicencePlate(), t.getDriver(), t.getClient(), t.getRating(), t.getEstimatedTimeToDest(), t.getTaxiPos(), t.getEstimatedTimeToClient(), t.getRealTimeToClient());
     }
 
     /** Metodos de Instância */
@@ -85,9 +97,7 @@ public class Trip {
      * @return Início
      */
     public Point2D.Double getStart() {
-        Point2D.Double start = new Point2D.Double();
-        start.setLocation(this.start.getX(), this.start.getY());
-        return start;
+        return new Point2D.Double(this.start.getX(), this.start.getY());
     }
 
     /**
@@ -95,7 +105,7 @@ public class Trip {
      * @return Fim
      */
     public Point2D.Double getEnd() {
-        return this.end;
+        return new Point2D.Double(this.end.getX(), this.end.getY());
     }
 
     /**
@@ -134,16 +144,16 @@ public class Trip {
      * Retorna o condutor da viagem
      * @return Condutor
      */
-    public User getDriver() {
-        return this.driver.clone();
+    public String getDriver() {
+        return this.driver;
     }
 
     /**
      * Retorna o cliente da viagem
      * @return Cliente
      */
-    public User getClient(){
-        return this.client.clone();
+    public String getClient(){
+        return this.client;
     }
 
     /**
@@ -155,6 +165,46 @@ public class Trip {
     }
 
     /**
+     * Retorna o tempo incialmente previsto
+     * @return Tempo previsto
+     */
+    public double getEstimatedTimeToDest(){
+        return this.estimatedTimeToDest;
+    }
+
+    /**
+     * Retorna a posição inicial do taxi
+     * @return Posição inicial do taxi
+     */
+    public Point2D.Double getTaxiPos(){
+        return new Point2D.Double(this.taxiPos.getX(), this.taxiPos.getY());
+    }
+
+    /**
+     * Retorna o tempo estimado do taxi ao cliente
+     * @return Tempo estimado até ao cliente
+     */
+    public double getEstimatedTimeToClient(){
+        return this.estimatedTimeToClient;
+    }
+
+    /**
+     * Retorna o tempo que o taxi demorou a chegar ao cliente
+     * @return Tempo até ao cliente
+     */
+    public double getRealTimeToClient(){
+        return this.realTimeToClient;
+    }
+
+    /**
+     * Altera a classificação de uma viagem
+     * @param rating
+     */
+    public void setRating(int rating){
+        this.rating = rating;
+    }
+
+    /**
      * Faz uma cópia da viagem
      * @return Cópia da viagem
      */
@@ -162,10 +212,23 @@ public class Trip {
         return new Trip (this);
     }
 
+    /**
+     * Imprime uma classificação
+     * @return String com a classificação
+     */
     public String printRating(){
         if (this.rating == -1)
             return "Não classificado";
-        else return Integer.toString(this.rating);
+        else return Integer.toString(this.rating) + "**";
+    }
+
+    /**
+     * Imprime o tempo em h:m:s
+     * @param time  Tempo
+     * @return  String com o tempo em h:m:s
+     */
+    public String printTime(double time){
+        return (int) time + "h:" + Math.round(time * 60)%60 + "m:" + Math.round(time * 3600)%60 + "s";
     }
 
     /**
@@ -175,12 +238,17 @@ public class Trip {
     public String toString(){
         return "Viagem de " + "("+ this.start.getX() + "," + this.start.getY() + ") ---> (" + this.end.getX() + "," + this.end.getY() + ")" + "\n" +
                 "Data : " + this.date + "\n" +
-                "Distância : " + distance() + "km\n" +
-                "Duração : " + (int) this.time + "h:" + Math.round(this.time * 60)%60 + "m:" + Math.round(this.time * 3600)%60 + "s\n" +
+                "Distância : " + Math.round(distance()*100.0)/100.0 + "km\n" +
+                "Duração prevista : " + printTime(this.estimatedTimeToDest) + "\n" +
+                "Duração real : " + printTime(this.time) + "\n" +
                 "Preço : " + this.price + "€\n" +
-                "Email condutor : " + this.driver.getEmail() + "\n" +
-                "Email cliente : " + this.client.getEmail() + "\n" +
-                "Classificação :" + printRating();
+                "Email condutor : " + this.driver + "\n" +
+                "Email cliente : " + this.client + "\n" +
+                "Classificação : " + printRating() + "\n" +
+                "Posição inicial do taxi : [" + this.taxiPos.getX() + "," + this.taxiPos.getY() + "]\n" +
+                "Tempo previsto até ao cliente : " + printTime(this.estimatedTimeToClient) + "\n" +
+                "Tempo real até ao cliente : " + printTime(this.realTimeToClient) + "\n" +
+                "Trip id : " + this.id;
     }
 
     /**
