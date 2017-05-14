@@ -5,12 +5,13 @@ import java.util.*;
 import java.lang.Comparable;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+import java.io.*;
 
 /**
  * Write a description of class UMeR here.
  */
 
-public class UMeR {
+public class UMeR implements Serializable {
 
     /** Variáveis de instância */
     private HashMap<String, Driver> driversP;
@@ -598,4 +599,57 @@ public class UMeR {
     public void doAllTripsQueue(String d){
         while(doTripQueue(d));
     }
+
+
+    /**
+     * Métodos que asseguram persistência.
+     *
+     */
+
+    /**
+     * Método que guarda o estado de uma instância num ficheiro de texto.
+     *
+     * @param nome do ficheiro
+     */
+
+    public void escreveEmFicheiroTxt(String nomeFicheiro) throws IOException {
+        PrintWriter fich = new PrintWriter(nomeFicheiro);
+        fich.println("------- UMeR --------");
+        fich.println(this.toString()); // ou fich.println(this);
+        fich.flush();
+        fich.close();
+    }
+
+
+
+    /**
+     * Método que guarda em ficheiro de objectos o objecto que recebe a mensagem.
+     */
+
+    public void guardaEstado(String nomeFicheiro) throws FileNotFoundException,IOException {
+        FileOutputStream fos = new FileOutputStream(nomeFicheiro);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(this); //guarda-se todo o objecto de uma só vez
+        oos.flush();
+        oos.close();
+    }
+
+
+    /**
+     * Método que recupera uma instância de UMeR de um ficheiro de objectos.
+     * Este método tem de ser um método de classe que devolva uma instância já construída de
+     * UMeR.
+     *
+     * @param nome do ficheiro onde está guardado um objecto do tipo UMeR
+     * @return objecto UMeR inicializado
+     */
+
+    public static UMeR carregaEstado(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream(nomeFicheiro);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        UMeR u = (UMeR) ois.readObject();
+        ois.close();
+        return u;
+    }
+
 }
