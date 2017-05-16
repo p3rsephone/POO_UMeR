@@ -1,5 +1,6 @@
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 /**
  * Company of UMeR
@@ -9,8 +10,9 @@ public class Company {
     private String name, password;
     private HashMap<String, Driver> drivers;
     private HashMap<String, Vehicle> vehicles;
+    private ArrayList<Trip> trips;
     private double moneyGenerated;
-    private int totalTrips;
+    private int points;
 
     /**
      * Criar uma nova empresa a partir do nome
@@ -20,9 +22,10 @@ public class Company {
         this.name = name;
         this.password = password;
         this.moneyGenerated = 0;
-        this.totalTrips = 0;
         this.drivers = new HashMap<>();
         this.vehicles = new HashMap<>();
+        this.trips = new ArrayList<>();
+        this.points = 0;
     }
 
     /**
@@ -34,8 +37,9 @@ public class Company {
         this.password = c.getPassword();
         this.drivers = new HashMap<>(c.getDrivers());
         this.vehicles = new HashMap<>(c.getVehicles());
-        this.moneyGenerated = moneyGenerated;
-        this.totalTrips = totalTrips;
+        this.moneyGenerated = c.getMoneyGenerated();
+        this.trips = c.getTrips();
+        this.points = c.getPoints();
     }
 
     /**
@@ -89,8 +93,28 @@ public class Company {
      * @return Número de viagens
      */
     public int getTotalTrips() {
-        return this.totalTrips;
+        return this.trips.size();
     }
+
+    /*
+     * Retorna o arraylist de viagens
+     * @return Trips
+     */
+    public ArrayList<Trip> getTrips(){
+        ArrayList<Trip> trips = new ArrayList<>();
+        for(Trip t: this.trips)
+            trips.add(t.clone());
+        return trips;
+    }
+
+    /**
+     * Retonar o número de pontos de um empresa
+     * @return Número de pontos
+     */
+    public int getPoints(){
+        return this.points;
+    }
+
     /**
      * Imprime a informação de uma empresa
      * @return String com a informação da empresa
@@ -99,7 +123,7 @@ public class Company {
         return "Empresa " + this.name + "\n" +
                 "---Condutores " + "\n" + printDrivers() + "\n" +
                 "---Veículos " + "\n" + printVehicles() + "\n" +
-                "Número de viagens : " + this.totalTrips + "\n" +
+                "Número de viagens : " + this.trips.size() + "\n" +
                 "Dinheiro gerado : " + this.moneyGenerated + "\n";
     }
 
@@ -145,60 +169,56 @@ public class Company {
     /**
      * Adiciona um condutor à empresa
      * @param d Condutor a adicionar
-     * @return O condutor foi adicionado (true) ou já existia (false)
      */
-    public boolean addDriver(Driver d){
-        int size = this.drivers.size();
+    public void addDriver(Driver d){
         this.drivers.put(d.getEmail(), d);
-
-        if (size != this.drivers.size())
-            return true;
-        else return false;
     }
 
     /**
      * Adiciona um veículo à empresa
      * @param d Veículo a adicionar
-     * @return O veículo foi adicionado (true) ou já existia (false)
      */
-    public boolean addVehicle(Vehicle v){
-        int size = this.vehicles.size();
+    public void addVehicle(Vehicle v){
         this.vehicles.put(v.getLicencePlate(), v);
-
-        if (size != this.vehicles.size())
-            return true;
-        else return false;
-    }
-
-    /**
-     * Incrementa o número total de viagens
-     */
-    public void incrementTotalTrips(){
-        this.totalTrips++;
-    }
-
-    /**
-     * Adiciona um quantia ao número total de dinheiro gerado
-     * @param money Quantia a adicionar
-     */
-    public void addMoney(double money){
-        this.moneyGenerated += money;
     }
 
     /**
      * Seleciona um condutor para conduzir um taxi da empresa
      * @return Email do condutor escolhido ou null se estiverem todos ocupados
      */
-    public String pickDriver(){
-        Random rand = new Random();
-        Driver[] drivers = (Driver[]) this.drivers.values()
-                                            .stream()
-                                            .filter(driver -> driver.isAvailable() == true)
-                                            .toArray();
-        if (drivers.length != 0) {
-            Driver d = drivers[rand.nextInt()];
-            return d.getEmail();
+    public String pickDriver() {
+        List<Driver> drivers = this.drivers.values()
+                                                .stream()
+                                                .filter(driver -> driver.isAvailable() == true)
+                                                .collect(Collectors.toList());
+
+        if (drivers.size() != 0) {
+            ThreadLocalRandom rand = ThreadLocalRandom.current();
+            return drivers.get(rand.nextInt(0, drivers.size())).getEmail();
         }
         else return null;
+    }
+
+
+    /**
+     * Adiciona uma viagem a uma empresa
+     * @param t Viagem a adicionar
+     */
+    public void addTrip(Trip t){
+        this.trips.add(t);
+        this.moneyGenerated += t.getPrice();
+        this.points += t.getPrice() - t.distance();
+    }
+
+    /**
+     * Retorna as (diferentes) datas das viagens feitas
+     * @return Datas das viagens
+     */
+    public ArrayList<String> getDates(){
+        ArrayList<String> dates = new ArrayList<>();
+        for (Trip t: this.trips)
+            if (!dates.contains(t.getDate().toString()))
+                dates.add(t.getDate().toString());
+        return dates;
     }
 }

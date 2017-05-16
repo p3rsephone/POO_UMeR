@@ -17,10 +17,11 @@ public class Driver extends User {
 	private int numberOfReviews;
 	private int exp;
 	private String vehicle;
+	private String company;
 
 
 	/**
-	 *
+	 * Cria um condutor a partir de todos os parámetros
 	 * @param email				Email
 	 * @param name 				Morada
 	 * @param password 			Password
@@ -32,17 +33,18 @@ public class Driver extends User {
 	 * @param timeCompliance 	Dia de nascimento
 	 * @param numberOfReviews 	Número de classificações
 	 * @param trips				Viagens feitas
-	 * @param numberOfTrips 	Número de viagens
 	 * @param money				Dinheiro ganho
 	 * @param vehicle 			Matrícula do seu veículo
+	 * @param company			Empresa para a qual trabalha
 	 */
-    public Driver(String email, String name, String password, String address, LocalDate birthday, double totalDistance, double grading, Boolean availability, double timeCompliance, int numberOfReviews, ArrayList<Trip> trips, int numberOfTrips, double money, double exp, String vehicle){
-		super(email, name, password, address, birthday, totalDistance, trips, numberOfTrips, money);
+    public Driver(String email, String name, String password, String address, LocalDate birthday, double totalDistance, double grading, Boolean availability, double timeCompliance, ArrayList<Trip> trips, int numberOfTrips, double money, double exp, String vehicle, String company){
+		super(email, name, password, address, birthday, totalDistance, trips, money);
 		this.grading = grading;
 		this.availability = availability;
 		this.timeCompliance = timeCompliance;
 		this.numberOfReviews = numberOfReviews;
 		this.vehicle = vehicle;
+		this.company = company;
     }
 
 	/**
@@ -52,14 +54,15 @@ public class Driver extends User {
 	 * @param password	Password
 	 * @param address	Morada
 	 * @param birthday	Aniversário
+	 * @param company	Empresa para a qual trabalha
 	 */
-    public Driver(String email, String name, String password, String address, LocalDate birthday, double timeCompliance){
-    	super(email, name, password, address, birthday, 0, null, 0, 0);
+    public Driver(String email, String name, String password, String address, LocalDate birthday, double timeCompliance, String company){
+    	super(email, name, password, address, birthday, 0, null, 0);
     	this.grading = 0;
     	this.availability = true;
     	this.timeCompliance = timeCompliance;
     	this.numberOfReviews = 0;
-    	this.vehicle = vehicle;
+    	this.company = company;
 	}
 
 	/**
@@ -67,13 +70,14 @@ public class Driver extends User {
 	* @param d
 	*/
 	public Driver(Driver d) {
-		super(d.getEmail(), d.getName(), d.getPassword(), d.getAddress(), d.getBirthday(), d.getTotalDistance(), d.getTrips(), d.getNumberOfTrips(), d.getMoney());
+		super(d.getEmail(), d.getName(), d.getPassword(), d.getAddress(), d.getBirthday(), d.getTotalDistance(), d.getTrips(), d.getMoney());
 		this.grading = d.getGrading();
 		this.availability = d.isAvailable();
 		this.timeCompliance = d.getTimeCompliance();
 		this.numberOfReviews = d.getNumberOfReviews();
 		this.exp = d.getExp();
 		this.vehicle = d.getVehicle();
+		this.company = d.getCompany();
 	}
 
 	public Driver(){
@@ -131,6 +135,14 @@ public class Driver extends User {
 	 */
 	public String getVehicle(){
 		return this.vehicle;
+	}
+
+	/**
+	 * Retorna o nome da empresa para quem trabalha (null se for condutor privado)
+	 * @return Nome da empresa
+	 */
+	public String getCompany(){
+		return this.company;
 	}
 
 	/**

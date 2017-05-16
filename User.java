@@ -20,7 +20,6 @@ public abstract class User {
 	private LocalDate birthday;
 	private double totalDistance;
 	private ArrayList<Trip> trips;
-	private int numberOfTrips;
 	private double money;
 
 
@@ -35,7 +34,7 @@ public abstract class User {
 	 * @param birth Dia de nascimento
 	 * @param position Posição
 	 */
-	public User(String email, String name, String password, String address, LocalDate birthday, double totalDistance, ArrayList<Trip> trips, int numberOfTrips, double money){
+	public User(String email, String name, String password, String address, LocalDate birthday, double totalDistance, ArrayList<Trip> trips, double money){
 		this.email = email;
 		this.name = name;
 		this.password = password;
@@ -47,8 +46,6 @@ public abstract class User {
 		if (trips != null)
 			this.trips = new ArrayList<>(trips);
 		else this.trips = new ArrayList<>();
-
-		this.numberOfTrips = numberOfTrips;
 	}
 
 	/**
@@ -56,7 +53,7 @@ public abstract class User {
 	 * @param p
 	 */
 	public User(User p){
-		this(p.getEmail(), p.getName(), p.getPassword(), p.getAddress(), p.getBirthday(), p.getTotalDistance(), p.getTrips(), p.getNumberOfTrips(), p.getMoney());
+		this(p.getEmail(), p.getName(), p.getPassword(), p.getAddress(), p.getBirthday(), p.getTotalDistance(), p.getTrips(), p.getMoney());
 	}
 
 	/**
@@ -141,7 +138,7 @@ public abstract class User {
 	 * @return Número de viagens
 	 */
 	public int getNumberOfTrips(){
-		return this.numberOfTrips;
+		return this.trips.size();
 	}
 
 	/**
@@ -193,14 +190,6 @@ public abstract class User {
 	}
 
 	/**
-	 * Altera o número de viagens de um user
-	 * @param numberOfTrips Novo número de viagens
-	 */
-	public void setNumberOfTrips(int numberOfTrips){
-		this.numberOfTrips = numberOfTrips;
-	}
-
-	/**
 	 * Altera a distância total percorrida
 	 * @param totalDistance Nova distância total
 	 */
@@ -228,7 +217,7 @@ public abstract class User {
 				"Data de nascimento : "  + this.birthday 	  + "\n" +
 				"Distância Total : " 	 + this.totalDistance + "\n"+
 				"Dinheiro gasto/ganho : "+ this.money 		  + "\n" +
-				"Número de viagens :"	 + this.numberOfTrips;
+				"Número de viagens :"	 + this.trips.size();
 	}
 
 	/**
@@ -253,7 +242,6 @@ public abstract class User {
 	public void addTrip(Trip t){
 		this.trips.add(t);
 		this.totalDistance += t.distance();
-		this.numberOfTrips++;
 		this.money += t.getPrice();
 	}
 

@@ -224,6 +224,10 @@ public class UMeR implements Serializable {
         "\n---Number of trips---\n" + this.tripID;
     }
 
+    /**
+     * Retonar o map de todos os utilizadores
+     * @return Map de utilizadores
+     */
     public HashMap<String, User> allUsers(){
         HashMap<String, User> allUsers = new HashMap<>();
         for (Client client : this.clients.values()) {
@@ -302,6 +306,7 @@ public class UMeR implements Serializable {
     public boolean registerCompanyVehicle(String company, Vehicle v){
         if (this.companies.get(company) != null && this.allVehicles.get(v.getLicencePlate()) == null){
             Vehicle vehicle = v.clone();
+            vehicle.setOwner(company);
             this.allVehicles.put(vehicle.getLicencePlate(), vehicle);
             this.companies.get(company).addVehicle(vehicle);
             return true;
@@ -347,9 +352,9 @@ public class UMeR implements Serializable {
     }
 
     /**
-     * Faz um pedido para o taxi mais próximo disponível
+     * Retonar o tax o taxi mais próximo disponível
      * @param client  Cliente que pretende o taxi
-     * @return Driver mais próximo (null se estiverem todos ocupados)
+     * @return Vehicle mais próximo (null se estiverem todos ocupados)
      */
     public String closestAvailableTaxi(Client client){
         double min = Integer.MAX_VALUE;
@@ -483,39 +488,52 @@ public class UMeR implements Serializable {
 
     /**
      ** Realiza uma viagem para um condutor especifico
-     * @param c                 Cliente
+     * @param client            Cliente
      * @param driverEmail       Email do condutor
      * @param destination       Destino
      */
-    public Trip newTripSpecific(String c, String driverEmail, Point2D.Double destination){
-        Driver driver = allDrivers.get(driverEmail);
+    public Trip newTripSpecific(Client client, String driverEmail, Point2D.Double destination){
+        Driver driver = this.allDrivers.get(driverEmail);
         if (driver != null){
-            Client client = this.clients.get(c);
-            Vehicle vehicle = allVehicles.get(driver.getVehicle());
+            Vehicle vehicle = this.allVehicles.get(driver.getVehicle());
             if (vehicle.isAvailable())
                 return newTrip(client, driver, vehicle, destination);
             else {
-                vehicle.addClient(c, client.getPosition(), destination);
-                client.setQueue(vehicle.getLicencePlate());
+                vehicle.addClient(client.getEmail(), client.getPosition(), destination);
+                this.clients.get(client.getEmail()).setQueue(vehicle.getLicencePlate());
             }
         }
         return null;
     }
 
+    public void addQueue(String c, String d, Point2D.Double start, Point2D.Double end){
+        String v = this.allDrivers.get(d).getVehicle();
+        this.allVehicles.get(v).addClient(c, start, end);
+        clients.get(c).setQueue(v);
+    }
+
     /**
      * Realiza uma viagem com o veiculo disponivel mais próximo
-     * @param c                 Cliente
+     * @param client            Cliente
      * @param destination       Destino
      */
-    public Trip newTripClosest(String c, Point2D.Double destination){
-        Client client = this.clients.get(c);
+    public Trip newTripClosest(Client client, Point2D.Double destination){
         Vehicle vehicle = null;
 
-        if (client != null)
-            vehicle = allVehicles.get(closestAvailableTaxi(client));
+        vehicle = allVehicles.get(closestAvailableTaxi(client));
 
-        if (vehicle != null)
-            return newTrip(client, allDrivers.get(vehicle.getOwner()), vehicle, destination);
+        if (vehicle != null) {
+            Driver d = allDrivers.get(vehicle.getOwner());
+            if (d != null)
+                return newTrip(client, allDrivers.get(vehicle.getOwner()), vehicle, destination);
+            else {
+                Company c = companies.get(vehicle.getOwner());
+                d = allDrivers.get(c.pickDriver());
+                if (d != null)
+                    return newTrip(client, d, vehicle, destination);
+                else return null;
+            }
+        }
 
         else return null;
     }
@@ -532,6 +550,10 @@ public class UMeR implements Serializable {
         this.clients.get(c).addTrip(t);
         this.allDrivers.get(d).addTrip(t);
         this.allVehicles.get(v).addTrip(t);
+
+        String company = allDrivers.get(d).getCompany();
+        if (company != null)
+            this.companies.get(company).addTrip(t);
     }
 
     /**
@@ -562,12 +584,6 @@ public class UMeR implements Serializable {
         }
 
         return top;
-    }
-
-    public void addQueue(String c, String d, Point2D.Double start, Point2D.Double end){
-        String v = this.allDrivers.get(d).getVehicle();
-        this.allVehicles.get(v).addClient(c, start, end);
-        clients.get(c).setQueue(v);
     }
 
     /**
@@ -625,6 +641,7 @@ public class UMeR implements Serializable {
     /**
      * Método que guarda em ficheiro de objectos o objecto que recebe a mensagem.
      */
+
 
     public void guardaEstado(String nomeFicheiro) throws FileNotFoundException,IOException {
         FileOutputStream fos = new FileOutputStream(nomeFicheiro);

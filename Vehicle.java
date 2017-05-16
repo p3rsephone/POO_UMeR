@@ -335,5 +335,6 @@ public abstract class Vehicle {
      */
     public void addTrip(Trip t){
         this.trips.add(t);
+        this.position.setLocation(t.getEnd().getX(), t.getEnd().getY());
     }
 }

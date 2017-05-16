@@ -39,6 +39,7 @@ import java.awt.geom.Point2D;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeSet;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GUI extends Application{
@@ -65,7 +66,7 @@ public class GUI extends Application{
         if (email != null && name != null && password != null && address != null && date != null &&
                 !email.equals("") && !name.equals("") && !password.equals("") && !address.equals("")){
             int timeComplience = ThreadLocalRandom.current().nextInt(10, 100);
-            Driver driver = new Driver(email, name, password, address, date, timeComplience);
+            Driver driver = new Driver(email, name, password, address, date, timeComplience, company);
             return umer.registerUser(driver, company);
         }
         else return false;
@@ -106,34 +107,31 @@ public class GUI extends Application{
     }
 
     public Trip newTrip(Client client, String d, Point2D.Double start, Point2D.Double end){
-        if(start != null && end != null){
-            client.setPosition(start);
-            Driver driver = null;
-            Vehicle vehicle = null;
-            if (d.equals("--condutor mais próximo--")){
-                vehicle = umer.getAllVehicles().get(umer.closestAvailableTaxi(client));
-                if (vehicle != null)
-                    driver = umer.getAllDrivers().get(vehicle.getOwner());
-            }
-            else {
-                driver = umer.getDriversP().get(d);
-                vehicle = umer.getVehiclesP().get(driver.getVehicle());
-            }
-            if (vehicle != null && driver != null) {
+        client.setPosition(start);
+        if (d.equals("--condutor mais próximo--")){
+            Trip t = umer.newTripClosest(client, end);
+            if (t != null) {
+                String vehicle = umer.closestAvailableTaxi(client);
+                String driver = t.getDriver();
+                this.currentTripVehicle = vehicle;
+                this.currentTripDriver = driver;
                 this.noAvailiableTaxis = false;
-                Trip trip = umer.newTrip(client, driver, vehicle, end);
-
-                if (trip == null) this.driverAvailiable = false;
-                else this.driverAvailiable = true;
-
-                this.currentTripDriver = driver.getEmail();
-                this.currentTripVehicle = vehicle.getLicencePlate();
-
-                return trip;
+                return t;
             }
-            else this.noAvailiableTaxis = true;
+            else{
+                this.noAvailiableTaxis = true;
+                return null;
+            }
         }
-        return null;
+        else{
+            Trip t = umer.newTripSpecific(client, d, end);
+            if (t == null) this.driverAvailiable = false;
+            else this.driverAvailiable = true;
+            this.currentTripVehicle = umer.getDriversP().get(d).getVehicle();
+            this.currentTripDriver = umer.getDriversP().get(d).getEmail();
+            this.noAvailiableTaxis = false;
+            return t;
+            }
     }
 
     public boolean loginCheck(String key, String password){
@@ -254,7 +252,7 @@ public class GUI extends Application{
         return positionHbox;
     }
 
-    public Tab infoTab(User user){
+    public Tab infoTab(Object user){
         Tab infoTab = new Tab("Informação");
         VBox infoTabVBox = new VBox(10);
         infoTabVBox.setPadding(new Insets(20,20,20,20));
@@ -264,14 +262,16 @@ public class GUI extends Application{
         Label info = new Label();
         if (user instanceof Client)
             info.setText(printClient((Client) user));
-        else info.setText(printDriver((Driver) user));
+        else if (user instanceof Driver)
+            info.setText(printDriver((Driver) user));
+        else info.setText(printCompany((Company) user));
         info.setFont(Font.font(15));
         infoTabVBox.getChildren().addAll(info_title, info);
         infoTab.setContent(infoTabVBox);
         return infoTab;
     }
 
-    public Tab tripsTab(User user){
+    public Tab tripsTab(Object user){
         VBox tripsTabVBox = new VBox(10);
         tripsTabVBox.setPadding(new Insets(20,20,20,20));
 
@@ -282,15 +282,26 @@ public class GUI extends Application{
         trips_title.setUnderline(true);
 
         TreeItem<String> trips_root = new TreeItem<>("Viagens");
-        ArrayList<String> trips_info = printTrips(user);
-        ArrayList<String> trips_dates = user.getDates();
+        trips_root.setExpanded(true);
+
+        ArrayList<String> trips_info;
+        ArrayList<String> trips_dates;
+        if (user instanceof User) {
+            trips_info = printTrips((User) user);
+            trips_dates = ((User) user).getDates();
+        }
+        else{
+            trips_info = printTrips((Company) user);
+            trips_dates = ((Company) user).getDates();
+        }
 
         int i = 0;
         for (String s : trips_dates){
             TreeItem<String> trips_items = new TreeItem<>(s);
-            TreeItem<String> asd = new TreeItem<>(trips_info.get(i));
-            trips_items.getChildren().add(asd);
+            TreeItem<String> trips_i = new TreeItem<>(trips_info.get(i));
+            trips_items.getChildren().add(trips_i);
             trips_root.getChildren().add(trips_items);
+            i++;
         }
 
         TreeView<String> trips = new TreeView<>(trips_root);
@@ -299,6 +310,71 @@ public class GUI extends Application{
 
         tripsTab.setContent(tripsTabVBox);
         return tripsTab;
+    }
+
+    public Tab driversTab(Company c){
+        Tab drivers_tab = new Tab("Condutores");
+
+        VBox driversTabVbox = new VBox(10);
+        driversTabVbox.setPadding(new Insets(20,20,20,20));
+
+        Label drivers_title = new Label("Condutores");
+        drivers_title.setFont(Font.font(30));
+        drivers_title.setUnderline(true);
+
+        TreeItem<String> drivers_root = new TreeItem<>("Condutores");
+        drivers_root.setExpanded(true);
+
+        TreeSet<String> drivers_emails = printIdentifier(c.getDrivers());
+
+        for (String s : drivers_emails){
+            TreeItem<String> trips_items = new TreeItem<>(s);
+            TreeItem<String> drivers_i = new TreeItem<>(printDriver(c.getDrivers().get(s)));
+            trips_items.getChildren().add(drivers_i);
+            drivers_root.getChildren().add(trips_items);
+        }
+
+        TreeView<String> drivers = new TreeView<>(drivers_root);
+
+        driversTabVbox.getChildren().addAll(drivers_title, drivers);
+        drivers_tab.setContent(driversTabVbox);
+        return drivers_tab;
+    }
+
+    public Tab vehiclesTab(Company c){
+        Tab vehicles_tab = new Tab("Veículos");
+
+        VBox vehiclesTabVbox = new VBox(10);
+        vehiclesTabVbox.setPadding(new Insets(20,20,20,20));
+
+        Label drivers_title = new Label("Veículos");
+        drivers_title.setFont(Font.font(30));
+        drivers_title.setUnderline(true);
+
+        Button registerVehicle_button = new Button("Registar veículo");
+        registerVehicle_button.setFont(Font.font(15));
+        registerVehicle_button.setOnAction(e -> {
+            vehicleSignupMenu();
+            window.setScene(signupVehicle_menu);
+        });
+
+        TreeItem<String> vehicles_root = new TreeItem<>("Veículos");
+        vehicles_root.setExpanded(true);
+
+        TreeSet<String> vehicles_licencePlate = printIdentifier(c.getVehicles());
+
+        for (String s : vehicles_licencePlate){
+            TreeItem<String> trips_items = new TreeItem<>(s);
+            TreeItem<String> vehicles_i = new TreeItem<>(printVehicle(c.getVehicles().get(s)));
+            trips_items.getChildren().add(vehicles_i);
+            vehicles_root.getChildren().add(trips_items);
+        }
+
+        TreeView<String> vehicles = new TreeView<>(vehicles_root);
+
+        vehiclesTabVbox.getChildren().addAll(drivers_title, registerVehicle_button, vehicles);
+        vehicles_tab.setContent(vehiclesTabVbox);
+        return vehicles_tab;
     }
 
     public Button doneRegisterButton(){
@@ -312,7 +388,7 @@ public class GUI extends Application{
         Button back_button = new Button("<- Back");
         back_button.setMaxWidth(100);
         back_button.setOnAction(e -> {
-            window.setScene(menu);
+            loadMenu();
         });
         return back_button;
     }
@@ -336,7 +412,7 @@ public class GUI extends Application{
         return success;
     }
 
-    public VBox userHeaderBox(User user){
+    public VBox userHeaderBox(Object user){
         VBox header = new VBox(5);
         header.setPadding(new Insets(10, 10, 0, 10));
 
@@ -346,15 +422,22 @@ public class GUI extends Application{
         ImageView thumbnail;
         if (user instanceof Client)
             thumbnail = new ImageView("images/client_small.png");
-        else thumbnail = new ImageView("images/driver_small.png");
+        else if (user instanceof Driver)
+            thumbnail = new ImageView("images/driver_small.png");
+        else thumbnail = new ImageView("images/company_small.png");
 
-        Label name = new Label(user.getName());
+        Label name;
+        if (user instanceof User)
+            name = new Label(((User) user).getName());
+        else name = new Label(((Company) user).getName());
         name.setFont(Font.font(30));
 
         Label points = new Label();
         if (user instanceof Client)
-            points.setText(Integer.toString(((Client) user).getPoints()) + " pontos");
-        else points.setText(Integer.toString(((Driver) user).getExp()) + " exp");
+            points.setText((((Client) user).getPoints()) + " pontos");
+        else if (user instanceof User)
+            points.setText((((Driver) user).getExp()) + " exp");
+        else points.setText(((Company) user).getPoints() + " pontos");
 
         Button logout = new Button("Logout ✖");
         logout.setOnAction(e->{
@@ -365,7 +448,8 @@ public class GUI extends Application{
 
         reload_button.setOnAction(e ->{
             if (user instanceof Client) clientMenu();
-            else driverMenu();
+            else if (user instanceof Driver) driverMenu();
+            else companyMenu();
 
             window.setScene(user_menu);
         });
@@ -399,6 +483,25 @@ public class GUI extends Application{
                 "\nClassficação: " + d.getGrading();
     }
 
+    public String printCompany(Company c){
+        return "Nome: " + c.getName() +
+                "\nNúmero de condutores: " + c.getDrivers().size() +
+                "\nNúmero de veículos: " + c.getVehicles().size() +
+                "\nNúmero de viagens: " + c.getTotalTrips() +
+                "\nDinheiro gerado: " + c.getMoneyGenerated();
+    }
+
+    public String printVehicle(Vehicle v){
+        return "Matrícula: " + v.getLicencePlate() +
+                "\nClass: " + v.getClass().getSimpleName() +
+                "\nVelocidade: " + v.getSpeed() +
+                "\nPreço (por km): " + v.getPrice() +
+                "\nLugares: " + v.getSeats() +
+                "\nFator de confiança: " + v.getReliable() +
+                "\nPosição Atual: " + v.getPosition() +
+                "\nNúmero de viagens: " + v.getTrips().size();
+    }
+
     public String printTripsByDate(String date, ArrayList<Trip> trips){
         String s = "";
         for (Trip t: trips)
@@ -407,10 +510,19 @@ public class GUI extends Application{
         return s;
     }
 
-    public ArrayList<String> printTrips(User u){
+    public ArrayList<String> printTrips(Object user){
         ArrayList<String> trips = new ArrayList<>();
-        ArrayList<String> dates = u.getDates();
-        ArrayList<Trip> t = u.getTrips();
+        ArrayList<String> dates;
+        ArrayList<Trip> t;
+
+        if (user instanceof User) {
+            dates = ((User) user).getDates();
+            t = ((User) user).getTrips();
+        }
+        else{
+            dates = ((Company) user).getDates();
+            t = ((Company) user).getTrips();
+        }
 
         int i = 0;
         for (String d : dates)
@@ -418,6 +530,16 @@ public class GUI extends Application{
         return trips;
     }
 
+    public TreeSet<String> printIdentifier(HashMap map){
+        TreeSet<String> emailsOrd = new TreeSet<>(String::compareTo);
+
+        for (Object o: map.values()) {
+            if (o instanceof User) emailsOrd.add(((User) o).getEmail());
+            else emailsOrd.add(((Vehicle) o).getLicencePlate());
+        }
+
+        return emailsOrd;
+    }
 
     public void clientSignupMenu(){
         VBox signupClient_layout = new VBox(15);
@@ -506,8 +628,10 @@ public class GUI extends Application{
             else {
                 this.current_class = "Driver";
                 this.current_user = email;
-                vehicleSignupMenu();
-                window.setScene(signupVehicle_menu);
+                if (company == null) {
+                    vehicleSignupMenu();
+                    window.setScene(signupVehicle_menu);
+                }
                 signupDriver_layout.getChildren().add(success);
             }
         });
@@ -557,6 +681,7 @@ public class GUI extends Application{
                 else if (current_class.equals("Driver")) {
                         window.setScene(signupDriver_menu);
                     }
+                else window.setScene(user_menu);
             }
             catch (NumberFormatException exception){
                 error.setText("Posição inserida incorretamente");
@@ -633,6 +758,10 @@ public class GUI extends Application{
             }
             else if (current_class.equals("Driver")) {
                 driverMenu();
+                window.setScene(user_menu);
+            }
+            else if (current_class.equals("Company")){
+                companyMenu();
                 window.setScene(user_menu);
             }
         });
@@ -727,7 +856,6 @@ public class GUI extends Application{
                         newTrip_tabVBox.getChildren().removeAll(success, drivers_box, positionStart_hbox, positionEnd_hbox, newTrip_button);
                         success.setText("Colocado na fila de espera de " + driver);
                         newTrip_tabVBox.getChildren().add(success);
-                        umer.addQueue(client.getEmail(), driver, posStart, posEnd);
                     }
                     else if (noAvailiableTaxis) {
                         error.setText("Não existem taxis disponíveis");
@@ -835,6 +963,30 @@ public class GUI extends Application{
         user_menu = new Scene(menu_vbox);
     }
 
+    public void companyMenu(){
+
+        Company company = umer.getCompanies().get(this.current_user);
+
+        VBox menu_vbox = new VBox();
+        TabPane menu_tab = new TabPane();
+        menu_tab.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+
+        VBox header = userHeaderBox(company);
+        Tab info_tab = infoTab(company);
+
+        Tab trips_tab = tripsTab(company);
+
+        Tab drivers_tab = driversTab(company);
+
+        Tab vehicles_tab = vehiclesTab(company);
+
+
+        menu_tab.getTabs().addAll(info_tab, trips_tab, drivers_tab, vehicles_tab);
+        menu_vbox.getChildren().addAll(header, menu_tab);
+
+        user_menu = new Scene(menu_vbox);
+    }
+
 
     public void loadMenu(){
         //Logo
@@ -843,6 +995,7 @@ public class GUI extends Application{
         logo.setFitWidth(250);
         logo.setSmooth(true);
         logo.setCache(true);
+        logo.setTranslateX(-10);
 
 
         //Login button
@@ -916,6 +1069,7 @@ public class GUI extends Application{
         this.window.setWidth(350);
         this.window.setHeight(570);
         this.window.setTitle("UMeR");
+        this.window.getIcons().add(new Image("images/umer_icon.png"));
 
         loadMenu();
     }
@@ -924,5 +1078,3 @@ public class GUI extends Application{
         launch(args);
     }
 }
-
-//Todo condutor executar as viagens em fila de espera

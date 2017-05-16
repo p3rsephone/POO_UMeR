@@ -35,8 +35,8 @@ public class Client extends User {
      * @param premium           Se tem conta premium
      * @param queue             Veículo onde está em fila de espera
      */
-    public Client(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, ArrayList<Trip> trips, int numberOfTrips,  int points, double money, boolean premium, String inQueue) {
-        super(email, name, password, address, birthday, totalDistance, trips, numberOfTrips, money);
+    public Client(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, ArrayList<Trip> trips, int points, double money, boolean premium, String inQueue) {
+        super(email, name, password, address, birthday, totalDistance, trips, money);
         this.position = new Point2D.Double(position.getX(), position.getY());
         this.points = points;
         this.position = new Point2D.Double(0,0);
@@ -52,7 +52,7 @@ public class Client extends User {
      * @param birthday  Dia de nascimento
      */
     public Client(String email, String name, String password, String address, LocalDate birthday){
-        super(email, name, password, address, birthday, 0, null, 0, 0);
+        super(email, name, password, address, birthday, 0, null, 0);
         this.points = 0;
         this.premium = false;
         this.position = new Point2D.Double(0,0);
@@ -64,7 +64,7 @@ public class Client extends User {
      * @param c Cliente
      */
     public Client(Client c) {
-        super(c.getEmail(), c.getName(), c.getPassword(), c.getAddress(), c.getBirthday(), c.getTotalDistance(), c.getTrips(), c.getNumberOfTrips(), c.getMoney());
+        super(c.getEmail(), c.getName(), c.getPassword(), c.getAddress(), c.getBirthday(), c.getTotalDistance(), c.getTrips(), c.getMoney());
         this.points = c.getPoints();
         this.position = new Point2D.Double(c.getPosition().getX(), c.getPosition().getY());
         this.premium = c.isPremium();
