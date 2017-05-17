@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.*;
 
@@ -6,7 +7,7 @@ import java.util.*;
  * Helicopter for UMeR.
  */
 
-public class Helicopter extends Vehicle {
+public class Helicopter extends Vehicle implements Serializable {
 
     /** CONSTRUTORES */
 

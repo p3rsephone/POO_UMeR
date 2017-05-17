@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.stream.Collectors;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * @author (your name)
  * @version 02.05.17
  */
-public class Client extends User {
+public class Client extends User implements Serializable {
 
     /** Variáveis de Instância */
     private Point2D.Double position;

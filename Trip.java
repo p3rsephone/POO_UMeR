@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.time.*;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -9,7 +10,7 @@ import java.util.concurrent.TimeUnit;
  * @author (your name)
  * @version (a version number or a date)
  */
-public class Trip {
+public class Trip implements Serializable {
 
     /** Variáveis de Instância */
 

@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,7 +10,7 @@ import java.util.Date;
  * @author (your name)
  * @version (a version number or a date)
  */
-public abstract class User {
+public abstract class User implements Serializable {
 
     /** Variáveis de Instância */
 

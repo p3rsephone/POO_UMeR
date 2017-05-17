@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.*;
 
@@ -6,7 +7,7 @@ import java.util.*;
  * Car for UMeR.
  */
 
-public class Car extends Vehicle {
+public class Car extends Vehicle implements Serializable {
 
     /** CONSTRUTORES */
 

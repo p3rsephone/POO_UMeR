@@ -618,51 +618,29 @@ public class UMeR implements Serializable {
 
 
     /**
-     * Métodos que asseguram persistência.
-     *
+     * Guarda o estado
+     * @param fileName                  Nome do ficheiro
+     * @throws FileNotFoundException    Exception
+     * @throws IOException              Exception
      */
-
-    /**
-     * Método que guarda o estado de uma instância num ficheiro de texto.
-     *
-     * @param nome do ficheiro
-     */
-
-    public void escreveEmFicheiroTxt(String nomeFicheiro) throws IOException {
-        PrintWriter fich = new PrintWriter(nomeFicheiro);
-        fich.println("------- UMeR --------");
-        fich.println(this.toString()); // ou fich.println(this);
-        fich.flush();
-        fich.close();
-    }
-
-
-
-    /**
-     * Método que guarda em ficheiro de objectos o objecto que recebe a mensagem.
-     */
-
-
-    public void guardaEstado(String nomeFicheiro) throws FileNotFoundException,IOException {
-        FileOutputStream fos = new FileOutputStream(nomeFicheiro);
+    public void saveUMeR(String fileName) throws FileNotFoundException,IOException {
+        FileOutputStream fos = new FileOutputStream(fileName);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(this); //guarda-se todo o objecto de uma só vez
         oos.flush();
         oos.close();
     }
 
-
     /**
-     * Método que recupera uma instância de UMeR de um ficheiro de objectos.
-     * Este método tem de ser um método de classe que devolva uma instância já construída de
-     * UMeR.
-     *
-     * @param nome do ficheiro onde está guardado um objecto do tipo UMeR
-     * @return objecto UMeR inicializado
+     * Carrega o estado
+     * @param fileName
+     * @return Estado carregado
+     * @throws FileNotFoundException    Exception
+     * @throws IOException              Exception
+     * @throws ClassNotFoundException   Exception
      */
-
-    public static UMeR carregaEstado(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream(nomeFicheiro);
+    public static UMeR loadUMeR(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream(fileName);
         ObjectInputStream ois = new ObjectInputStream(fis);
         UMeR u = (UMeR) ois.readObject();
         ois.close();

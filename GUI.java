@@ -50,6 +50,7 @@ public class GUI extends Application{
     private boolean driverAvailiable = true, noAvailiableTaxis = true;
     private String currentTripDriver, currentTripVehicle;
     private int currentTripId;
+    private String saveFile = "umerData";
 
     private HBox company_hbox;
 
@@ -775,6 +776,8 @@ public class GUI extends Application{
     }
 
     public void clientMenu(){
+        saveData();
+
         Client client = umer.getClients().get(current_user);
 
         VBox menu_vbox = new VBox();
@@ -900,6 +903,8 @@ public class GUI extends Application{
 
 
     public void driverMenu(){
+        saveData();
+
         Driver driver = umer.getAllDrivers().get(current_user);
 
         VBox menu_vbox = new VBox();
@@ -964,6 +969,7 @@ public class GUI extends Application{
     }
 
     public void companyMenu(){
+        saveData();
 
         Company company = umer.getCompanies().get(this.current_user);
 
@@ -989,6 +995,8 @@ public class GUI extends Application{
 
 
     public void loadMenu(){
+        saveData();
+
         //Logo
         ImageView logo = new ImageView("images/logo_taxi_small.png");
         logo.setPreserveRatio(true);
@@ -1060,9 +1068,24 @@ public class GUI extends Application{
         this.window.show();
     }
 
+    public void saveData(){
+        try{
+            umer.saveUMeR(saveFile);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         umer = new UMeR();
+        try{
+            umer = umer.loadUMeR(saveFile);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
         System.setProperty("prism.lcdtext", "false");
         this.window = primaryStage;

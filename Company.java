@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -6,7 +7,7 @@ import java.util.stream.Collectors;
  * Company of UMeR
  */
 
-public class Company {
+public class Company implements Serializable {
     private String name, password;
     private HashMap<String, Driver> drivers;
     private HashMap<String, Vehicle> vehicles;

@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
 import java.util.*;
@@ -8,7 +9,7 @@ import java.util.*;
  * @author (your name)
  * @version 02.05.17
  */
-public class Driver extends User {
+public class Driver extends User implements Serializable {
 
 	/* Variáveis de Instância */
 	private double grading;

@@ -1,11 +1,12 @@
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.sql.Array;
 import java.util.*;
 /**
  * Vehicle class for UMeR.
  */
 
-public abstract class Vehicle {
+public abstract class Vehicle implements Serializable {
 
     /** Variáveis de Instância */
 
