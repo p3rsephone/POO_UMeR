@@ -333,15 +333,6 @@ public class UMeR implements Serializable {
         this.allVehicles.remove(v);
     }
 
-
-    /**
-     * Adiciona uma viagem ao conjunto de viagens totais
-     * @param t Viagem a adicionar
-     */
-    public void addTrip(Trip t){
-        this.trips.add(t);
-    }
-
     /**
      * Cancela uma viagem (fila de espera) de um cliente
      * @param client Cliente
@@ -546,7 +537,7 @@ public class UMeR implements Serializable {
      * @param t Viagem
      */
     public void addTrip(String c, String d, String v, Trip t){
-        this.addTrip(t);
+        this.trips.add(t);
         this.clients.get(c).addTrip(t);
         this.allDrivers.get(d).addTrip(t);
         this.allVehicles.get(v).addTrip(t);

@@ -253,8 +253,9 @@ public abstract class User implements Serializable {
 	public ArrayList<String> getDates(){
 		ArrayList<String> dates = new ArrayList<>();
 		for (Trip t: this.trips)
-			if (!dates.contains(t.getDate().toString()))
+			if (!dates.contains(t.getDate().toString())) {
 				dates.add(t.getDate().toString());
+			}
 		return dates;
 	}
 }

@@ -49,7 +49,7 @@ public class GUI extends Application{
     private String current_user, current_class;
     private boolean driverAvailiable = true, noAvailiableTaxis = true;
     private String currentTripDriver, currentTripVehicle;
-    private int currentTripId;
+    private int currentTripId = 0;
     private String saveFile = "umerData";
 
     private HBox company_hbox;
@@ -91,9 +91,9 @@ public class GUI extends Application{
 
             Vehicle vehicle = null;
             if (vehicleClass.equals("Carro"))       vehicle = new Car(licencePlate, reliable, position, this.current_user);
-            if (vehicleClass.equals("Mota"))        vehicle = new Car(licencePlate, reliable, position, this.current_user);
-            if (vehicleClass.equals("Carrinha"))    vehicle = new Car(licencePlate, reliable, position, this.current_user);
-            if (vehicleClass.equals("Helicóptero")) vehicle = new Car(licencePlate, reliable, position, this.current_user);
+            if (vehicleClass.equals("Mota"))        vehicle = new Bike(licencePlate, reliable, position, this.current_user);
+            if (vehicleClass.equals("Carrinha"))    vehicle = new Van(licencePlate, reliable, position, this.current_user);
+            if (vehicleClass.equals("Helicóptero")) vehicle = new Helicopter(licencePlate, reliable, position, this.current_user);
 
             if (this.current_class.equals("Driver")) {
                     if (umer.registerVehicleP(vehicle)) {
@@ -506,8 +506,9 @@ public class GUI extends Application{
     public String printTripsByDate(String date, ArrayList<Trip> trips){
         String s = "";
         for (Trip t: trips)
-            if (t.getDate().toString().equals(date))
+            if (t.getDate().toString().equals(date)) {
                 s += t.toString() + "\n---------------------------------------------\n";
+            }
         return s;
     }
 
@@ -525,9 +526,9 @@ public class GUI extends Application{
             t = ((Company) user).getTrips();
         }
 
-        int i = 0;
-        for (String d : dates)
-            trips.add(i, printTripsByDate(d, t));
+        for (String d : dates) {
+            trips.add(printTripsByDate(d, t));
+        }
         return trips;
     }
 
@@ -852,19 +853,9 @@ public class GUI extends Application{
                     Point2D.Double posEnd = new Point2D.Double(posEndX, posEndY);
 
                     Trip trip = newTrip(client, driver, posStart, posEnd);
-                    if (trip != null)
+                    if (trip != null) {
                         currentTripId = trip.getID();
 
-                    if (!driverAvailiable && !noAvailiableTaxis) {
-                        newTrip_tabVBox.getChildren().removeAll(success, drivers_box, positionStart_hbox, positionEnd_hbox, newTrip_button);
-                        success.setText("Colocado na fila de espera de " + driver);
-                        newTrip_tabVBox.getChildren().add(success);
-                    }
-                    else if (noAvailiableTaxis) {
-                        error.setText("Não existem taxis disponíveis");
-                        newTrip_tabVBox.getChildren().add(error);
-                    }
-                    else {
                         rate_hbox.getChildren().removeAll(rateDriver_cbox, rateDriver_button);
                         success.setText(trip.toString());
                         rate_hbox.getChildren().addAll(rateDriver_cbox, rateDriver_button);
@@ -873,6 +864,18 @@ public class GUI extends Application{
                         newTrip_tabVBox.getChildren().addAll(rate_hbox, tripInfo_pane);
 
                         umer.addTrip(client.getEmail(), currentTripDriver, currentTripVehicle, trip);
+                    }
+
+                    else{
+                        if (!driverAvailiable && !noAvailiableTaxis) {
+                            newTrip_tabVBox.getChildren().removeAll(success, drivers_box, positionStart_hbox, positionEnd_hbox, newTrip_button);
+                            success.setText("Colocado na fila de espera de " + driver);
+                            newTrip_tabVBox.getChildren().add(success);
+                        }
+                        else if (noAvailiableTaxis) {
+                            error.setText("Não existem taxis disponíveis");
+                            newTrip_tabVBox.getChildren().add(error);
+                        }
                     }
                 }
                 catch (NumberFormatException exception) {
@@ -943,7 +946,11 @@ public class GUI extends Application{
         Label currentStatus = new Label("Disponibilidade atual: " + driver.isAvailable());
         currentStatus.setFont(Font.font(15));
 
-        Label queueNumber = new Label("Número de clientes em fila de espera - " + umer.getAllVehicles().get(driver.getVehicle()).getQueue().size());
+        Label queueNumber;
+        if (driver.getVehicle() != null)
+           queueNumber = new Label("Número de clientes em fila de espera - " + umer.getAllVehicles().get(driver.getVehicle()).getQueue().size());
+
+        else queueNumber = new Label("");
 
         Button changeStatusButton = new Button("Alterar disponibilidade");
         changeStatusButton.setFont(Font.font(15));
@@ -955,6 +962,8 @@ public class GUI extends Application{
             queueNumber.setText("Número de clientes em fila de espera - 0");
             work_tabVbox.getChildren().addAll(currentStatus, queueNumber);
             umer.doAllTripsQueue(driver.getEmail());
+            driverAvailiable = true;
+            noAvailiableTaxis = false;
 
         });
 
@@ -995,7 +1004,7 @@ public class GUI extends Application{
 
 
     public void loadMenu(){
-        saveData();
+        //saveData();
 
         //Logo
         ImageView logo = new ImageView("images/logo_taxi_small.png");
