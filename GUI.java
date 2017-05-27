@@ -48,7 +48,7 @@ public class GUI extends Application{
     private Scene menu, login_menu, signupClient_menu, signupDriver_menu, signupCompany_menu, user_menu, signupVehicle_menu;
     private String current_user, current_class;
     private boolean driverAvailiable = true, noAvailiableTaxis = true;
-    private String currentTripDriver, currentTripVehicle;
+    private String currentTripDriver;
     private int currentTripId = 0;
     private String saveFile = "umerData";
 
@@ -114,7 +114,6 @@ public class GUI extends Application{
             if (t != null) {
                 String vehicle = umer.closestAvailableTaxi(client);
                 String driver = t.getDriver();
-                this.currentTripVehicle = vehicle;
                 this.currentTripDriver = driver;
                 this.noAvailiableTaxis = false;
                 return t;
@@ -128,11 +127,10 @@ public class GUI extends Application{
             Trip t = umer.newTripSpecific(client, d, end);
             if (t == null) this.driverAvailiable = false;
             else this.driverAvailiable = true;
-            this.currentTripVehicle = umer.getDriversP().get(d).getVehicle();
-            this.currentTripDriver = umer.getDriversP().get(d).getEmail();
-            this.noAvailiableTaxis = false;
+            if (umer.getAllDrivers().get(d) == null) this.noAvailiableTaxis = true;
+            else this.noAvailiableTaxis = false;
             return t;
-            }
+        }
     }
 
     public boolean loginCheck(String key, String password){
@@ -150,7 +148,11 @@ public class GUI extends Application{
                 return true;
             }
         }
-
+        if (key.equals("admin") && password.equals("12345")){
+            this.current_user = "admin";
+            this.current_class = "admin";
+            return true;
+        }
         return false;
     }
 
@@ -273,6 +275,8 @@ public class GUI extends Application{
     }
 
     public Tab tripsTab(Object user){
+        boolean admin = false;
+        if (user == null) admin = true;
         VBox tripsTabVBox = new VBox(10);
         tripsTabVBox.setPadding(new Insets(20,20,20,20));
 
@@ -287,7 +291,11 @@ public class GUI extends Application{
 
         ArrayList<String> trips_info;
         ArrayList<String> trips_dates;
-        if (user instanceof User) {
+        if (admin){
+            trips_info = printTrips(null);
+            trips_dates = umer.getDates();
+        }
+        else if (user instanceof User) {
             trips_info = printTrips((User) user);
             trips_dates = ((User) user).getDates();
         }
@@ -313,44 +321,71 @@ public class GUI extends Application{
         return tripsTab;
     }
 
-    public Tab driversTab(Company c){
-        Tab drivers_tab = new Tab("Condutores");
-
-        VBox driversTabVbox = new VBox(10);
-        driversTabVbox.setPadding(new Insets(20,20,20,20));
-
-        Label drivers_title = new Label("Condutores");
-        drivers_title.setFont(Font.font(30));
-        drivers_title.setUnderline(true);
-
-        TreeItem<String> drivers_root = new TreeItem<>("Condutores");
-        drivers_root.setExpanded(true);
-
-        TreeSet<String> drivers_emails = printIdentifier(c.getDrivers());
-
-        for (String s : drivers_emails){
-            TreeItem<String> trips_items = new TreeItem<>(s);
-            TreeItem<String> drivers_i = new TreeItem<>(printDriver(c.getDrivers().get(s)));
-            trips_items.getChildren().add(drivers_i);
-            drivers_root.getChildren().add(trips_items);
+    public Tab usersTab(Company c, String user){
+        int user_class;
+        boolean admin = false;
+        Tab users_tab = new Tab();
+        if (user.equals("client")){
+            users_tab.setText("Clientes");
+            user_class = 1;
+        }
+        else {
+            users_tab.setText("Condutores");
+            user_class = 0;
         }
 
-        TreeView<String> drivers = new TreeView<>(drivers_root);
+        if (c == null)
+            admin = true;
 
-        driversTabVbox.getChildren().addAll(drivers_title, drivers);
-        drivers_tab.setContent(driversTabVbox);
-        return drivers_tab;
+        VBox usersTabVbox = new VBox(10);
+        usersTabVbox.setPadding(new Insets(20,20,20,20));
+
+        Label users_title;
+        if (user_class == 1) users_title = new Label("Clientes");
+        else users_title = new Label("Condutores");
+        users_title.setFont(Font.font(30));
+        users_title.setUnderline(true);
+
+        TreeItem<String> users_root;
+        if (user_class == 1) users_root = new TreeItem<>("Clientes");
+        else users_root = new TreeItem<>("Condutores");
+        users_root.setExpanded(true);
+
+        TreeSet<String> users_emails = null;
+        if (admin)
+            if (user_class == 1)  users_emails = printIdentifier(umer.getClients());
+            else users_emails = printIdentifier(umer.getAllDrivers());
+        else users_emails = printIdentifier(c.getDrivers());
+
+        for (String s : users_emails){
+            TreeItem<String> trips_items = new TreeItem<>(s);
+            TreeItem<String> users_i;
+            if (admin)
+                if (user_class == 1) users_i = new TreeItem<>(printClient(umer.getClients().get(s)));
+                else users_i = new TreeItem<>(printDriver(umer.getAllDrivers().get(s)));
+            else users_i = new TreeItem<>(printDriver(c.getDrivers().get(s)));
+            trips_items.getChildren().add(users_i);
+            users_root.getChildren().add(trips_items);
+        }
+
+        TreeView<String> users = new TreeView<>(users_root);
+
+        usersTabVbox.getChildren().addAll(users_title, users);
+        users_tab.setContent(usersTabVbox);
+        return users_tab;
     }
 
     public Tab vehiclesTab(Company c){
+        boolean admin = false;
+        if (c == null) admin = true;
         Tab vehicles_tab = new Tab("Veículos");
 
         VBox vehiclesTabVbox = new VBox(10);
         vehiclesTabVbox.setPadding(new Insets(20,20,20,20));
 
-        Label drivers_title = new Label("Veículos");
-        drivers_title.setFont(Font.font(30));
-        drivers_title.setUnderline(true);
+        Label vehicles_title = new Label("Veículos");
+        vehicles_title.setFont(Font.font(30));
+        vehicles_title.setUnderline(true);
 
         Button registerVehicle_button = new Button("Registar veículo");
         registerVehicle_button.setFont(Font.font(15));
@@ -362,18 +397,23 @@ public class GUI extends Application{
         TreeItem<String> vehicles_root = new TreeItem<>("Veículos");
         vehicles_root.setExpanded(true);
 
-        TreeSet<String> vehicles_licencePlate = printIdentifier(c.getVehicles());
+        TreeSet<String> vehicles_licencePlate;
+        if (admin) vehicles_licencePlate = new TreeSet<>(printIdentifier(umer.getAllVehicles()));
+        else vehicles_licencePlate = new TreeSet<>(printIdentifier(c.getVehicles()));
 
         for (String s : vehicles_licencePlate){
             TreeItem<String> trips_items = new TreeItem<>(s);
-            TreeItem<String> vehicles_i = new TreeItem<>(printVehicle(c.getVehicles().get(s)));
+            TreeItem<String> vehicles_i;
+            if (admin) vehicles_i = new TreeItem<>(printVehicle(umer.getAllVehicles().get(s)));
+            else vehicles_i = new TreeItem<>(printVehicle(c.getVehicles().get(s)));
             trips_items.getChildren().add(vehicles_i);
             vehicles_root.getChildren().add(trips_items);
         }
 
         TreeView<String> vehicles = new TreeView<>(vehicles_root);
 
-        vehiclesTabVbox.getChildren().addAll(drivers_title, registerVehicle_button, vehicles);
+        if (admin) vehiclesTabVbox.getChildren().addAll(vehicles_title, vehicles);
+        else vehiclesTabVbox.getChildren().addAll(vehicles_title, registerVehicle_button, vehicles);
         vehicles_tab.setContent(vehiclesTabVbox);
         return vehicles_tab;
     }
@@ -458,9 +498,21 @@ public class GUI extends Application{
         headerInfo.getChildren().addAll(thumbnail, name);
         headerInfo2.getChildren().addAll(logout, reload_button, points);
         header.getChildren().addAll(headerInfo, headerInfo2);
+        header.setStyle("-fx-background-color: #f8b702;");
         return header;
     }
 
+    public String printTime(double time){
+        return (int) time + "h:" + Math.round(time * 60)%60 + "m:" + Math.round(time * 3600)%60 + "s";
+    }
+
+    public String printMoney(double money){
+        return (int) money + "€";
+    }
+
+    public String printDistance(double distance){
+        return (int) distance + "km";
+    }
 
     public String printClient(Client c){
         return "Nome: " + c.getName() +
@@ -468,8 +520,8 @@ public class GUI extends Application{
                 "\nMorada: " + c.getAddress() +
                 "\nData de nascimento: " + c.getBirthday() +
                 "\nViagens totais: " + c.getNumberOfTrips() +
-                "\nDistância percorrida: " + c.getTotalDistance() +
-                "\nDinheiro gasto: " + c.getMoney();
+                "\nDistância percorrida: " + printDistance(c.getTotalDistance()) +
+                "\nDinheiro gasto: " + printMoney(c.getMoney());
     }
 
     public String printDriver(Driver d){
@@ -478,8 +530,8 @@ public class GUI extends Application{
                 "\nMorada: " + d.getAddress() +
                 "\nData de nascimento: " + d.getBirthday() +
                 "\nViagens totais: " + d.getNumberOfTrips() +
-                "\nDistância percorrida: " + d.getTotalDistance() +
-                "\nDinheiro ganho: " + d.getMoney() +
+                "\nDistância percorrida: " + printDistance(d.getTotalDistance()) +
+                "\nDinheiro ganho: " + printMoney(d.getMoney()) +
                 "\nNúmero de classificações: " + d.getNumberOfReviews() +
                 "\nClassficação: " + d.getGrading();
     }
@@ -489,7 +541,7 @@ public class GUI extends Application{
                 "\nNúmero de condutores: " + c.getDrivers().size() +
                 "\nNúmero de veículos: " + c.getVehicles().size() +
                 "\nNúmero de viagens: " + c.getTotalTrips() +
-                "\nDinheiro gerado: " + c.getMoneyGenerated();
+                "\nDinheiro gerado: " + printMoney(c.getMoneyGenerated());
     }
 
     public String printVehicle(Vehicle v){
@@ -517,7 +569,11 @@ public class GUI extends Application{
         ArrayList<String> dates;
         ArrayList<Trip> t;
 
-        if (user instanceof User) {
+        if (user == null){
+            dates = umer.getDates();
+            t = umer.getTrips();
+        }
+        else if (user instanceof User) {
             dates = ((User) user).getDates();
             t = ((User) user).getTrips();
         }
@@ -541,6 +597,27 @@ public class GUI extends Application{
         }
 
         return emailsOrd;
+    }
+
+    public String printAdminInfo(){
+        return "Número de viagens : " + umer.getTrips().size() +
+                "\nNúmero de condutores : " + umer.getAllDrivers().size() +
+                "\nNúmero de veículos : " + umer.getAllVehicles().size() +
+                "\nNúmero de empresas : " + umer.getCompanies().size() +
+                "\nNúmero de clientes : " + umer.getClients().size() +
+                "\nDinheiro gerado : " + printMoney(umer.getMoneyGenerated()) +
+                "\nDistância total : " + printDistance(umer.getTotalDistance()) +
+                "\nTempo total : " + printTime(umer.getTotalTime());
+    }
+
+    public String printTop(ArrayList<User> users){
+        String s = "";
+        int i = 1;
+        for (User u: users) {
+            s += i + "\t " + u.getName() + " - " + u.getEmail() + "\n";
+            i++;
+        }
+        return s;
     }
 
     public void clientSignupMenu(){
@@ -766,6 +843,10 @@ public class GUI extends Application{
                 companyMenu();
                 window.setScene(user_menu);
             }
+            else if (current_user.equals("admin")) {
+                adminMenu();
+                window.setScene(user_menu);
+            }
         });
 
         Button back_button = backButton();
@@ -821,6 +902,8 @@ public class GUI extends Application{
             driversList.add("--condutor mais próximo--");
             for (Driver d : umer.getDriversP().values())
                 driversList.add(d.getEmail());
+            for (Company c : umer.getCompanies().values())
+                driversList.add(c.getName());
             ComboBox<String> drivers_box = new ComboBox<>(driversList);
             drivers_box.getSelectionModel().selectFirst();
 
@@ -854,7 +937,8 @@ public class GUI extends Application{
 
                     Trip trip = newTrip(client, driver, posStart, posEnd);
                     if (trip != null) {
-                        currentTripId = trip.getID();
+                        this.currentTripDriver = trip.getDriver();
+                        this.currentTripId = trip.getID();
 
                         rate_hbox.getChildren().removeAll(rateDriver_cbox, rateDriver_button);
                         success.setText(trip.toString());
@@ -863,9 +947,8 @@ public class GUI extends Application{
                         tripInfo_pane.setContent(success);
                         newTrip_tabVBox.getChildren().addAll(rate_hbox, tripInfo_pane);
 
-                        umer.addTrip(client.getEmail(), currentTripDriver, currentTripVehicle, trip);
+                        umer.addTrip(client.getEmail(), trip.getDriver(), trip.getLicencePlate(), trip);
                     }
-
                     else{
                         if (!driverAvailiable && !noAvailiableTaxis) {
                             newTrip_tabVBox.getChildren().removeAll(success, drivers_box, positionStart_hbox, positionEnd_hbox, newTrip_button);
@@ -955,13 +1038,15 @@ public class GUI extends Application{
         Button changeStatusButton = new Button("Alterar disponibilidade");
         changeStatusButton.setFont(Font.font(15));
         changeStatusButton.setOnAction(e -> {
+            if (umer.getDriversP().get(driver.getEmail()) != null) {
+                queueNumber.setText("Número de clientes em fila de espera - 0");
+                umer.doAllTripsQueue(driver.getEmail());
+            }
             work_tabVbox.getChildren().removeAll(currentStatus, queueNumber);
             umer.changeDriverAvailability(driver.getEmail(), (boolean) status_group.getSelectedToggle().getUserData());
             driver.setAvailability((boolean) status_group.getSelectedToggle().getUserData());
             currentStatus.setText("Disponibilidade atual: " + driver.isAvailable());
-            queueNumber.setText("Número de clientes em fila de espera - 0");
             work_tabVbox.getChildren().addAll(currentStatus, queueNumber);
-            umer.doAllTripsQueue(driver.getEmail());
             driverAvailiable = true;
             noAvailiableTaxis = false;
 
@@ -991,7 +1076,7 @@ public class GUI extends Application{
 
         Tab trips_tab = tripsTab(company);
 
-        Tab drivers_tab = driversTab(company);
+        Tab drivers_tab = usersTab(company, "driver");
 
         Tab vehicles_tab = vehiclesTab(company);
 
@@ -1002,6 +1087,65 @@ public class GUI extends Application{
         user_menu = new Scene(menu_vbox);
     }
 
+    public void adminMenu(){
+        saveData();
+
+        VBox menu_vbox = new VBox();
+        VBox header = new VBox();
+        header.getChildren().addAll(new ImageView("images/admin_banner_small.png"));
+
+        Button logout = new Button("Logout ✖");
+        logout.setPrefWidth(350);
+        logout.setOnAction(e->{
+            loadMenu();
+        });
+
+        TabPane menu_tab = new TabPane();
+        menu_tab.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+
+        Tab info_tab = new Tab("Informação");
+        VBox info_tabVbox = new VBox(20);
+        info_tabVbox.setPadding(new Insets(20,20,20,20));
+        Label info_title = new Label("Informação");
+        info_title.setFont(Font.font(30));
+        info_title.setUnderline(true);
+        Label info = new Label(printAdminInfo());
+        info.setFont(Font.font(15));
+        info_tabVbox.getChildren().addAll(info_title, info);
+        info_tab.setContent(info_tabVbox);
+
+        Tab drivers_tab = usersTab(null, "driver");
+
+        Tab clients_tab = usersTab(null, "client");
+
+        Tab vehicles_tab = vehiclesTab(null);
+
+        Tab trips_tab = tripsTab(null);
+
+        Tab top_tab = new Tab("Top");
+        VBox top_tabVBox = new VBox(20);
+        top_tabVBox.setPadding(new Insets(20,20,20,20));
+        ScrollPane topClientesScroll = new ScrollPane();
+        Label topClients_title = new Label("Top 10 Clientes");
+        topClients_title.setFont(Font.font(30));
+        topClients_title.setUnderline(true);
+        Label topClients = new Label(printTop(umer.topUser("client")));
+        topClients.setFont(Font.font(15));
+        Label topDrivers_title = new Label("Top 10 Condutores");
+        topDrivers_title.setFont(Font.font(30));
+        topDrivers_title.setUnderline(true);
+        Label topDrivers = new Label(printTop(umer.topUser("driver")));
+        topDrivers.setFont(Font.font(15));
+        top_tabVBox.getChildren().addAll(topClients_title, topClients, topDrivers_title, topDrivers);
+        topClientesScroll.setContent(top_tabVBox);
+        top_tab.setContent(topClientesScroll);
+
+
+        menu_tab.getTabs().addAll(info_tab, drivers_tab, clients_tab, vehicles_tab, trips_tab, top_tab);
+        menu_vbox.getChildren().addAll(header, logout, menu_tab);
+
+        user_menu = new Scene(menu_vbox);
+    }
 
     public void loadMenu(){
         //saveData();
@@ -1070,6 +1214,7 @@ public class GUI extends Application{
         clientSignupMenu();
         driverSignupMenu();
         companySignup();
+        adminMenu();
 
         //Window
         this.window.setScene(menu);

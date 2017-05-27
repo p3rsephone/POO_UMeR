@@ -1,3 +1,4 @@
+import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -189,13 +190,32 @@ public class Company implements Serializable {
      */
     public String pickDriver() {
         List<Driver> drivers = this.drivers.values()
-                                                .stream()
-                                                .filter(driver -> driver.isAvailable() == true)
-                                                .collect(Collectors.toList());
+                                           .stream()
+                                           .filter(driver -> driver.isAvailable() == true)
+                                           .collect(Collectors.toList());
 
         if (drivers.size() != 0) {
             ThreadLocalRandom rand = ThreadLocalRandom.current();
             return drivers.get(rand.nextInt(0, drivers.size())).getEmail();
+        }
+        else return null;
+    }
+
+    /**
+     * Seleciona um veículo para levar o cliente (mais próximo)
+     * @param clientPosition Posição do cliente
+     * @return Matrícula do veículo escolhido ou null caso não exista nenhum livre
+     */
+    public String pickVehicle(Point2D.Double clientPosition){
+        List<Vehicle> vehicles = this.vehicles.values()
+                                             .stream()
+                                             .filter(vehicle -> vehicle.isAvailable() == true)
+                                             .sorted((v1, v2) ->
+                                                     ((Double) v1.getPosition().distance(clientPosition))
+                                                     .compareTo(v2.getPosition().distance(clientPosition)))
+                                             .collect(Collectors.toList());
+        if (vehicles.size() != 0){
+            return vehicles.get(0).getLicencePlate();
         }
         else return null;
     }

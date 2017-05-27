@@ -22,8 +22,17 @@ public abstract class Vehicle implements Serializable {
     private ArrayList<Trip> trips = new ArrayList<>();
     private String owner = null;
 
-
-
+    /**
+     * Construtor a partir de parametros definidos
+     * @param licencePlate  Matricula
+     * @param reliable      Grau de reabilidade
+     * @param position      Posição
+     * @param available     Se está disponível ou não
+     * @param queue         Fila de espera
+     * @param queueInfo     Informação da fila de espera
+     * @param trips         Viagens
+     * @param owner         Dono do veículo
+     */
     public Vehicle(String licencePlate, double reliable, Point2D.Double position, boolean available, LinkedList<String> queue, HashMap<String, ArrayList<Point2D.Double>> queueInfo, ArrayList<Trip> trips, String owner){
         this.licencePlate = licencePlate;
         this.reliable = reliable;
@@ -38,6 +47,9 @@ public abstract class Vehicle implements Serializable {
         this.owner = owner;
     }
 
+    /**
+     * Contrutor vazio
+     */
     public Vehicle(){
         this.licencePlate = null;
         this.reliable = 0;
@@ -286,7 +298,6 @@ public abstract class Vehicle implements Serializable {
      * @return Cópia de Veiculo
      */
     public abstract Vehicle clone();
-
 
     /**
      * Imprime a informação de um veículo

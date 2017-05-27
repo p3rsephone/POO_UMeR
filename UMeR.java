@@ -21,23 +21,30 @@ public class UMeR implements Serializable {
     private HashMap<String, Vehicle> allVehicles;
     private HashMap<String, Company> companies;
     private ArrayList<Trip> trips;
+    private double moneyGenerated;
+    private double totalDistance;
+    private double totalTime;
     private int tripID;
     private int weather;
 
     /** Construtores */
     public UMeR(){
-        this.driversP    = new HashMap<>();
-        this.allDrivers  = new HashMap<>();
-        this.clients     = new HashMap<>();
-        this.vehiclesP   = new HashMap<>();
-        this.allVehicles = new HashMap<>();
-        this.trips       = new ArrayList<>();
-        this.companies   = new HashMap<>();
-        this.tripID      = 0;
-        this.weather     = 0;
+        this.driversP       = new HashMap<>();
+        this.allDrivers     = new HashMap<>();
+        this.clients        = new HashMap<>();
+        this.vehiclesP      = new HashMap<>();
+        this.allVehicles    = new HashMap<>();
+        this.trips          = new ArrayList<>();
+        this.companies      = new HashMap<>();
+        this.moneyGenerated = 0;
+        this.totalDistance  = 0;
+        this.totalTime      = 0;
+        this.tripID         = 0;
+        this.weather        = 0;
     }
 
     /** Métodos de instância */
+
     /**
      * Retorna uma cópia com o Map de drivers
      * @return Map drivers
@@ -191,6 +198,67 @@ public class UMeR implements Serializable {
         for (Company c: this.companies.values())
             newCompanies.put(c.getName(), c.clone());
         return newCompanies;
+    }
+
+    /**
+     * Retonar a quantidade total de dinheiro
+     * @return Dinhero gerado
+     */
+    public double getMoneyGenerated() {
+        return moneyGenerated;
+    }
+
+    /**
+     * Altera a quantidade de dinheiro gerado
+     * @param moneyGenerated Nova quantia
+     */
+    public void setMoneyGenerated(double moneyGenerated) {
+        this.moneyGenerated = moneyGenerated;
+    }
+
+    /**
+     * Retorna a distância total em viagem
+     * @return Distância total
+     */
+    public double getTotalDistance() {
+        return totalDistance;
+    }
+
+    /**
+     * Altera a distância total em viagem
+     * @param totalDistance Nova distância
+     */
+    public void setTotalDistance(double totalDistance) {
+        this.totalDistance = totalDistance;
+    }
+
+    /**
+     * Retorna o tempo total em viagem
+     * @return Tempo total
+     */
+    public double getTotalTime() {
+        return totalTime;
+    }
+
+    /**
+     * Altera o tempo total em viagem
+     * @param totalTime Novo tempo
+     */
+    public void setTotalTime(double totalTime) {
+        this.totalTime = totalTime;
+    }
+
+    /**
+     * Retorna as (diferentes) datas das viagens feitas
+     * @return Datas das viagens
+     */
+    public ArrayList<String> getDates(){
+        ArrayList<String> dates = new ArrayList<>();
+        for (Trip t: this.trips)
+            if (!dates.contains(t.getDate().toString())) {
+                dates.add(t.getDate().toString());
+            }
+        return dates;
     }
 
     /**
@@ -474,17 +542,21 @@ public class UMeR implements Serializable {
         trip = new Trip(this.tripID++, client.getPosition(), destination, realTimeToDest,
                 price, date, vehicle.getLicencePlate(), driver.getEmail(), client.getEmail(), -1, etaToDest, vehicle.getPosition(), etaToClient, realTimeToClient);
 
+        this.moneyGenerated += trip.getPrice();
+        this.totalDistance += trip.distance();
+        this.totalTime += trip.getTime();
+
         return trip;
     }
 
     /**
      ** Realiza uma viagem para um condutor especifico
      * @param client            Cliente
-     * @param driverEmail       Email do condutor
+     * @param selection         Email do condutor ou nome da empresa
      * @param destination       Destino
      */
-    public Trip newTripSpecific(Client client, String driverEmail, Point2D.Double destination){
-        Driver driver = this.allDrivers.get(driverEmail);
+    public Trip newTripSpecific(Client client, String selection, Point2D.Double destination){
+        Driver driver = this.allDrivers.get(selection);
         if (driver != null){
             Vehicle vehicle = this.allVehicles.get(driver.getVehicle());
             if (vehicle.isAvailable())
@@ -492,6 +564,17 @@ public class UMeR implements Serializable {
             else {
                 vehicle.addClient(client.getEmail(), client.getPosition(), destination);
                 this.clients.get(client.getEmail()).setQueue(vehicle.getLicencePlate());
+            }
+        }
+        else{
+            Company c = this.getCompanies().get(selection);
+            if (c != null) {
+                Driver comapny_driver = this.allDrivers.get(c.pickDriver());
+                if (comapny_driver != null) {
+                    Vehicle vehicle = this.allVehicles.get(c.pickVehicle(client.getPosition()));
+                    if (vehicle != null)
+                        return newTrip(client, comapny_driver, vehicle, destination);
+                }
             }
         }
         return null;
@@ -557,23 +640,23 @@ public class UMeR implements Serializable {
         this.trips.get(tripID).setRating(rating);
     }
 
-    public ArrayList<Client> topClient(){
-        List<Client> list = new ArrayList<Client>(this.clients.values());
-        Collections.sort(list,new Comparator<Client>(){
+    public ArrayList<User> topUser(String u){
+        List<User> list;
+        if (u.equals("client")) list = new ArrayList<User>(this.clients.values());
+        else list = new ArrayList<User>(this.allDrivers.values());
+        Collections.sort(list,new Comparator<User>(){
             @Override
-            public int compare(Client c1, Client c2) {
-                if(c1.getMoney() < c2.getMoney()) return 1;
+            public int compare(User u1, User u2) {
+                if(u1.getMoney() < u2.getMoney()) return 1;
                 else return -1;
             }
         });
 
         int n = Math.min(list.size(), 10);
 
-        ArrayList<Client> top = new ArrayList<>(n);
-        for(int i=0; i<n; i++){
-            top.add(i,list.get(i));
-        }
-
+        ArrayList<User> top = new ArrayList<>(n);
+        for(int i=0; i<n; i++)
+            top.add(list.get(i));
         return top;
     }
 
@@ -606,7 +689,6 @@ public class UMeR implements Serializable {
     public void doAllTripsQueue(String d){
         while(doTripQueue(d));
     }
-
 
     /**
      * Guarda o estado
