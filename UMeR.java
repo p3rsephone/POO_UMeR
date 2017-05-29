@@ -318,7 +318,7 @@ public class UMeR implements Serializable {
      * @return Registou com sucesso (true) ou já existe (false)
      */
     public boolean registerUser(User u, String company){
-        if (this.driversP.get(u.getEmail()) == null && this.clients.get(u.getEmail()) == null
+        if (this.allDrivers.get(u.getEmail()) == null && this.clients.get(u.getEmail()) == null
                 && this.companies.get(u.getName()) == null){
             if (u instanceof Client) {
                 this.clients.put(u.getEmail(), (Client) u.clone());
@@ -640,6 +640,10 @@ public class UMeR implements Serializable {
         this.trips.get(tripID).setRating(rating);
     }
 
+    /**
+    *  Listagens dos 10 clientes/condutores que gastaram/ganharam mais dinheiro, respetivamente
+    * @param u Tipo de utilizador (cliente ou condutor)
+    */
     public ArrayList<User> topUser(String u){
         List<User> list;
         if (u.equals("client")) list = new ArrayList<User>(this.clients.values());
@@ -659,6 +663,30 @@ public class UMeR implements Serializable {
             top.add(list.get(i));
         return top;
     }
+
+
+	/**
+    * Listagem dos 5 motoristas que apresentam mais desvios entre o valores previstos
+	* para as viagens e o valor final facturado
+    */
+    public ArrayList<Driver> topDriver(){
+        List<Driver> list = new ArrayList<Driver>(this.allDrivers.values());
+        Collections.sort(list,new Comparator<Driver>(){
+            @Override
+            public int compare(Driver d1, Driver d2) {
+                if(d1.getDesvio() < d2.getDesvio()) return 1;
+                else return -1;
+            }
+        });
+
+        int n = Math.min(list.size(), 5);
+
+        ArrayList<Driver> top = new ArrayList<>(n);
+        for(int i=0; i<n; i++)
+            top.add(list.get(i));
+        return top;
+    }
+
 
     /**
      * Irá executar a primeira viagem da fila de espera de um condutor

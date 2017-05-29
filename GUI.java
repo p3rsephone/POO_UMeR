@@ -533,7 +533,8 @@ public class GUI extends Application{
                 "\nDistância percorrida: " + printDistance(d.getTotalDistance()) +
                 "\nDinheiro ganho: " + printMoney(d.getMoney()) +
                 "\nNúmero de classificações: " + d.getNumberOfReviews() +
-                "\nClassficação: " + d.getGrading();
+                "\nClassficação: " + d.getGrading() +
+                "\nDesvios total: " + d.getDesvio();
     }
 
     public String printCompany(Company c){
@@ -614,12 +615,22 @@ public class GUI extends Application{
         String s = "";
         int i = 1;
         for (User u: users) {
-            s += i + "\t " + u.getName() + " - " + u.getEmail() + "\n";
+            s += i + "\t " + u.getName() + " - " + u.getEmail()  +"\n";
             i++;
         }
         return s;
     }
-
+    
+    public String printTD(ArrayList<Driver> drivers){
+        String s = "";
+        int i = 1;
+        for (Driver d: drivers) {
+            s += i + "\t " + d.getName() + " - " + d.getEmail() +"\n";
+            i++;
+        }
+        return s;
+    }
+    
     public void clientSignupMenu(){
         VBox signupClient_layout = new VBox(15);
         signupClient_layout.setPadding(new Insets(35, 50, 20, 50));
@@ -1136,7 +1147,12 @@ public class GUI extends Application{
         topDrivers_title.setUnderline(true);
         Label topDrivers = new Label(printTop(umer.topUser("driver")));
         topDrivers.setFont(Font.font(15));
-        top_tabVBox.getChildren().addAll(topClients_title, topClients, topDrivers_title, topDrivers);
+        Label topDesvio_title = new Label("Top 5 Condutores com maior desvio");
+        topDesvio_title.setFont(Font.font(16));
+        topDesvio_title.setUnderline(true);
+        Label topDesvio = new Label(printTD(umer.topDriver()));
+        topDesvio.setFont(Font.font(15));
+        top_tabVBox.getChildren().addAll(topClients_title, topClients, topDrivers_title, topDrivers, topDesvio_title, topDesvio);
         topClientesScroll.setContent(top_tabVBox);
         top_tab.setContent(topClientesScroll);
 
