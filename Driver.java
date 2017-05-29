@@ -20,7 +20,7 @@ public class Driver extends User implements Serializable {
     private int exp;
     private String vehicle;
     private String company;
-    double desvio;
+    private double desvio;
 
 
     /**
@@ -255,7 +255,7 @@ public class Driver extends User implements Serializable {
         super.addTrip(t);
         this.setTotalDistance(this.getTotalDistance() + t.getTaxiPos().distance(t.getStart()));
         this.exp += (t.distance()+1)/2;
-        double d = t.getTime() - t.getEstimatedTimeToDest();
+        double d = (t.getPrice())*(t.getTime() - t.getEstimatedTimeToDest());
         this.setDesvio( this.getDesvio() + Math.abs(d));
     }
 
