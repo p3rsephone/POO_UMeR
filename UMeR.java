@@ -420,10 +420,11 @@ public class UMeR implements Serializable {
         String closestTaxi = null;
         for (Vehicle vehicle : this.allVehicles.values()){
             if (vehicle.isAvailable()) {
-                if (vehicle.getPosition().distance(client.getPosition()) < min){
-                    min = vehicle.getPosition().distance(client.getPosition());
-                    closestTaxi = vehicle.getLicencePlate();
-                }
+                if (companies.get(vehicle.getOwner()) == null || companies.get(vehicle.getOwner()).availiableTaxis())
+                    if (vehicle.getPosition().distance(client.getPosition()) < min){
+                        min = vehicle.getPosition().distance(client.getPosition());
+                        closestTaxi = vehicle.getLicencePlate();
+                    }
             }
         }
         return closestTaxi;
@@ -534,13 +535,14 @@ public class UMeR implements Serializable {
         //Price
         double price = 2;
         double distanceToDest = client.getPosition().distance(destination);
+        double estimatedPrice = distanceToDest * vehicle.getPrice();
 
         if (timeDiffPercentage <= 1.25)
             price += vehicle.getPrice() * distanceToDest * timeDiffPercentage;
         else price += (vehicle.getPrice() * distanceToDest) - (vehicle.getPrice() * (distanceToDest/2) * (timeDiffPercentage-1));
 
         trip = new Trip(this.tripID++, client.getPosition(), destination, realTimeToDest,
-                price, date, vehicle.getLicencePlate(), driver.getEmail(), client.getEmail(), -1, etaToDest, vehicle.getPosition(), etaToClient, realTimeToClient);
+                price, date, vehicle.getLicencePlate(), driver.getEmail(), client.getEmail(), -1, etaToDest, vehicle.getPosition(), etaToClient, realTimeToClient, estimatedPrice);
 
         this.moneyGenerated += trip.getPrice();
         this.totalDistance += trip.distance();
@@ -641,52 +643,28 @@ public class UMeR implements Serializable {
     }
 
     /**
-    *  Listagens dos 10 clientes/condutores que gastaram/ganharam mais dinheiro, respetivamente
-    * @param u Tipo de utilizador (cliente ou condutor)
-    */
-    public ArrayList<User> topUser(String u){
-        List<User> list;
-        if (u.equals("client")) list = new ArrayList<User>(this.clients.values());
-        else list = new ArrayList<User>(this.allDrivers.values());
-        Collections.sort(list,new Comparator<User>(){
-            @Override
-            public int compare(User u1, User u2) {
-                if(u1.getMoney() < u2.getMoney()) return 1;
-                else return -1;
-            }
-        });
-
-        int n = Math.min(list.size(), 10);
-
-        ArrayList<User> top = new ArrayList<>(n);
-        for(int i=0; i<n; i++)
-            top.add(list.get(i));
-        return top;
+     * Ordena clientes por uma determinada ordem
+     * @param c Comparador
+     * @return TreeSet ordenado
+     */
+    public TreeSet<Client> ordClient(Comparator<Client> comp){
+        TreeSet<Client> tree = new TreeSet<>(comp);
+        for (Client c: clients.values())
+            tree.add(c.clone());
+        return tree;
     }
 
-
-	/**
-    * Listagem dos 5 motoristas que apresentam mais desvios entre o valores previstos
-	* para as viagens e o valor final facturado
-    */
-    public ArrayList<Driver> topDriver(){
-        List<Driver> list = new ArrayList<Driver>(this.allDrivers.values());
-        Collections.sort(list,new Comparator<Driver>(){
-            @Override
-            public int compare(Driver d1, Driver d2) {
-                if(d1.getDesvio() < d2.getDesvio()) return 1;
-                else return -1;
-            }
-        });
-
-        int n = Math.min(list.size(), 5);
-
-        ArrayList<Driver> top = new ArrayList<>(n);
-        for(int i=0; i<n; i++)
-            top.add(list.get(i));
-        return top;
+    /**
+     * Ordena condutores por uma determinada ordem
+     * @param c Comparador
+     * @return TreeSet ordenado
+     */
+    public TreeSet<Driver> ordDriver(Comparator<Driver> comp){
+        TreeSet<Driver> tree = new TreeSet<>(comp);
+        for (Driver d: allDrivers.values())
+            tree.add(d.clone());
+        return tree;
     }
-
 
     /**
      * Irá executar a primeira viagem da fila de espera de um condutor
@@ -727,7 +705,7 @@ public class UMeR implements Serializable {
     public void saveUMeR(String fileName) throws FileNotFoundException,IOException {
         FileOutputStream fos = new FileOutputStream(fileName);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(this); //guarda-se todo o objecto de uma só vez
+        oos.writeObject(this);
         oos.flush();
         oos.close();
     }

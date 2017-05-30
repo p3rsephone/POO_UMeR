@@ -13,14 +13,14 @@ import java.util.*;
 public class Driver extends User implements Serializable {
 
     /* Variáveis de Instância */
-    private double grading;
+    private double rating;
     private boolean availability;
     private double timeCompliance;
     private int numberOfReviews;
     private int exp;
     private String vehicle;
     private String company;
-    private double desvio;
+    private double deviation;
 
 
     /**
@@ -31,7 +31,7 @@ public class Driver extends User implements Serializable {
      * @param address           Morada
      * @param birthday          Data de nascimento
      * @param totalDistance     Distância total percorrida
-     * @param grading           Classificação
+     * @param rating           Classificação
      * @param availability      Disponibilidade
      * @param timeCompliance    Fator de cumprimento de hórario
      * @param numberOfReviews   Número de classificações
@@ -39,17 +39,17 @@ public class Driver extends User implements Serializable {
      * @param money             Dinheiro ganho
      * @param vehicle           Matrícula do seu veículo
      * @param company           Empresa para a qual trabalha
-     * @param desvio            Soma dos desvios totais entre tempo de viagem estimado e tempo real
+     * @param deviation            Soma dos deviations totais entre tempo de viagem estimado e tempo real
      */
-    public Driver(String email, String name, String password, String address, LocalDate birthday, double totalDistance, double grading, Boolean availability, double timeCompliance, ArrayList<Trip> trips, int numberOfTrips, double money, double exp, String vehicle, String company, double desvio){
+    public Driver(String email, String name, String password, String address, LocalDate birthday, double totalDistance, double rating, Boolean availability, double timeCompliance, ArrayList<Trip> trips, int numberOfTrips, double money, double exp, String vehicle, String company, double deviation){
         super(email, name, password, address, birthday, totalDistance, trips, money);
-        this.grading = grading;
+        this.rating = rating;
         this.availability = availability;
         this.timeCompliance = timeCompliance;
         this.numberOfReviews = numberOfReviews;
         this.vehicle = vehicle;
         this.company = company;
-        this.desvio = desvio;
+        this.deviation = deviation;
     }
 
     /**
@@ -63,36 +63,40 @@ public class Driver extends User implements Serializable {
      */
     public Driver(String email, String name, String password, String address, LocalDate birthday, double timeCompliance, String company){
         super(email, name, password, address, birthday, 0, null, 0);
-        this.grading = 0;
+        this.rating = 0;
         this.availability = true;
         this.timeCompliance = timeCompliance;
         this.numberOfReviews = 0;
         this.company = company;
+        this.deviation = 0;
     }
 
     /**
     * Constroi um motorista a partir de um já definido
-    * @param d
+    * @param d Motorista
     */
     public Driver(Driver d) {
         super(d.getEmail(), d.getName(), d.getPassword(), d.getAddress(), d.getBirthday(), d.getTotalDistance(), d.getTrips(), d.getMoney());
-        this.grading = d.getGrading();
+        this.rating = d.getRating();
         this.availability = d.isAvailable();
         this.timeCompliance = d.getTimeCompliance();
         this.numberOfReviews = d.getNumberOfReviews();
         this.exp = d.getExp();
         this.vehicle = d.getVehicle();
         this.company = d.getCompany();
-        this.desvio = d.getDesvio();
+        this.deviation = d.getDeviation();
     }
 
+    /**
+     * Constroi um motorista a partir de um construtor vazio
+     */
     public Driver(){
         super();
-        this.grading = 0;
+        this.rating = 0;
         this.availability = true;
         this.timeCompliance = 0;
         this.numberOfReviews = 0;
-        this.desvio = 0;
+        this.deviation = 0;
     }
 
 
@@ -100,8 +104,8 @@ public class Driver extends User implements Serializable {
      * Retorna a classificação do motorista
      * @return Classificação
      */
-    public Double getGrading() {
-        return this.grading;
+    public Double getRating() {
+        return this.rating;
     }
 
     /**
@@ -153,19 +157,19 @@ public class Driver extends User implements Serializable {
     }
 
     /**
-     * Retorna a soma dos desvios realizados pelo condutor
-     * @return Desvios
+     * Retorna a soma dos deviations realizados pelo condutor
+     * @return deviations
      */
-    public double getDesvio(){
-        return this.desvio;
+    public double getDeviation(){
+        return this.deviation;
     }
     
     /**
      * Altera a classificação de um driver
-     * @param grading Nova classificação
+     * @param rating Nova classificação
      */
-    public void setGrading(double grading){
-        this.grading = grading;
+    public void setRating(double rating){
+        this.rating = rating;
     }
 
     /**
@@ -209,11 +213,11 @@ public class Driver extends User implements Serializable {
     }
     
     /**
-     * Altera os desvios totais de um condutor
-     * @param desvio Novo valor de desvio
+     * Altera os deviations totais de um condutor
+     * @param deviation Novo valor de deviation
      */
-    public void setDesvio(double desvio){
-        this.desvio = desvio;
+    public void setdeviation(double deviation){
+        this.deviation = deviation;
     }
     
     /**
@@ -231,11 +235,11 @@ public class Driver extends User implements Serializable {
     public String toString(){
         return "Driver \n" + super.toString() + "\n" +
                 "Disponibilidade : " + this.availability + "\n" +
-                "Classificação : " + this.grading + "\n" +
+                "Classificação : " + this.rating + "\n" +
                 "Grau de cumprimento : " + this.timeCompliance + "\n" +
                 "Número de classificações : " + this.numberOfReviews + "\n" +
                 "Veículo : " + this.vehicle + "\n" +
-                "Desvios total : " + this.desvio + "\n";
+                "Desvio total : " + this.deviation + "\n";
     }
 
     /**
@@ -255,8 +259,7 @@ public class Driver extends User implements Serializable {
         super.addTrip(t);
         this.setTotalDistance(this.getTotalDistance() + t.getTaxiPos().distance(t.getStart()));
         this.exp += (t.distance()+1)/2;
-        double d = (t.getPrice())*(t.getTime() - t.getEstimatedTimeToDest());
-        this.setDesvio( this.getDesvio() + Math.abs(d));
+        this.deviation += Math.abs(t.getPrice() - t.getEstimatedPrice());
     }
 
     /**
@@ -264,7 +267,7 @@ public class Driver extends User implements Serializable {
      * @param rating Classificação
      */
     public void addRating(int rating){
-        this.grading = (this.grading * numberOfReviews + rating * 20) / (numberOfReviews + 1);
+        this.rating = (this.rating * numberOfReviews + rating * 20) / (numberOfReviews + 1);
         this.numberOfReviews++;
         if (rating > 2)
             this.exp += 3 * (rating/5);

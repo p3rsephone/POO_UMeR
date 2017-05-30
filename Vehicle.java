@@ -1,6 +1,8 @@
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.sql.Array;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 /**
  * Vehicle class for UMeR.
@@ -18,8 +20,8 @@ public abstract class Vehicle implements Serializable {
     private int seats;
     private Point2D.Double position;
     private LinkedList<String> queue = new LinkedList<>();
-    private HashMap<String, ArrayList<Point2D.Double>> queueInfo = new HashMap<String, ArrayList<Point2D.Double>>();
-    private ArrayList<Trip> trips = new ArrayList<>();
+    private HashMap<String, ArrayList<Point2D.Double>> queueInfo;
+    private ArrayList<Trip> trips;
     private String owner = null;
 
     /**
@@ -42,7 +44,7 @@ public abstract class Vehicle implements Serializable {
         setQueue(queue);
         this.queueInfo = new HashMap<>();
         setQueueInfo(queueInfo);
-        //this.trips = new ArrayList<>();
+        this.trips = new ArrayList<>();
         setTrips(trips);
         this.owner = owner;
     }
@@ -348,5 +350,20 @@ public abstract class Vehicle implements Serializable {
     public void addTrip(Trip t){
         this.trips.add(t);
         this.position.setLocation(t.getEnd().getX(), t.getEnd().getY());
+    }
+
+    /**
+     * Retorna a quantia de dinheiro gerada entre duas datas
+     * @param t1  Data 1
+     * @param t2  Data 2
+     * @return Dinheiro gerado
+     */
+    public int moneyGeneratedBetween(LocalDate t1, LocalDate t2){
+        int money = 0;
+        for (Trip t: trips)
+            if ((t.getDate().isAfter(t1) || t.getDate().isEqual(t1))
+                    && (t.getDate().isBefore(t2)) || t.getDate().isEqual(t2))
+                money += t.getPrice();
+        return money;
     }
 }

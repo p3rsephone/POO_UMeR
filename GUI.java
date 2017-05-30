@@ -37,6 +37,7 @@ import javafx.scene.paint.Color;
 
 import java.awt.geom.Point2D;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
@@ -56,7 +57,8 @@ public class GUI extends Application{
 
     public boolean addClient(String email, String name, String password, String address, LocalDate date){
         if (email != null && name != null && password != null && address != null && date != null &&
-                !email.equals("") && !name.equals("") && !password.equals("") && !address.equals("")){
+                !email.equals("") && !name.equals("") && !password.equals("") && !address.equals("")
+                && !email.equals("admin")){
             Client client = new Client(email, name, password, address, date);
             return umer.registerUser(client, null);
         }
@@ -65,7 +67,8 @@ public class GUI extends Application{
 
     public boolean addDriver(String email, String name, String password, String address, LocalDate date, String company){
         if (email != null && name != null && password != null && address != null && date != null &&
-                !email.equals("") && !name.equals("") && !password.equals("") && !address.equals("")){
+                !email.equals("") && !name.equals("") && !password.equals("") && !address.equals("")
+                && !email.equals("admin")){
             int timeComplience = ThreadLocalRandom.current().nextInt(10, 100);
             Driver driver = new Driver(email, name, password, address, date, timeComplience, company);
             return umer.registerUser(driver, company);
@@ -74,7 +77,7 @@ public class GUI extends Application{
     }
 
     public boolean addCompany(String name, String password){
-        if (name != null && password != null && !name.equals("") && !password.equals(""))
+        if (name != null && password != null && !name.equals("") && !password.equals("") && !name.equals("admin"))
             return umer.registerCompany(name, password);
         else return false;
     }
@@ -174,7 +177,9 @@ public class GUI extends Application{
         return hbox;
     }
 
-    public HBox bDayRegisterBox(){
+    public HBox datesBox(){
+        LocalDate now = LocalDate.now();
+
         ObservableList<Integer> dayOptions = FXCollections.observableArrayList();
         for (int i=1; i<=31; i++) dayOptions.add(i);
 
@@ -182,12 +187,12 @@ public class GUI extends Application{
         for (int i=1; i<=12; i++) monthOptions.add(i);
 
         ObservableList<Integer> yearOptions = FXCollections.observableArrayList();
-        for (int i=1999; i>=1900; i--) yearOptions.add(i);
+        for (int i= now.getYear(); i>=1900; i--) yearOptions.add(i);
 
         ComboBox day_box = new ComboBox(dayOptions);
-        day_box.getSelectionModel().selectFirst();
+        day_box.getSelectionModel().select(now.getDayOfMonth()-1);
         ComboBox month_box = new ComboBox(monthOptions);
-        month_box.getSelectionModel().selectFirst();
+        month_box.getSelectionModel().select(now.getMonthValue()-1);
         ComboBox year_box = new ComboBox(yearOptions);
         year_box.getSelectionModel().selectFirst();
 
@@ -469,9 +474,9 @@ public class GUI extends Application{
 
         Label name;
         if (user instanceof User)
-            name = new Label(((User) user).getName());
-        else name = new Label(((Company) user).getName());
-        name.setFont(Font.font(30));
+            name = new Label(((User) user).getName() + "\n"+ user.getClass().getSimpleName() + " | " + LocalDate.now());
+        else name = new Label(((Company) user).getName() +" \n"+ user.getClass().getSimpleName() + " | " + LocalDate.now());
+        name.setFont(Font.font(20));
 
         Label points = new Label();
         if (user instanceof Client)
@@ -500,6 +505,68 @@ public class GUI extends Application{
         header.getChildren().addAll(headerInfo, headerInfo2);
         header.setStyle("-fx-background-color: #f8b702;");
         return header;
+    }
+
+    public int moneyGeneratedBetween(String s, LocalDate t1, LocalDate t2){
+        if (umer.getAllVehicles().get(s) != null)
+            return umer.getAllVehicles().get(s).moneyGeneratedBetween(t1, t2);
+        else return umer.getCompanies().get(s).moneyGeneratedBetween(t1, t2);
+    }
+
+    public VBox moneyGeneratedBetweenBox(){
+        VBox moneyGeneratedBetween_box = new VBox(5);
+        moneyGeneratedBetween_box.setPadding(new Insets(20,20,20,20));
+
+        Label title = new Label("Dinheiro gerado entre:");
+        title.setUnderline(true);
+        title.setFont(Font.font(30));
+
+        Label date1_label = new Label("Data inicial");
+        date1_label.setFont(Font.font(15));
+        Label date2_label = new Label("Data final");
+        date2_label.setFont(Font.font(15));
+
+        HBox date1_box = datesBox();
+        HBox date2_box = datesBox();
+
+        ListView<String> options = new ListView<>();
+        ObservableList<String> list = FXCollections.observableArrayList();
+        for (Vehicle v: umer.getAllVehicles().values())
+            list.add(v.getLicencePlate());
+        for (Company c: umer.getCompanies().values())
+            list.add(c.getName());
+
+        options.setItems(list);
+        options.getSelectionModel().selectFirst();
+
+        HBox button_and_money = new HBox(10);
+        Label moneyGenerated_label = new Label("");
+        moneyGenerated_label.setFont(Font.font(20));
+        Button done_buttom = new Button("Concluído");
+
+        button_and_money.getChildren().addAll(done_buttom, moneyGenerated_label);
+
+        done_buttom.setOnAction(e ->{
+            button_and_money.getChildren().remove(moneyGenerated_label);
+
+            int date1_day   = (int)     ((ComboBox) date1_box.getChildren().get(0)).getValue();
+            int date1_month = (int)     ((ComboBox) date1_box.getChildren().get(1)).getValue();
+            int date1_year  = (int)     ((ComboBox) date1_box.getChildren().get(2)).getValue();
+            int date2_day   = (int)     ((ComboBox) date2_box.getChildren().get(0)).getValue();
+            int date2_month = (int)     ((ComboBox) date2_box.getChildren().get(1)).getValue();
+            int date2_year  = (int)     ((ComboBox) date2_box.getChildren().get(2)).getValue();
+            String s        = options.getSelectionModel().getSelectedItem();
+
+            LocalDate date1 = LocalDate.of(date1_year, date1_month, date1_day);
+            LocalDate date2 = LocalDate.of(date2_year, date2_month, date2_day);
+
+            int moneyGenerated = moneyGeneratedBetween(s, date1, date2);
+            moneyGenerated_label.setText(printMoney(moneyGenerated));
+            button_and_money.getChildren().add(moneyGenerated_label);
+        });
+
+        moneyGeneratedBetween_box.getChildren().addAll(title, date1_label, date1_box, date2_label, date2_box, options, button_and_money);
+        return moneyGeneratedBetween_box;
     }
 
     public String printTime(double time){
@@ -533,8 +600,8 @@ public class GUI extends Application{
                 "\nDistância percorrida: " + printDistance(d.getTotalDistance()) +
                 "\nDinheiro ganho: " + printMoney(d.getMoney()) +
                 "\nNúmero de classificações: " + d.getNumberOfReviews() +
-                "\nClassficação: " + d.getGrading() +
-                "\nDesvios total: " + d.getDesvio();
+                "\nClassficação: " + d.getRating() +
+                "\nDesvio total: " + d.getDeviation();
     }
 
     public String printCompany(Company c){
@@ -548,11 +615,11 @@ public class GUI extends Application{
     public String printVehicle(Vehicle v){
         return "Matrícula: " + v.getLicencePlate() +
                 "\nClass: " + v.getClass().getSimpleName() +
-                "\nVelocidade: " + v.getSpeed() +
+                "\nVelocidade: " + v.getSpeed() + " km/s" +
                 "\nPreço (por km): " + v.getPrice() +
                 "\nLugares: " + v.getSeats() +
-                "\nFator de confiança: " + v.getReliable() +
-                "\nPosição Atual: " + v.getPosition() +
+                "\nFator de confiança: " + (int) v.getReliable() +
+                "\nPosição Atual: " + v.getPosition().getX() + " , " + v.getPosition().getY()  +
                 "\nNúmero de viagens: " + v.getTrips().size();
     }
 
@@ -611,21 +678,34 @@ public class GUI extends Application{
                 "\nTempo total : " + printTime(umer.getTotalTime());
     }
 
-    public String printTop(ArrayList<User> users){
+    public String printTopMoney(TreeSet<? extends User> clients){
         String s = "";
         int i = 1;
-        for (User u: users) {
-            s += i + "\t " + u.getName() + " - " + u.getEmail()  +"\n";
+        for (User u: clients) {
+            if (i == 11) break;
+            s += i + "\t " + u.getEmail() + " - " + printMoney(u.getMoney()) +"\n";
             i++;
         }
         return s;
     }
     
-    public String printTD(ArrayList<Driver> drivers){
+    public String printTD(TreeSet<Driver> drivers){
         String s = "";
         int i = 1;
         for (Driver d: drivers) {
-            s += i + "\t " + d.getName() + " - " + d.getEmail() +"\n";
+            if (i == 6) break;
+            s += i + "\t " + d.getEmail() + " - " + printMoney(d.getDeviation()) +"\n";
+            i++;
+        }
+        return s;
+    }
+
+    public String printTopRating(TreeSet<Driver> drivers){
+        String s = "";
+        int i = 1;
+        for (Driver d: drivers) {
+            if (i == 11) break;
+            s += i + "\t " + d.getEmail() + " - " + Math.round(d.getRating()) +"\n";
             i++;
         }
         return s;
@@ -642,7 +722,7 @@ public class GUI extends Application{
         HBox address_hbox = textRegisterBox("Morada");
         Label bday_label = new Label("Data de Aniversário");
         bday_label.setFont(Font.font(15));
-        HBox bday_hbox = bDayRegisterBox();
+        HBox bday_hbox = datesBox();
         HBox password_hbox = passwordRegisterBox("Password");
         Label error = errorLabel("");
         Label success = successLabel("Cliente registado com sucesso!");
@@ -687,7 +767,7 @@ public class GUI extends Application{
         HBox address_hbox = textRegisterBox("Morada");
         Label bday_label = new Label("Data de Aniversário");
         bday_label.setFont(Font.font(15));
-        HBox bday_hbox = bDayRegisterBox();
+        HBox bday_hbox = datesBox();
         HBox password_hbox = passwordRegisterBox("Password");
         HBox company_hbox = companyRegisterBox();
         Label error = errorLabel("");
@@ -1091,7 +1171,6 @@ public class GUI extends Application{
 
         Tab vehicles_tab = vehiclesTab(company);
 
-
         menu_tab.getTabs().addAll(info_tab, trips_tab, drivers_tab, vehicles_tab);
         menu_vbox.getChildren().addAll(header, menu_tab);
 
@@ -1137,27 +1216,37 @@ public class GUI extends Application{
         VBox top_tabVBox = new VBox(20);
         top_tabVBox.setPadding(new Insets(20,20,20,20));
         ScrollPane topClientesScroll = new ScrollPane();
-        Label topClients_title = new Label("Top 10 Clientes");
-        topClients_title.setFont(Font.font(30));
-        topClients_title.setUnderline(true);
-        Label topClients = new Label(printTop(umer.topUser("client")));
+        Label topMoney_title = new Label("Top 10 dinheiro");
+        topMoney_title.setUnderline(true);
+        topMoney_title.setFont(Font.font(30));
+        Label topClients_title = new Label("Clientes");
+        topClients_title.setFont(Font.font(25));
+        Label topClients = new Label(printTopMoney(umer.ordClient(new MoneyComparatorC())));
         topClients.setFont(Font.font(15));
-        Label topDrivers_title = new Label("Top 10 Condutores");
-        topDrivers_title.setFont(Font.font(30));
-        topDrivers_title.setUnderline(true);
-        Label topDrivers = new Label(printTop(umer.topUser("driver")));
-        topDrivers.setFont(Font.font(15));
-        Label topDesvio_title = new Label("Top 5 Condutores com maior desvio");
-        topDesvio_title.setFont(Font.font(16));
-        topDesvio_title.setUnderline(true);
-        Label topDesvio = new Label(printTD(umer.topDriver()));
-        topDesvio.setFont(Font.font(15));
-        top_tabVBox.getChildren().addAll(topClients_title, topClients, topDrivers_title, topDrivers, topDesvio_title, topDesvio);
+        Label topDeviations_title = new Label("Condutores");
+        topDeviations_title.setFont(Font.font(25));
+        Label topDeviations = new Label(printTopMoney(umer.ordDriver(new MoneyComparatorD())));
+        topDeviations.setFont(Font.font(15));
+        Label topRating_title = new Label("Top 10 dinheiro gerado");
+        Label topdeviation_title = new Label("Top 5 Maiores desvios");
+        topdeviation_title.setFont(Font.font(25));
+        topdeviation_title.setUnderline(true);
+        Label topdeviation = new Label(printTD(umer.ordDriver(new DeviationComparator())));
+        topdeviation.setFont(Font.font(15));
+        Label topBestRating_title = new Label("Top Rating");
+        topBestRating_title.setUnderline(true);
+        topBestRating_title.setFont(Font.font(25));
+        Label topBestRating = new Label(printTopRating(umer.ordDriver(new RatingComparator())));
+        topBestRating.setFont(Font.font(15));
+        top_tabVBox.getChildren().addAll(topMoney_title, topClients_title, topClients, topDeviations_title, topDeviations, topdeviation_title, topdeviation, topBestRating_title, topBestRating);
         topClientesScroll.setContent(top_tabVBox);
         top_tab.setContent(topClientesScroll);
 
+        Tab moneyGeneratedBetween_tab = new Tab("Dinheiro Gerado Entre");
+        VBox moneyGeneratedBetween_tabVBox = moneyGeneratedBetweenBox();
+        moneyGeneratedBetween_tab.setContent(moneyGeneratedBetween_tabVBox);
 
-        menu_tab.getTabs().addAll(info_tab, drivers_tab, clients_tab, vehicles_tab, trips_tab, top_tab);
+        menu_tab.getTabs().addAll(info_tab, drivers_tab, clients_tab, vehicles_tab, trips_tab, top_tab, moneyGeneratedBetween_tab);
         menu_vbox.getChildren().addAll(header, logout, menu_tab);
 
         user_menu = new Scene(menu_vbox);

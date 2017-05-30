@@ -27,6 +27,7 @@ public class Trip implements Serializable {
     private Point2D.Double taxiPos;
     private double estimatedTimeToClient;
     private double realTimeToClient;
+    private double estimatedPrice;
 
 
     /** Constructores */
@@ -44,6 +45,10 @@ public class Trip implements Serializable {
         this.driver = null;
         this.client = null;
         this.rating = 0;
+        this.estimatedTimeToClient = 0;
+        this.estimatedTimeToDest = 0;
+        this.realTimeToClient = 0;
+        this.estimatedPrice = 0;
     }
 
     /**
@@ -61,8 +66,9 @@ public class Trip implements Serializable {
      * @param taxiPos               Posição incial do taxi
      * @param estimatedTimeToClient Tempo estimado até ao cliente
      * @param realTimeToClient      Tempo real até ao cliente
+     * @param estimatedPrice        Preço da estimado da viagem
      */
-    public Trip (int id, Point2D.Double start, Point2D.Double end, Double time, Double price, LocalDate date, String licencePlate, String driver, String client, int rating, double estimatedTimeToDest, Point2D.Double taxiPos, double estimatedTimeToClient, double realTimeToClient) {
+    public Trip (int id, Point2D.Double start, Point2D.Double end, Double time, Double price, LocalDate date, String licencePlate, String driver, String client, int rating, double estimatedTimeToDest, Point2D.Double taxiPos, double estimatedTimeToClient, double realTimeToClient, double estimatedPrice) {
         this.id = id;
         this.start = new Point2D.Double(start.getX(), start.getY());
         this.end = new Point2D.Double(end.getX(), end.getY());
@@ -77,6 +83,7 @@ public class Trip implements Serializable {
         this.taxiPos = new Point2D.Double(taxiPos.getX(), taxiPos.getY());
         this.estimatedTimeToClient = estimatedTimeToClient;
         this.realTimeToClient = realTimeToClient;
+        this.estimatedPrice = estimatedPrice;
     }
 
     /**
@@ -84,7 +91,12 @@ public class Trip implements Serializable {
      * @param t Viagem
      */
     public Trip (Trip t) {
-        this(t.getID(), t.getStart(), t.getEnd(), t.getTime(), t.getPrice(), t.getDate(), t.getLicencePlate(), t.getDriver(), t.getClient(), t.getRating(), t.getEstimatedTimeToDest(), t.getTaxiPos(), t.getEstimatedTimeToClient(), t.getRealTimeToClient());
+        this(t.getID(), t.getStart(), t.getEnd(), t.getTime(),
+                t.getPrice(), t.getDate(), t.getLicencePlate(),
+                t.getDriver(), t.getClient(), t.getRating(),
+                t.getEstimatedTimeToDest(), t.getTaxiPos(),
+                t.getEstimatedTimeToClient(), t.getRealTimeToClient(),
+                t.getEstimatedPrice());
     }
 
     /** Metodos de Instância */
@@ -198,6 +210,14 @@ public class Trip implements Serializable {
     }
 
     /**
+     * Retorna o tempo estimado da viagem
+     * @return
+     */
+    public double getEstimatedPrice(){
+        return this.estimatedPrice;
+    }
+
+    /**
      * Altera a classificação de uma viagem
      * @param rating
      */
@@ -217,7 +237,7 @@ public class Trip implements Serializable {
      * Imprime uma classificação
      * @return String com a classificação
      */
-    public String printRating(){
+    private String printRating(){
         if (this.rating == -1)
             return "Não classificado";
         else return Integer.toString(this.rating) + "**";
@@ -228,8 +248,26 @@ public class Trip implements Serializable {
      * @param time  Tempo
      * @return  String com o tempo em h:m:s
      */
-    public String printTime(double time){
+    private String printTime(double time){
         return (int) time + "h:" + Math.round(time * 60)%60 + "m:" + Math.round(time * 3600)%60 + "s";
+    }
+
+    /**
+     * Imprime o dinehiro em €
+     * @param money Dinheiro
+     * @return String com o dinheiro em €
+     */
+    private String printMoney(double money){
+        return (int) money + "€";
+    }
+
+    /**
+     * Imprime a distância em km
+     * @param distance Distância
+     * @return String com a distância em km
+     */
+    private String printDistance(double distance){
+        return (int) distance + "km";
     }
 
     /**
@@ -237,19 +275,21 @@ public class Trip implements Serializable {
      * @return String com a informação
      */
     public String toString(){
-        return "Viagem de " + "("+ this.start.getX() + "," + this.start.getY() + ") ---> (" + this.end.getX() + "," + this.end.getY() + ")" + "\n" +
-                "Data : " + this.date + "\n" +
-                "Distância : " + Math.round(distance()*100.0)/100.0 + "km\n" +
-                "Duração prevista : " + printTime(this.estimatedTimeToDest) + "\n" +
-                "Duração real : " + printTime(this.time) + "\n" +
-                "Preço : " + this.price + "€\n" +
-                "Email condutor : " + this.driver + "\n" +
-                "Email cliente : " + this.client + "\n" +
-                "Classificação : " + printRating() + "\n" +
-                "Posição inicial do taxi : [" + this.taxiPos.getX() + "," + this.taxiPos.getY() + "]\n" +
-                "Tempo previsto até ao cliente : " + printTime(this.estimatedTimeToClient) + "\n" +
-                "Tempo real até ao cliente : " + printTime(this.realTimeToClient) + "\n" +
-                "Trip id : " + this.id;
+        return "Viagem de " + "("+ this.start.getX() + "," + this.start.getY() + ") ---> (" + this.end.getX() + "," + this.end.getY() + ")" +
+                "\nData : " + this.date +
+                "\nDistância : " + printDistance(this.distance()) +
+                "\nDuração prevista : " + printTime(this.estimatedTimeToDest) +
+                "\nDuração real : " + printTime(this.time) +
+                "\nPreço : " + printMoney(this.price) +
+                "\nEmail condutor : " + this.driver +
+                "\nEmail cliente : " + this.client +
+                "\nMatrícula veículo : " + this.licencePlate +
+                "\nClassificação : " + printRating() +
+                "\nPosição inicial do taxi : [" + this.taxiPos.getX() + "," + this.taxiPos.getY() + "]" +
+                "\nTempo previsto até ao cliente : " + printTime(this.estimatedTimeToClient) +
+                "\nTempo real até ao cliente : " + printTime(this.realTimeToClient) +
+                "\nPreço estimado : " + printMoney(this.estimatedPrice) +
+                "\nTrip id : " + this.id;
     }
 
     /**

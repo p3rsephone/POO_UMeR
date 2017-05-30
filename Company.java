@@ -1,5 +1,6 @@
 import java.awt.geom.Point2D;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -185,6 +186,14 @@ public class Company implements Serializable {
     }
 
     /**
+     * Indica se existem taxis disponíveis
+     * @return Existem taxis disponíveis (true) ou não (false)
+     */
+    public boolean availiableTaxis(){
+        return drivers.values().stream().filter(d -> d.isAvailable() == true).count() > 0;
+    }
+
+    /**
      * Seleciona um condutor para conduzir um taxi da empresa
      * @return Email do condutor escolhido ou null se estiverem todos ocupados
      */
@@ -208,12 +217,12 @@ public class Company implements Serializable {
      */
     public String pickVehicle(Point2D.Double clientPosition){
         List<Vehicle> vehicles = this.vehicles.values()
-                                             .stream()
-                                             .filter(vehicle -> vehicle.isAvailable() == true)
-                                             .sorted((v1, v2) ->
-                                                     ((Double) v1.getPosition().distance(clientPosition))
-                                                     .compareTo(v2.getPosition().distance(clientPosition)))
-                                             .collect(Collectors.toList());
+                                              .stream()
+                                              .filter(vehicle -> vehicle.isAvailable() == true)
+                                              .sorted((v1, v2) ->
+                                                      ((Double) v1.getPosition().distance(clientPosition))
+                                                      .compareTo(v2.getPosition().distance(clientPosition)))
+                                              .collect(Collectors.toList());
         if (vehicles.size() != 0){
             return vehicles.get(0).getLicencePlate();
         }
@@ -241,5 +250,22 @@ public class Company implements Serializable {
             if (!dates.contains(t.getDate().toString()))
                 dates.add(t.getDate().toString());
         return dates;
+    }
+
+    /**
+     * Retorna a quantia de dinheiro gerada entre duas datas
+     * @param t1  Data 1
+     * @param t2  Data 2
+     * @return Dinheiro gerado
+     */
+    public int moneyGeneratedBetween(LocalDate t1, LocalDate t2){
+        int money = 0;
+        for (Trip t: trips){
+            if ((t.getDate().isAfter(t1) || t.getDate().isEqual(t1))
+                    && (t.getDate().isBefore(t2)) || t.getDate().isEqual(t2)) {
+                money += t.getPrice();
+            }
+        }
+        return money;
     }
 }
