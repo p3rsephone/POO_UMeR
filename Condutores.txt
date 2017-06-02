@@ -1,0 +1,67 @@
+Nome: Gil Cunha
+Mail: gil@email.com
+Password: gil123
+Pos. inicial : 12x 5y
+
+Nome: Tania Silva
+Mail: tania@email.com
+Password: tania123
+Pos. inicial : 4x 7y
+
+Nome: Afonso Pereira
+Mail: afonso@email.com
+Password: afonso123
+Pos. inicial : 17x -20y
+
+Nome: Marta Pereira
+Mail: marta@email.com
+Password: marta123
+Empresa : UMinho
+
+Nome: Rita Sampaio
+Mail: rita@email.com
+Password: rita123
+Empresa: UMTaxi
+
+Nome: Jorge Costa
+Mail: jorge@email.com
+Password: jorge123
+Pos. inicial : 55x 58y
+
+Nome: Elsa Oliveira
+Mail: elsa@email.com
+Password: elsa123
+Empresa: UMTaxi
+
+
+Nome: Helder Costa
+Mail: hc@email.com
+Password: hc123
+Empresa: FastCar
+
+Nome: Paulo Cunha
+Mail: paulo@email.com
+Password: paulo123
+Empresa: FastCar
+
+
+Nome: Vasco Coelho
+Mail: vasco@email.com
+Password: vasco123
+Empresa: FastCar
+
+
+Nome: Inês Carvalho
+Mail: ines@email.com
+Password: ines123
+Pos. inicial : 25x 28y
+
+Nome: Ricardo Coelho
+Mail: ricardo@email.com
+Password: ricardo123
+Empresa: UMinho
+
+Nome: Miguel Machado
+Mail: miguel@email.com
+Password: miguel123
+Empresa: UTaxi

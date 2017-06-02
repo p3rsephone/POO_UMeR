@@ -1,0 +1,51 @@
+Nome: Nuno Faria
+Mail: nuno@email.com
+Password: nf555
+
+Nome: Jose Torres
+Mail: jose@email.com
+Password: joseph
+
+Nome: Rui Gomes
+Mail: rui@email.com
+Password: ru1i23
+
+Nome: Filipa Ferreira
+Mail: ff@email.com
+Password: ff123
+
+Nome: Maria Sousa
+Mail: maria@email.com
+Password: maria123
+
+Nome: Manuel Marques
+Mail: mane@email.com
+Password: mane123
+
+Nome: Francisca Roque
+Mail: fr@email.com
+Password: fr123
+
+Nome: Artur Cunha
+Mail: artur@email.com
+Password: artur123
+
+Nome: Beatriz Pereira
+Mail: bia@email.com
+Password: bia123
+
+Nome: Fernando Oliveira
+Mail: fernando@email.com
+Password: fernando123
+
+Nome: Susana Cunha
+Mail: susana@email.com
+Password: susana123
+
+Nome: Raquel Fernandes
+Mail: raquel@email.com
+Password: raquel123
+
+Nome: Carlos Azevedo
+Mail: carlos@email.com
+Password: carlos123

@@ -1,0 +1,12 @@
+ADMIN
+Nome: admin
+Pw: 12345
+
+Nome: UMinho
+Pw: uminho123
+
+Nome: UMTaxi
+Pw: umtaxi
+
+Nome: FastCars
+Pw: fast123

@@ -674,6 +674,7 @@ public class UMeR implements Serializable {
     public boolean doTripQueue(String d){
         Trip t = null;
         Driver driver = this.allDrivers.get(d);
+        driver.setAvailability(true);
         Vehicle vehicle = this.allVehicles.get(driver.getVehicle());
 
         if (vehicle.getQueue().size() > 0) {
