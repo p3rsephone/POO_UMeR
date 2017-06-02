@@ -259,13 +259,13 @@ public class Company implements Serializable {
      * @return Dinheiro gerado
      */
     public int moneyGeneratedBetween(LocalDate t1, LocalDate t2){
-        int money = 0;
+        double money = 0;
         for (Trip t: trips){
             if ((t.getDate().isAfter(t1) || t.getDate().isEqual(t1))
                     && (t.getDate().isBefore(t2)) || t.getDate().isEqual(t2)) {
                 money += t.getPrice();
             }
         }
-        return money;
+        return (int) money;
     }
 }
