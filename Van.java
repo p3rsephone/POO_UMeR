@@ -26,6 +26,7 @@ public class Van extends Vehicle implements Serializable {
      * @param licencePlate Matrícula
      * @param reliable     Fator de fiabilidade
      * @param position     Posição atual
+     * @param owner        Dono da carrinha
      */
     public Van(String licencePlate, double reliable, Point2D.Double position, String owner) {
         super(licencePlate, reliable, position, true, null, null, null, owner);

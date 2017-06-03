@@ -4,6 +4,9 @@ import java.sql.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+
+
+
 /**
  * Vehicle class for UMeR.
  */
@@ -12,22 +15,24 @@ public abstract class Vehicle implements Serializable {
 
     /** Variáveis de Instância */
 
-    private String licencePlate;
-    private double speed;
-    private double price;
-    private double reliable;
-    private boolean available;
-    private int seats;
-    private Point2D.Double position;
-    private LinkedList<String> queue;
-    private HashMap<String, ArrayList<Point2D.Double>> queueInfo;
-    private ArrayList<Trip> trips;
-    private String owner;
+    private String licencePlate; ///< Matricula
+    private double speed; ///< Velocidade Media
+    private double price; ///< Preço Médio por km
+    private double reliable; ///< Grau de fiabilidade
+    private boolean available; ///< Disponibilidade
+    private int seats; ///< Numero de lugares
+    private Point2D.Double position; ///< Posição
+    private LinkedList<String> queue = new LinkedList<>(); ///< Fila de espera
+    private HashMap<String, ArrayList<Point2D.Double>> queueInfo; ///< Informação da fila de espera
+    private ArrayList<Trip> trips; ///< Viagens de um veiculo
+    private String owner = null; ///< Dono do veiculo
+
+
 
     /**
      * Construtor a partir de parametros definidos
      * @param licencePlate  Matricula
-     * @param reliable      Grau de viabilidade
+     * @param reliable      Grau de fiabilidade
      * @param position      Posição
      * @param available     Se está disponível ou não
      * @param queue         Fila de espera
@@ -49,6 +54,8 @@ public abstract class Vehicle implements Serializable {
         this.owner = owner;
     }
 
+
+
     /**
      * Contrutor vazio
      */
@@ -62,6 +69,8 @@ public abstract class Vehicle implements Serializable {
         this.owner = null;
     }
 
+
+
     /**Métodos de Instância*/
 
     /**
@@ -72,13 +81,17 @@ public abstract class Vehicle implements Serializable {
         return this.licencePlate;
     }
 
+
+
     /**
      * Retorna a velocidade média por km de um veiculo
-     * @return speed Velocidade média do Veiculo
+     * @return speed Velocidade Média do Veiculo
      */
     public double getSpeed() {
         return this.speed;
     }
+
+
 
     /**
      * Retorna o preço médio por km de um veiculo
@@ -88,6 +101,7 @@ public abstract class Vehicle implements Serializable {
         return this.price;
     }
 
+
     /**
      * Retorna o fator de fiabilidade de um veiculo
      * @return reliable Fator de fiabilidade do veiculo
@@ -95,6 +109,8 @@ public abstract class Vehicle implements Serializable {
     public double getReliable() {
         return this.reliable;
     }
+
+
 
     /**
      * Retorna a disponibilidade de um veiculo
@@ -104,6 +120,8 @@ public abstract class Vehicle implements Serializable {
         return this.available;
     }
 
+
+
     /**
      * Retorna o numero de lugares de um veiculo
      * @return seats Numeros de lugares do veiculo
@@ -112,6 +130,8 @@ public abstract class Vehicle implements Serializable {
         return this.seats;
     }
 
+
+
     /**
      * Retorna a posição de um veiculo
      * @return position Posiçao do veiculo
@@ -119,6 +139,8 @@ public abstract class Vehicle implements Serializable {
     public Point2D.Double getPosition() {
         return new Point2D.Double(this.position.getX(), this.position.getY());
     }
+
+
 
     /**
      * Retorna uma cópia da fila de espera
@@ -133,6 +155,8 @@ public abstract class Vehicle implements Serializable {
         return queue;
     }
 
+
+
     /**
      * Retorna uma cópia da informação da fila de espera
      * @return Fila de Espera
@@ -146,6 +170,8 @@ public abstract class Vehicle implements Serializable {
         return queue;
     }
 
+
+
     /**
      * Retorna uma cópia da informação da lista de viagens
      * @return Lista de viagens
@@ -157,6 +183,8 @@ public abstract class Vehicle implements Serializable {
         return trips;
     }
 
+
+
     /**
      * Indica o dono do veículo
      * @return Dono
@@ -164,6 +192,8 @@ public abstract class Vehicle implements Serializable {
     public String getOwner(){
         return this.owner;
     }
+
+
 
     /**
      * Altera a matricula de um veiculo
@@ -173,13 +203,17 @@ public abstract class Vehicle implements Serializable {
         this.licencePlate = licencePlate;
     }
 
+
+
     /**
-     * Altera a velocidade de um veiculo
+     * Altera a velocidade média de um veiculo
      * @param speed Nova velocidade
      */
     public void setSpeed(double speed) {
         this.speed = speed;
     }
+
+
 
     /**
      * Altera o preço médio por km de um veiculo
@@ -189,6 +223,8 @@ public abstract class Vehicle implements Serializable {
         this.price = price;
     }
 
+
+
     /**
      * Altera o fator de fiabilidade de um veiculo
      * @param reliable Novo fator de fiabilidade
@@ -196,6 +232,8 @@ public abstract class Vehicle implements Serializable {
     public void setReliable(double reliable) {
         this.reliable = reliable;
     }
+
+
 
     /**
      * Altera a disponibilidade de um veiculo
@@ -205,6 +243,8 @@ public abstract class Vehicle implements Serializable {
         this.available = available;
     }
 
+
+
     /**
      * Altera o numero de lugares de um veiculo
      * @param seats Novo numero de lugares
@@ -213,13 +253,17 @@ public abstract class Vehicle implements Serializable {
         this.seats = seats;
     }
 
+
+
     /**
      * Altera a posição de um veiculo
      * @param position Nova posição
      */
     public void setPosition(Point2D.Double position) {
         this.position = new Point2D.Double(position.getX(), position.getY());
+
     }
+
 
     /**
      * Altera a fila de espera
@@ -230,6 +274,7 @@ public abstract class Vehicle implements Serializable {
             for (String s: queue)
                 this.queue.addLast(s);
     }
+
 
     /**
      * Altera a informação da fila de espera
@@ -246,47 +291,38 @@ public abstract class Vehicle implements Serializable {
         }
     }
 
+
     /**
      * Altera o arraylist de viagens
      * @param trips Novas viagens
      */
     public void setTrips(ArrayList<Trip> trips){
         ArrayList<Trip> list = new ArrayList<>();
-        for (Trip t: trips)
-            list.add(t.clone());
+        if (trips != null){
+                for (Trip t: trips)
+                    list.add(t.clone());
+                }
         this.trips = list;
     }
 
     /**
-     * Adiciona um Cliente a uma fila de espera
-     * @param c Cliente a adicionar
+     * Associa um condutor/empresa a um veículo
+     * @param owner Condutor/Empresa
      */
-    public void addClient(String c, Point2D.Double start, Point2D.Double end){
-        ArrayList<Point2D.Double> p = new ArrayList<>();
-        p.add(new Point2D.Double(start.getX(), start.getY()));
-        p.add(new Point2D.Double(end.getX(), end.getY()));
-        this.queue.addLast(c);
-        this.queueInfo.put(c, p);
+    public void setOwner(String owner){
+        this.owner = owner;
     }
 
-    /**
-     * Remove um cliente da fila de espera
-     * @param c Cliente a remover
-     */
-    public void removeClient(String c){
-        this.queue.remove(c);
-        this.queueInfo.remove(c);
-    }
 
     /**
      * Compara dois veiculos
-     *
      * @param v Veiculo
      * @return É o mesmo veiculo (true) ou não (false)
      */
     public boolean equals(Vehicle v) {
         return this.licencePlate.equals(v.getLicencePlate());
     }
+
 
     /**
      * Faz a cópia de um veiculo
@@ -311,6 +347,7 @@ public abstract class Vehicle implements Serializable {
                 "---------\nFila de Espera : \n"+ printQueue() +"\n\n";
     }
 
+
     /**
      * Imprime a lista de espera de um veículo
      * @return String com a lista de espera
@@ -328,13 +365,30 @@ public abstract class Vehicle implements Serializable {
         else return "Fila de espera vazia.";
     }
 
+
     /**
-     * Associa um condutor/empresa a um veículo
-     * @param owner Condutor/Empresa
+     * Adiciona um Cliente a uma fila de espera
+     * @param c Cliente a adicionar
      */
-    public void setOwner(String owner){
-        this.owner = owner;
+    public void addClient(String c, Point2D.Double start, Point2D.Double end){
+        ArrayList<Point2D.Double> p = new ArrayList<>();
+        p.add(new Point2D.Double(start.getX(), start.getY()));
+        p.add(new Point2D.Double(end.getX(), end.getY()));
+        this.queue.addLast(c);
+        this.queueInfo.put(c, p);
     }
+
+
+
+    /**
+     * Remove um cliente da fila de espera
+     * @param c Cliente a remover
+     */
+    public void removeClient(String c){
+        this.queue.remove(c);
+        this.queueInfo.remove(c);
+    }
+
 
     /**
      * Adiciona uma viagem a um veículo
@@ -344,6 +398,7 @@ public abstract class Vehicle implements Serializable {
         this.trips.add(t);
         this.position.setLocation(t.getEnd().getX(), t.getEnd().getY());
     }
+
 
     /**
      * Retorna a quantia de dinheiro gerada entre duas datas
@@ -355,8 +410,9 @@ public abstract class Vehicle implements Serializable {
         double money = 0;
         for (Trip t: trips)
             if ((t.getDate().isAfter(t1) || t.getDate().isEqual(t1))
-                    && (t.getDate().isBefore(t2)) || t.getDate().isEqual(t2))
+                && (t.getDate().isBefore(t2)) || t.getDate().isEqual(t2))
                 money += t.getPrice();
         return (int) money;
     }
 }
+

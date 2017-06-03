@@ -5,19 +5,17 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.ArrayList;
+
 /**
  * Client that uses UMeR.
- *
- * @author (your name)
- * @version 02.05.17
  */
 public class Client extends User implements Serializable {
 
     /** Variáveis de Instância */
-    private Point2D.Double position;
-    private int points;
-    private boolean premium;
-    private String queue;
+    private Point2D.Double position; ///< Posição do cliente
+    private int points; ///< Pontos
+    private boolean premium; ///< Se tem conta premium ou não
+    private String queue; ///< Veículo onde está em fila de espera
 
 
     /**
@@ -36,7 +34,7 @@ public class Client extends User implements Serializable {
      * @param premium           Se tem conta premium
      * @param queue             Veículo onde está em fila de espera
      */
-    public Client(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, ArrayList<Trip> trips, int points, double money, boolean premium, String inQueue) {
+    public Client(String email, String name, String password, String address, LocalDate birthday, Point2D.Double position, double totalDistance, ArrayList<Trip> trips, int points, double money, boolean premium, String queue) {
         super(email, name, password, address, birthday, totalDistance, trips, money);
         this.position = new Point2D.Double(position.getX(), position.getY());
         this.points = points;

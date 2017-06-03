@@ -10,16 +10,17 @@ import java.util.stream.Collectors;
  */
 
 public class Company implements Serializable {
-    private String name, password;
-    private HashMap<String, Driver> drivers;
-    private HashMap<String, Vehicle> vehicles;
-    private ArrayList<Trip> trips;
-    private double moneyGenerated;
-    private int points;
+    private String name, password; ///< Nome e Password da conta
+    private HashMap<String, Driver> drivers; ///< Condutores que trabalham na empresa
+    private HashMap<String, Vehicle> vehicles; ///< Veiculos da empresa
+    private ArrayList<Trip> trips; ///< Viagens
+    private double moneyGenerated; ///< Dinheiro
+    private int points; ///< Pontos
 
     /**
      * Criar uma nova empresa a partir do nome
      * @param name Nome da empresa
+     * @param password Password da empresa
      */
     public Company(String name, String password){
         this.name = name;

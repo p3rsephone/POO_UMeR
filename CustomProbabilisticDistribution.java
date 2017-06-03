@@ -4,13 +4,12 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Uma distribuição de probabilidades
  */
-
 public class CustomProbabilisticDistribution {
 
     /** Variáveis de instância */
-    private int size;
-    private int values[];
-    private int currentPos;
+    private int size; ///< Tamanho do array
+    private int values[]; ///< Array com valores
+    private int currentPos; ///< Posição atual
 
     /** Contrutores */
 

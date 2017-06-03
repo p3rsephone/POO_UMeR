@@ -26,6 +26,7 @@ public class Bike extends Vehicle implements Serializable {
      * @param licencePlate Matrícula
      * @param reliable     Fator de fiabilidade
      * @param position     Posição atual
+     * @param owner        Dono da mota
      */
     public Bike(String licencePlate, double reliable, Point2D.Double position, String owner) {
         super(licencePlate, reliable, position, true, null, null, null, owner);

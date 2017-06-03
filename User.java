@@ -6,34 +6,33 @@ import java.util.Date;
 
 /**
  * User of UMeR.
- *
- * @author (your name)
- * @version (a version number or a date)
  */
 public abstract class User implements Serializable {
 
     /** Variáveis de Instância */
 
-    private String email;
-	private String name;
-	private String password;
-	private String address;
-	private LocalDate birthday;
-	private double totalDistance;
-	private ArrayList<Trip> trips;
-	private double money;
+    private String email; ///< Email
+	private String name; ///< Nome
+	private String password; ///< Password
+	private String address; ///< Morada
+	private LocalDate birthday; ///< Data de nascimento
+	private double totalDistance; ///< Distâncita Total
+	private ArrayList<Trip> trips; ///< Viagens do utilizador
+	private double money; ///< Dinheiro
 
 
     /** Construtores */
 
 	/**
 	 * Constrói um novo user a partir dos diferentes parametros fornecidos
-	 * @param email Email
-	 * @param name 	Nome
-	 * @param pass	Password
-	 * @param addr 	Morada
-	 * @param birth Dia de nascimento
-	 * @param position Posição
+	 * @param email 		Email
+	 * @param name 			Nome
+	 * @param pass			Password
+	 * @param address 		Morada
+	 * @param birthday 		Dia de nascimento
+	 * @param totalDistance Distancia Total
+	 * @param trip 			Viagens
+	 * @param money 		Dinheiro
 	 */
 	public User(String email, String name, String password, String address, LocalDate birthday, double totalDistance, ArrayList<Trip> trips, double money){
 		this.email = email;

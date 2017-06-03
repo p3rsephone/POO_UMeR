@@ -6,28 +6,25 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Trip.
- *
- * @author (your name)
- * @version (a version number or a date)
  */
 public class Trip implements Serializable {
 
     /** Variáveis de Instância */
 
-    private int id;
-    private Point2D.Double start;
-    private Point2D.Double end;
-    private double time;
-    private double price;
-    private LocalDate date;
-    private String licencePlate;
-    private String driver, client;
-    private int rating;
-    private double estimatedTimeToDest;
-    private Point2D.Double taxiPos;
-    private double estimatedTimeToClient;
-    private double realTimeToClient;
-    private double estimatedPrice;
+    private int id; ///< ID da Viagem 
+    private Point2D.Double start; ///< Ponto de inicio
+    private Point2D.Double end; ///< Ponto de destino
+    private double time; ///< Duração da viagem
+    private double price; ///< Preço da viagem
+    private LocalDate date; ///< Data
+    private String licencePlate; ///< Matricula do veiculo que efetuou a viagem
+    private String driver, client; ///< Condutor e Client
+    private int rating; ///< Classificação dada ao condutor pelo cliente
+    private double estimatedTimeToDest; ///< Duração estimada da viagem
+    private Point2D.Double taxiPos; ///< Posiçao do veiculo
+    private double estimatedTimeToClient; ///< Tempo esimado a chegar ao cliente
+    private double realTimeToClient; ///< Tempo real de chegada ao cliente
+    private double estimatedPrice; ///< Preço estimado da viagem
 
 
     /** Constructores */
@@ -101,6 +98,10 @@ public class Trip implements Serializable {
 
     /** Metodos de Instância */
 
+    /**
+     * Retorna o ID da viagem
+     * @return ID
+     */
     public int getID(){
         return this.id;
     }

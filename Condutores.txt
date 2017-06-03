@@ -65,3 +65,17 @@ Nome: Miguel Machado
 Mail: miguel@email.com
 Password: miguel123
 Empresa: UTaxi
+
+Nome: Joana Freitas
+Mail: joana@email.com
+Password: joana123
+
+Nome: Bruno Guedes
+Mail: bruno@email.com
+Password: bruno123
+Empresa: UMinho
+
+Nome: Gabriel Lima
+Mail: gabi@email.com
+Password: gabi123
+Empresa: UMTaxi

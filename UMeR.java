@@ -14,18 +14,18 @@ import java.io.*;
 public class UMeR implements Serializable {
 
     /** Variáveis de instância */
-    private HashMap<String, Driver> driversP;
-    private HashMap<String, Driver> allDrivers;
-    private HashMap<String, Client> clients;
-    private HashMap<String, Vehicle> vehiclesP;
-    private HashMap<String, Vehicle> allVehicles;
-    private HashMap<String, Company> companies;
-    private ArrayList<Trip> trips;
-    private double moneyGenerated;
-    private double totalDistance;
-    private double totalTime;
-    private int tripID;
-    private int weather;
+    private HashMap<String, Driver> driversP; ///< Condutores Privados
+    private HashMap<String, Driver> allDrivers; ///< Todos os Condutores
+    private HashMap<String, Client> clients; ///< Clientes
+    private HashMap<String, Vehicle> vehiclesP; ///< Veiculos privados
+    private HashMap<String, Vehicle> allVehicles; ///< Todos os veiculos
+    private HashMap<String, Company> companies; ///< Empresas
+    private ArrayList<Trip> trips; ///< Viagens totais
+    private double moneyGenerated; ///< Dinheiro gerado
+    private double totalDistance; ///< Distancia total
+    private double totalTime; ///< Tempo total
+    private int tripID; ///< ID da viagem
+    private int weather; ///< Tempo meteorologico
 
     /** Construtores */
     public UMeR(){
@@ -166,7 +166,7 @@ public class UMeR implements Serializable {
     }
 
     /**
-     * Altera o ID da ultima viagem
+     * Altera o ID da ultima viagem (a mais recente)
      * @param tripID Novo ID
      */
     public void setTripID(int tripID) {
@@ -174,7 +174,7 @@ public class UMeR implements Serializable {
     }
 
     /**
-     * Retorna o tempo atual
+     * Retorna o tempo meteorologico atual
      * @return Tempo
      */
     public int getWeather() {
@@ -182,7 +182,7 @@ public class UMeR implements Serializable {
     }
 
     /**
-     * Altera o tempo atual
+     * Altera o tempo meteorologico atual
      * @param weather Novo tempo
      */
     public void setWeather(int weather) {
@@ -409,7 +409,7 @@ public class UMeR implements Serializable {
     }
 
     /**
-     * Retonar o tax o taxi mais próximo disponível
+     * Retonar o taxi mais próximo disponível
      * @param client  Cliente que pretende o taxi
      * @return Vehicle mais próximo (null se estiverem todos ocupados)
      */

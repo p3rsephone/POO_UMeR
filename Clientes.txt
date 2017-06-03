@@ -49,3 +49,15 @@ Password: raquel123
 Nome: Carlos Azevedo
 Mail: carlos@email.com
 Password: carlos123
+
+Nome: Patricia Fonseca
+Mail: pati@email.com
+Password: pati123
+
+Nome: Raul Silva
+Mail: raul@email.com
+Password: raul123
+
+Nome: Ana Cardoso
+Mail: ana@email.com
+Password: ana123

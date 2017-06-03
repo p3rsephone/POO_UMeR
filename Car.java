@@ -26,6 +26,7 @@ public class Car extends Vehicle implements Serializable {
      * @param licencePlate Matrícula
      * @param reliable     Fator de fiabilidade
      * @param position     Posição atual
+     * @param owner        Dono do carro
      */
     public Car(String licencePlate, double reliable, Point2D.Double position, String owner) {
         super(licencePlate, reliable, position, true, null, null, null, owner);
@@ -52,6 +53,7 @@ public class Car extends Vehicle implements Serializable {
     public Car clone(){
         return new Car(this);
     }
+
 
     /**
      * Calcula o trânsito à volta de um carro

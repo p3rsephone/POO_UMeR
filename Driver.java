@@ -6,21 +6,18 @@ import java.util.*;
 
 /**
  * Driver of UMeR.
- *
- * @author (your name)
- * @version 02.05.17
  */
 public class Driver extends User implements Serializable {
 
     /* Variáveis de Instância */
-    private double rating;
-    private boolean availability;
-    private double timeCompliance;
-    private int numberOfReviews;
-    private int exp;
-    private String vehicle;
-    private String company;
-    private double deviation;
+    private double rating; ///< Classifiacção
+    private boolean availability; ///< Disponibilidade
+    private double timeCompliance; ///< Fator de cumprimento de hórario
+    private int numberOfReviews; ///< Numero de classificaçoes
+    private int exp; ///< Experiência
+    private String vehicle; ///< Matricula do seu veiculo
+    private String company; ///< Empresa a que pertence
+    private double deviation; ///< Soma dos desvios totais (dinheiro)
 
 
     /**
@@ -41,7 +38,7 @@ public class Driver extends User implements Serializable {
      * @param company           Empresa para a qual trabalha
      * @param deviation         Soma dos desvios totais (dinheiro)
      */
-    public Driver(String email, String name, String password, String address, LocalDate birthday, double totalDistance, double rating, Boolean availability, double timeCompliance, ArrayList<Trip> trips, int numberOfTrips, double money, double exp, String vehicle, String company, double deviation){
+    public Driver(String email, String name, String password, String address, LocalDate birthday, double totalDistance, double rating, Boolean availability, double timeCompliance, ArrayList<Trip> trips, int numberOfReviews, double money, double exp, String vehicle, String company, double deviation){
         super(email, name, password, address, birthday, totalDistance, trips, money);
         this.rating = rating;
         this.availability = availability;
@@ -54,12 +51,13 @@ public class Driver extends User implements Serializable {
 
     /**
      * Cria um novo condutor a partir de parametros de registo
-     * @param email     Email
-     * @param name      Name
-     * @param password  Password
-     * @param address   Morada
-     * @param birthday  Aniversário
-     * @param company   Empresa para a qual trabalha
+     * @param email             Email
+     * @param name              Name
+     * @param password          Password
+     * @param address           Morada
+     * @param birthday          Aniversário
+     * @param timeCompliance    Fator de cumprimento de hórario
+     * @param company           Empresa para a qual trabalha
      */
     public Driver(String email, String name, String password, String address, LocalDate birthday, double timeCompliance, String company){
         super(email, name, password, address, birthday, 0, null, 0);
