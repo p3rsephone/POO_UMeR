@@ -320,14 +320,15 @@ public class UMeR implements Serializable {
     public boolean registerUser(User u, String company){
         if (this.allDrivers.get(u.getEmail()) == null && this.clients.get(u.getEmail()) == null
                 && this.companies.get(u.getName()) == null){
-            if (u instanceof Client) {
+            if (u instanceof Client)
                 this.clients.put(u.getEmail(), (Client) u.clone());
-            }
             else {
                 Driver d = (Driver) u.clone();
                 if (company == null)
                     this.driversP.put(u.getEmail(), d);
-                else this.companies.get(company).addDriver(d);
+                else if (this.companies.get(company) != null)
+                        this.companies.get(company).addDriver(d);
+                    else return false;
 
                 this.allDrivers.put(u.getEmail(), d);
             }
@@ -501,7 +502,7 @@ public class UMeR implements Serializable {
         double multiplier = 0.8 + driverSuccess*driverMultiplier + carSuccess*carMultiplier
             + trafficDelay + weatherDelay + driverSkill*driverMultiplier;
 
-        double realTime = eta*multiplier;
+        double realTime = estimatedTime(start, end, v.getSpeed())*multiplier;
         return realTime;
     }
 
@@ -659,8 +660,9 @@ public class UMeR implements Serializable {
      */
     public TreeSet<Driver> ordDriver(Comparator<Driver> comp){
         TreeSet<Driver> tree = new TreeSet<>(comp);
-        for (Driver d: allDrivers.values())
+        for (Driver d: allDrivers.values()) {
             tree.add(d.clone());
+        }
         return tree;
     }
 

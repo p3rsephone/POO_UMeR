@@ -632,7 +632,7 @@ public class GUI extends Application{
                 "\nDistância percorrida: " + printDistance(d.getTotalDistance()) +
                 "\nDinheiro ganho: " + printMoney(d.getMoney()) +
                 "\nNúmero de classificações: " + d.getNumberOfReviews() +
-                "\nClassficação: " + d.getRating() +
+                "\nClassficação: " + Math.round(d.getRating()) +
                 "\nExperiência: " + d.getExp() +
                 "\nDesvio total: " + printMoney(d.getDeviation()) +
                 "\nVeículo: " + d.getVehicle() +
@@ -1029,7 +1029,7 @@ public class GUI extends Application{
             ObservableList<String> driversList = FXCollections.observableArrayList();
             driversList.add("--condutor-mais-próximo--");
             for (Driver d : umer.getDriversP().values())
-                driversList.add(d.getEmail() + " - " + d.getRating() + " - Disponibilidade - " + d.isAvailable());
+                driversList.add(d.getEmail() + " - " + Math.round(d.getRating()) + " - Disponibilidade - " + d.isAvailable());
             for (Company c : umer.getCompanies().values())
                 driversList.add(c.getName());
             ComboBox<String> drivers_box = new ComboBox<>(driversList);
@@ -1267,7 +1267,6 @@ public class GUI extends Application{
         topDeviations_title.setFont(Font.font(25));
         Label topDeviations = new Label(printTopMoney(umer.ordDriver(new MoneyComparatorD())));
         topDeviations.setFont(Font.font(15));
-        Label topRating_title = new Label("Top 10 dinheiro gerado");
         Label topdeviation_title = new Label("Top 5 Maiores desvios");
         topdeviation_title.setFont(Font.font(25));
         topdeviation_title.setUnderline(true);
