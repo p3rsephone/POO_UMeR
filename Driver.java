@@ -31,7 +31,7 @@ public class Driver extends User implements Serializable {
      * @param address           Morada
      * @param birthday          Data de nascimento
      * @param totalDistance     Distância total percorrida
-     * @param rating           Classificação
+     * @param rating            Classificação
      * @param availability      Disponibilidade
      * @param timeCompliance    Fator de cumprimento de hórario
      * @param numberOfReviews   Número de classificações
@@ -39,7 +39,7 @@ public class Driver extends User implements Serializable {
      * @param money             Dinheiro ganho
      * @param vehicle           Matrícula do seu veículo
      * @param company           Empresa para a qual trabalha
-     * @param deviation            Soma dos deviations totais entre tempo de viagem estimado e tempo real
+     * @param deviation         Soma dos desvios totais (dinheiro)
      */
     public Driver(String email, String name, String password, String address, LocalDate birthday, double totalDistance, double rating, Boolean availability, double timeCompliance, ArrayList<Trip> trips, int numberOfTrips, double money, double exp, String vehicle, String company, double deviation){
         super(email, name, password, address, birthday, totalDistance, trips, money);

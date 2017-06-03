@@ -1,5 +1,5 @@
 /**
- * Created by Nuno on 07/05/2017.
+ * Gui class
  */
 
 import javafx.animation.Animation;
@@ -112,7 +112,7 @@ public class GUI extends Application{
 
     public Trip newTrip(Client client, String d, Point2D.Double start, Point2D.Double end){
         client.setPosition(start);
-        if (d.equals("--condutor mais próximo--")){
+        if (d.equals("--condutor-mais-próximo--")){
             Trip t = umer.newTripClosest(client, end);
             if (t != null) {
                 String vehicle = umer.closestAvailableTaxi(client);
@@ -407,12 +407,12 @@ public class GUI extends Application{
         else vehicles_licencePlate = new TreeSet<>(printIdentifier(c.getVehicles()));
 
         for (String s : vehicles_licencePlate){
-            TreeItem<String> trips_items = new TreeItem<>(s);
+            TreeItem<String> vehicle_item = new TreeItem<>(s);
             TreeItem<String> vehicles_i;
             if (admin) vehicles_i = new TreeItem<>(printVehicle(umer.getAllVehicles().get(s)));
             else vehicles_i = new TreeItem<>(printVehicle(c.getVehicles().get(s)));
-            trips_items.getChildren().add(vehicles_i);
-            vehicles_root.getChildren().add(trips_items);
+            vehicle_item.getChildren().add(vehicles_i);
+            vehicles_root.getChildren().add(vehicle_item);
         }
 
         TreeView<String> vehicles = new TreeView<>(vehicles_root);
@@ -421,6 +421,37 @@ public class GUI extends Application{
         else vehiclesTabVbox.getChildren().addAll(vehicles_title, registerVehicle_button, vehicles);
         vehicles_tab.setContent(vehiclesTabVbox);
         return vehicles_tab;
+    }
+
+    public Tab companiesTab(){
+        Tab companies_tab = new Tab("Empresas");
+
+        VBox companiesTabVbox = new VBox(10);
+        companiesTabVbox.setPadding(new Insets(20,20,20,20));
+
+        Label companies_title = new Label("Empresas");
+        companies_title.setFont(Font.font(30));
+        companies_title.setUnderline(true);
+
+        TreeItem<String> companies_root = new TreeItem<>("Empresas");
+        companies_root.setExpanded(true);
+
+        TreeSet<String> companies_name;
+        companies_name = new TreeSet<>(printIdentifier(umer.getCompanies()));
+
+        for (String s : companies_name){
+            TreeItem<String> company_item = new TreeItem<>(s);
+            TreeItem<String> company_i;
+            company_i = new TreeItem<>(printCompany(umer.getCompanies().get(s)));
+            company_item.getChildren().add(company_i);
+            companies_root.getChildren().add(company_item);
+        }
+
+        TreeView<String> vehicles = new TreeView<>(companies_root);
+
+        companiesTabVbox.getChildren().addAll(companies_title, vehicles);
+        companies_tab.setContent(companiesTabVbox);
+        return companies_tab;
     }
 
     public Button doneRegisterButton(){
@@ -601,7 +632,8 @@ public class GUI extends Application{
                 "\nDinheiro ganho: " + printMoney(d.getMoney()) +
                 "\nNúmero de classificações: " + d.getNumberOfReviews() +
                 "\nClassficação: " + d.getRating() +
-                "\nDesvio total: " + d.getDeviation();
+                "\nDesvio total: " + printMoney(d.getDeviation()) +
+                "\nEmpresa : " + d.getCompany();
     }
 
     public String printCompany(Company c){
@@ -661,7 +693,8 @@ public class GUI extends Application{
 
         for (Object o: map.values()) {
             if (o instanceof User) emailsOrd.add(((User) o).getEmail());
-            else emailsOrd.add(((Vehicle) o).getLicencePlate());
+            else if (o instanceof Vehicle) emailsOrd.add(((Vehicle) o).getLicencePlate());
+            else emailsOrd.add(((Company) o).getName());
         }
 
         return emailsOrd;
@@ -990,9 +1023,9 @@ public class GUI extends Application{
 
         else {
             ObservableList<String> driversList = FXCollections.observableArrayList();
-            driversList.add("--condutor mais próximo--");
+            driversList.add("--condutor-mais-próximo--");
             for (Driver d : umer.getDriversP().values())
-                driversList.add(d.getEmail());
+                driversList.add(d.getEmail() + " - Disponibilidade - " + d.isAvailable());
             for (Company c : umer.getCompanies().values())
                 driversList.add(c.getName());
             ComboBox<String> drivers_box = new ComboBox<>(driversList);
@@ -1015,7 +1048,8 @@ public class GUI extends Application{
             Button newTrip_button = new Button("Realizar viagem");
             newTrip_button.setOnAction(e -> {
                 newTrip_tabVBox.getChildren().removeAll(error, rate_hbox, tripInfo_pane, success);
-                String driver = drivers_box.getValue();
+                String driver_info[] = drivers_box.getValue().split(" ");
+                String driver = driver_info[0];
 
                 try {
                     double posStartX = Double.parseDouble(((TextField) positionStart_hbox.getChildren().get(1)).getText());
@@ -1212,6 +1246,8 @@ public class GUI extends Application{
 
         Tab trips_tab = tripsTab(null);
 
+        Tab companies_tab = companiesTab();
+
         Tab top_tab = new Tab("Top");
         VBox top_tabVBox = new VBox(20);
         top_tabVBox.setPadding(new Insets(20,20,20,20));
@@ -1246,7 +1282,7 @@ public class GUI extends Application{
         VBox moneyGeneratedBetween_tabVBox = moneyGeneratedBetweenBox();
         moneyGeneratedBetween_tab.setContent(moneyGeneratedBetween_tabVBox);
 
-        menu_tab.getTabs().addAll(info_tab, drivers_tab, clients_tab, vehicles_tab, trips_tab, top_tab, moneyGeneratedBetween_tab);
+        menu_tab.getTabs().addAll(info_tab, drivers_tab, clients_tab, vehicles_tab, trips_tab, companies_tab, top_tab, moneyGeneratedBetween_tab);
         menu_vbox.getChildren().addAll(header, logout, menu_tab);
 
         user_menu = new Scene(menu_vbox);

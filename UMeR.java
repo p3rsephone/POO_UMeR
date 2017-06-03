@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.io.*;
 
 /**
- * Write a description of class UMeR here.
+ * UMeR class
  */
 
 public class UMeR implements Serializable {
@@ -387,10 +387,8 @@ public class UMeR implements Serializable {
      * @param u Utilizador a remover
      */
     public void removeUser(User u){
-        if (u instanceof Client) {
-            this.clients.remove(u);
-        }
-        else this.driversP.remove(u);
+        if (u instanceof Client) this.clients.remove(u);
+        else this.allDrivers.remove(u);
     }
 
     /**
