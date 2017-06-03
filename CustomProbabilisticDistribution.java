@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -28,7 +29,7 @@ public class CustomProbabilisticDistribution {
      * @param probability   Probabilidade desse valor
      */
     public void addValues(int value, double probability){
-        int n = (int) probability * 100;
+        int n = (int) (probability * 100);
         while (n > 0 &&  this.currentPos < this.size){
             this.values[this.currentPos] = value;
             this.currentPos++;

@@ -437,7 +437,7 @@ public class UMeR implements Serializable {
      * @return Tempo esperado
      */
     public double estimatedTime(Point2D.Double start, Point2D.Double end, double vehicleSpeed){
-        return (start.distance(end)) / vehicleSpeed;
+        return (start.distance(end)) / vehicleSpeed *1.2;
     }
 
     /**
@@ -470,7 +470,7 @@ public class UMeR implements Serializable {
         CustomProbabilisticDistribution distD = new CustomProbabilisticDistribution();
         CustomProbabilisticDistribution distC = new CustomProbabilisticDistribution();
         CustomProbabilisticDistribution distS = new CustomProbabilisticDistribution();
-        double eta = estimatedTime(start, end, v.getSpeed()) * 1.2;
+        double eta = estimatedTime(start, end, v.getSpeed())/1.2;
 
         double radius = start.distance(end)/2;
         double traffic = (calculateTraffic(v, radius) * ThreadLocalRandom.current().nextInt(1, 100)) / radius;
@@ -483,7 +483,7 @@ public class UMeR implements Serializable {
         distC.addValues(1, (100 - v.getReliable())/100);
         int carSuccess = distC.pickNumber();
 
-        double driverSkillChance = d.getTotalDistance() / d.getExp();
+        double driverSkillChance = d.getExp() / d.getTotalDistance();
         distS.addValues(0, driverSkillChance);
         distS.addValues(1, 1 - driverSkillChance);
         int driverSkill = distS.pickNumber();
@@ -497,12 +497,12 @@ public class UMeR implements Serializable {
         double trafficMultiplier      = Math.abs(random.nextGaussian());
 
         double trafficDelay = Math.min(traffic * trafficMultiplier / 100, 0.4);
-        double weatherDelay = this.weather * (weatherMultiplier / 5);
+        double weatherDelay = this.weather * weatherMultiplier / 5;
 
         double multiplier = 0.8 + driverSuccess*driverMultiplier + carSuccess*carMultiplier
             + trafficDelay + weatherDelay + driverSkill*driverMultiplier;
 
-        double realTime = estimatedTime(start, end, v.getSpeed())*multiplier;
+        double realTime = eta*multiplier;
         return realTime;
     }
 
