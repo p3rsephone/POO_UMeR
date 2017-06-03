@@ -483,8 +483,8 @@ public class UMeR implements Serializable {
         int carSuccess = distC.pickNumber();
 
         double driverSkillChance = d.getTotalDistance() / d.getExp();
-        distS.addValues(1, driverSkillChance);
-        distS.addValues(0, 1 - driverSkillChance);
+        distS.addValues(0, driverSkillChance);
+        distS.addValues(1, 1 - driverSkillChance);
         int driverSkill = distS.pickNumber();
 
         ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -495,11 +495,11 @@ public class UMeR implements Serializable {
         double weatherMultiplier      = random.nextDouble(0, 0.2);
         double trafficMultiplier      = Math.abs(random.nextGaussian());
 
-        double trafficDelay = Math.min(traffic * trafficMultiplier / 100, 0.5);
+        double trafficDelay = Math.min(traffic * trafficMultiplier / 100, 0.4);
         double weatherDelay = this.weather * (weatherMultiplier / 5);
 
-        double multiplier = 0.9 + driverSuccess*driverMultiplier + carSuccess*carMultiplier
-            + trafficDelay + weatherDelay - driverSkill*driverMultiplier;
+        double multiplier = 0.8 + driverSuccess*driverMultiplier + carSuccess*carMultiplier
+            + trafficDelay + weatherDelay + driverSkill*driverMultiplier;
 
         double realTime = eta*multiplier;
         return realTime;

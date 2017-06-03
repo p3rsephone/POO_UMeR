@@ -19,15 +19,15 @@ public abstract class Vehicle implements Serializable {
     private boolean available;
     private int seats;
     private Point2D.Double position;
-    private LinkedList<String> queue = new LinkedList<>();
+    private LinkedList<String> queue;
     private HashMap<String, ArrayList<Point2D.Double>> queueInfo;
     private ArrayList<Trip> trips;
-    private String owner = null;
+    private String owner;
 
     /**
      * Construtor a partir de parametros definidos
      * @param licencePlate  Matricula
-     * @param reliable      Grau de reabilidade
+     * @param reliable      Grau de viabilidade
      * @param position      Posição
      * @param available     Se está disponível ou não
      * @param queue         Fila de espera
@@ -250,18 +250,11 @@ public abstract class Vehicle implements Serializable {
      * Altera o arraylist de viagens
      * @param trips Novas viagens
      */
-    /**
     public void setTrips(ArrayList<Trip> trips){
-        if (trips != null) {
-            for (Trip t : trips)
-                this.trips.add(t.clone());
-        }
-    }
-     */
-    public void setTrips(ArrayList<Trip> trips){
-        if (trips != null)
-            this.trips = new ArrayList<>(trips);
-        else this.trips = new ArrayList<>();
+        ArrayList<Trip> list = new ArrayList<>();
+        for (Trip t: trips)
+            list.add(t.clone());
+        this.trips = list;
     }
 
     /**

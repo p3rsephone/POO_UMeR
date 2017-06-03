@@ -619,7 +619,8 @@ public class GUI extends Application{
                 "\nData de nascimento: " + c.getBirthday() +
                 "\nViagens totais: " + c.getNumberOfTrips() +
                 "\nDistância percorrida: " + printDistance(c.getTotalDistance()) +
-                "\nDinheiro gasto: " + printMoney(c.getMoney());
+                "\nDinheiro gasto: " + printMoney(c.getMoney()) +
+                "\nPontos: " + (int) c.getPoints();
     }
 
     public String printDriver(Driver d){
@@ -632,8 +633,10 @@ public class GUI extends Application{
                 "\nDinheiro ganho: " + printMoney(d.getMoney()) +
                 "\nNúmero de classificações: " + d.getNumberOfReviews() +
                 "\nClassficação: " + d.getRating() +
+                "\nExperiência: " + d.getExp() +
                 "\nDesvio total: " + printMoney(d.getDeviation()) +
-                "\nEmpresa : " + d.getCompany();
+                "\nVeículo: " + d.getVehicle() +
+                "\nEmpresa: " + d.getCompany();
     }
 
     public String printCompany(Company c){
@@ -648,11 +651,12 @@ public class GUI extends Application{
         return "Matrícula: " + v.getLicencePlate() +
                 "\nClass: " + v.getClass().getSimpleName() +
                 "\nVelocidade: " + v.getSpeed() + " km/s" +
-                "\nPreço (por km): " + v.getPrice() +
+                "\nPreço (por km): " + v.getPrice() + "€" +
                 "\nLugares: " + v.getSeats() +
                 "\nFator de confiança: " + (int) v.getReliable() +
                 "\nPosição Atual: " + v.getPosition().getX() + " , " + v.getPosition().getY()  +
-                "\nNúmero de viagens: " + v.getTrips().size();
+                "\nNúmero de viagens: " + v.getTrips().size() +
+                "\nDono: " + v.getOwner();
     }
 
     public String printTripsByDate(String date, ArrayList<Trip> trips){
@@ -1025,7 +1029,7 @@ public class GUI extends Application{
             ObservableList<String> driversList = FXCollections.observableArrayList();
             driversList.add("--condutor-mais-próximo--");
             for (Driver d : umer.getDriversP().values())
-                driversList.add(d.getEmail() + " - Disponibilidade - " + d.isAvailable());
+                driversList.add(d.getEmail() + " - " + d.getRating() + " - Disponibilidade - " + d.isAvailable());
             for (Company c : umer.getCompanies().values())
                 driversList.add(c.getName());
             ComboBox<String> drivers_box = new ComboBox<>(driversList);
@@ -1376,7 +1380,8 @@ public class GUI extends Application{
     public void start(Stage primaryStage) throws Exception {
         umer = new UMeR();
         try{
-            umer = umer.loadUMeR(saveFile);
+            umer = UMeR.loadUMeR(saveFile);
+            umer.setWeather(ThreadLocalRandom.current().nextInt(1, 6));
         }
         catch (Exception e){
             e.printStackTrace();
